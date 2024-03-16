@@ -3,18 +3,18 @@
   //import viteLogo from '/vite.svg';
 
   let data = [];
-  let ldbData = {};
+  let lbdData = {};
   let db;
 
   async function getData(){
-    const lbdData = await fetch('//statsboxd-workers.giudimax.workers.dev/id/7ua3D');
-    ldbData = await lbdData.json()
+    const res = await fetch('//statsboxd-workers.giudimax.workers.dev/id/7ua3D');
+    lbdData = await res.json()
   }
 
   async function getDB(){
     const app = new App({ id: "cloudflare-workers-wtddz" });
-    const DBuser = await app.logIn(Credentials.apiKey("1svtpMUA8In8cykVNcCH8NtKqSRIKWk77ECSNhawSXirmenNE5rp5Tpil1qA8Afa"));
-    const mongoClient = DBuser.mongoClient("mongodb-atlas");
+    const mouser = await app.logIn(Credentials.apiKey("1svtpMUA8In8cykVNcCH8NtKqSRIKWk77ECSNhawSXirmenNE5rp5Tpil1qA8Afa"));
+    const mongoClient = mouser.mongoClient("mongodb-atlas");
     db = mongoClient.db("Statsboxd");
   }
 
@@ -23,6 +23,7 @@
       await Promise.all([getData(), getDB()]);
       const filmsCollection = db.collection("Film");
       data = await filmsCollection.aggregate([{"$limit": 1}])
+      console.log(lbdData);
       console.log(data);
     } catch (error) {
       console.error("Errore:", error);
