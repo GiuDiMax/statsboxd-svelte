@@ -1,13 +1,40 @@
 <script>
   import {App, Credentials} from 'realm-web';
   //import viteLogo from '/vite.svg';
-
   let data = [];
   let lbdData = {};
   let db;
 
+  function getQueries(){
+    let q = {}
+    q['a'] = [{'$limit': 1}]
+    q['b'] = [{'$limit': 1}]
+    return q
+  }
+
+  async function doStats(){
+    const film = db.collection("Film");
+    const watched = lbdData['watched'];
+    return film.aggregate([
+      {$limit: 1},
+      {$project: {_id: 0, user: watched}},
+      {$unwind: "$user"},
+      {$lookup: {
+        from: "Film",
+          localField: "user._id",
+          foreignField: "_id",
+          as: "info",
+          pipeline: [
+            { $limit: 1 }
+          ],
+        }},
+      {$project: {_id: "$user._id", r: "$user.rating", info: {$first: "$info"}}},
+      {$facet: getQueries()}
+    ]);
+  }
+
   async function getData(){
-    const res = await fetch('//statsboxd-workers.giudimax.workers.dev/id/7ua3D');
+    const res = await fetch('//statsboxd-workers.giudimax.workers.dev/id/1Ioll');
     lbdData = await res.json()
   }
 
@@ -21,10 +48,7 @@
   async function getStats() {
     try {
       await Promise.all([getData(), getDB()]);
-      const filmsCollection = db.collection("Film");
-      data = await filmsCollection.aggregate([{"$limit": 1}])
-      console.log(lbdData);
-      console.log(data);
+      data = await doStats();
     } catch (error) {
       console.error("Errore:", error);
     }
