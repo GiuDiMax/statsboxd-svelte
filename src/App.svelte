@@ -1,47 +1,46 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import {App, Credentials} from 'realm-web';
+  //import viteLogo from '/vite.svg';
+
+  let data = [];
+  let ldbData = {};
+  let db;
+
+  async function getData(){
+    const lbdData = await fetch('//statsboxd-workers.giudimax.workers.dev/id/7ua3D');
+    ldbData = await lbdData.json()
+  }
+
+  async function getDB(){
+    const app = new App({ id: "cloudflare-workers-wtddz" });
+    const userDB = await app.logIn(Credentials.apiKey("1svtpMUA8In8cykVNcCH8NtKqSRIKWk77ECSNhawSXirmenNE5rp5Tpil1qA8Afa"));
+    const mongoClient = userDB.mongoClient("mongodb-atlas");
+    db = mongoClient.db("Statsboxd");
+  }
+
+  async function getStats() {
+    try {
+      await Promise.all([getData(), getDB()]);
+      const filmsCollection = db.collection("Film");
+      data = await filmsCollection.aggregate([{"$limit": 1}])
+      console.log(data);
+    } catch (error) {
+      console.error("Errore:", error);
+    }
+  }
+
+  getStats();
 </script>
 
+
 <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+  {#if data.length > 0 }
+    <div>{JSON.stringify(data, null, 2)}</div>
+    {:else}
+    <p>Caricamento...</p>
+  {/if}
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+
 </style>

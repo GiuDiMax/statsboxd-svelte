@@ -12,5 +12,10 @@
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "svelte": "^4.2.12",
     "vite": "^5.1.6"
+  },
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "node-fetch": "^3.3.2",
+    "realm-web": "^2.0.0"
   }
 }
