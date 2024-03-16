@@ -11,34 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3  # Use the latest version for checkout
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: 20  # Explicitly specify Node.js 20
+          node-version: 20
 
       - name: Install dependencies
-        run: npm ci  # Consider using npm ci for production builds
+        run: npm ci
 
       - name: Build project
         run: npm run build
 
       - name: Upload production-ready build files
-        uses: actions/upload-artifact@v3  # Use the latest version for upload
+        uses: actions/upload-artifact@v3
         with:
           name: production-files
           path: ./dist
 
   deploy:
     name: Deploy
-    needs: build  # Ensure build job completes before deploy
+    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # Deploy only on push to main
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3  # Use the latest version for download
+        uses: actions/download-artifact@v3
         with:
           name: production-files
           path: ./dist
