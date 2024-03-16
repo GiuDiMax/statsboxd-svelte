@@ -13,8 +13,8 @@
 
   async function getDB(){
     const app = new App({ id: "cloudflare-workers-wtddz" });
-    const userDB = await app.logIn(Credentials.apiKey("1svtpMUA8In8cykVNcCH8NtKqSRIKWk77ECSNhawSXirmenNE5rp5Tpil1qA8Afa"));
-    const mongoClient = userDB.mongoClient("mongodb-atlas");
+    const DBuser = await app.logIn(Credentials.apiKey("1svtpMUA8In8cykVNcCH8NtKqSRIKWk77ECSNhawSXirmenNE5rp5Tpil1qA8Afa"));
+    const mongoClient = DBuser.mongoClient("mongodb-atlas");
     db = mongoClient.db("Statsboxd");
   }
 
