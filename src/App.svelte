@@ -1,10 +1,7 @@
 <script>
-  import Cookies from 'js-cookie';
+  import SharedPage from './page.svelte';
 
   let data = {}
-  let message = ""
-  //const baseUrl = "//worker.statsboxd.eu.org/"
-  const baseUrl = " http://127.0.0.1:8787/"
 
   async function getLbdWatched(username, id="", limit=0, offset=0, session=""){
     let watched = []
@@ -42,11 +39,11 @@
 
   async function getStats(data){
     const resp = await fetch(baseUrl + 'stats',
-            {
-              method: "POST",
-              headers: {"Accept-Encoding": "br"},
-              body: JSON.stringify(data)
-            },
+        {
+          method: "POST",
+          headers: {"Accept-Encoding": "br"},
+          body: JSON.stringify(data)
+        },
     )
     return await resp.json()
   }
@@ -55,7 +52,7 @@
     try {
       const username = location.pathname.split('/')[2]
       if (username === '' || username === null){
-        message = "Insert your username in the site path."
+        data.message = "Insert your username in the site path."
       }
       else {
         const localStorageData = localStorage.getItem(username)
@@ -69,6 +66,7 @@
         }
         localStorage.setItem(username, JSON.stringify(tmpdata))
         data = await getStats(tmpdata)
+          data['id'] = tmpdata['id']
       }
     }
     catch (error) {
@@ -76,24 +74,19 @@
     }
   }
 
-  main();
+  //main();
+  data.message = "Under construction..."
 
 </script>
 
-
 <main>
-  {#if Object.keys(data).length > 0 }
-    <div>{JSON.stringify(data, null, 2)}</div>
-    <!--<div>{data.watched.length}</div>-->
+    {#if data.message !== undefined}
+        <p>{data.message}</p>
     {:else}
-      {#if message !== ''}
-          <p>{message}</p>
+        {#if data.id !== undefined }
+            <SharedPage data={data} />
         {:else}
-          <p>Loading</p>
-      {/if}
-  {/if}
+            <p>Loading</p>
+        {/if}
+    {/if}
 </main>
-
-<style>
-
-</style>
