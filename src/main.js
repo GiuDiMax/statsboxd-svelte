@@ -1,6 +1,8 @@
-import './app.css'
 import App from './App.svelte'
 import AppFile from './AppFile.svelte'
+import './assets/css/font.css'
+import './assets/css/main.css'
+import './assets/css/mobile.css'
 
 const appBaseUrl = '';
 const pathname = window.location.pathname

@@ -1,0 +1,656 @@
+
+/* MOBILE PART */
+
+@media only screen and (min-width: 500px) and (max-width: 1199px) {
+    .arrow-down {
+        left: 130px !important;
+    }
+}
+
+@media only screen and (max-width: 1199px) {
+    #isMobile{
+        height: 0;
+        display:block !important;
+    }
+
+    .recSec > div:nth-child(2){
+        margin-top:20px;
+    }
+
+    .logoup{
+        width:200px;
+        margin-top:10px;
+    }
+
+    .navbar{
+        margin-top:10px;
+        margin-bottom:5px;
+        gap: 15px;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .navbar .bmc-btn{
+        flex-basis: 100%;
+        font-family: Graphik-Regular-Web, sans-serif;
+    }
+
+    .navbar a{
+        font-size: 11px;
+    }
+
+    .hideMobile{
+        display:none !important;
+    }
+
+    .mainTitle{
+        font-size: 64px;
+        padding-left:15px;
+        padding-right:15px;
+    }
+
+    .yearTitle{
+        font-size: 112px;
+    }
+
+    .headerbar{
+        padding:5px;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        height:auto;
+    }
+
+    .mainT .popupdiv {
+        position: relative;
+        bottom: 0;
+    }
+
+
+    .ppyear{
+        right: 28px;
+    }
+
+    .ppalltime{
+        right: 120px;
+        top: 10px;
+    }
+
+    .popupYear {
+        right: 70px;
+    }
+
+    .popupYear .arrow-up{
+        left: 72px;
+    }
+
+    .content{
+        /*max-width: initial !important;*/
+        width: 100%;
+        max-width: 99vw !important;
+        margin-left: auto;
+        margin-right: auto;
+        /*padding: 0 16px 200px 16px;*/
+    }
+
+    .sectionStats{
+        /*padding: 0 16px;*/
+        width: 92%;
+        max-width: 92vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .sepline{
+        align-items: flex-start;
+        flex-wrap: wrap;
+        padding-top: 30px;
+        padding-bottom: 25px;
+    }
+
+    .sepline span{
+        text-align: left;
+    }
+
+    .sepline span:first-child{
+        flex-basis: 100%;
+        text-transform: initial !important;
+        letter-spacing: 0;
+        margin-bottom:5px;
+        font-size: 21px;
+    }
+
+    .sepline .clickable{
+        padding-right: 7px;
+        font-size: 14px;
+    }
+
+    .sepline .line{
+        order: -1;
+        flex-basis: 100%;
+        margin-top:10px;
+        margin-bottom: 10px;
+    }
+
+    .donut{
+        width:154px;
+        height:154px;
+    }
+
+    .hole{
+        width:138px;
+        height:138px;
+    }
+
+    .listtitle{
+        font-size: 12px;
+    }
+
+    .listperc{
+        font-size: 28px;
+    }
+
+    .listnum{
+        font-size: 11px;
+    }
+
+    .singleCollection{
+        width: 45%;
+    }
+
+    .singleCollection .name {
+        font-size: 13.5px;
+    }
+
+    .threeposters:hover{
+        outline: 0;
+        outline-offset: 0;
+    }
+
+    .threeposters img{
+        flex: 0 0 0;
+        height: 70px !important;
+    }
+
+    .threeposters img:nth-child(2), .threeposters img:nth-child(3){
+        margin-left: -7px;
+    }
+
+    .singleFilm .poster, .singleFilm .poster img{
+        width:100% !important;
+        height:100% !important;
+    }
+
+    .filmList{
+        gap: 3%;
+    }
+
+    .filmList .singleFilm{
+        width: 17%;
+        margin: 0;
+    }
+
+    .singleFilm div{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .stelline, .bigsotto{
+        font-size: 12px !important;
+    }
+
+    .filmList{
+        row-gap: 20px;
+    }
+
+    .hideLast > .singleFilm:nth-child(11), .hideLast > .singleFilm:nth-child(12){
+        display:none;
+    }
+
+    .hideLastfour > .singleFilm:nth-child(11), .hideLastfour > .singleFilm:nth-child(12),
+    .hideLastfour > .singleFilm:nth-child(13), .hideLastfour > .singleFilm:nth-child(14){
+        display:none;
+    }
+
+    .hideLast2 > .singleFilm:nth-child(16), .hideLast2 > .singleFilm:nth-child(17), .hideLast2 > .singleFilm:nth-child(18){
+        display:none;
+    }
+
+    .container_people{
+        width: 50%;
+        margin:0;
+    }
+
+    .holeperson{
+        width: 123.75px;
+        height: 123.75px;
+    }
+
+
+    .studiohole{
+        padding:8px;
+        width:75px;
+        height:75px;
+    }
+
+    .people{
+        justify-content: center;
+        gap: 0 !important;
+        row-gap:20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .container_people .clickable{
+        font-size: 15px;
+        margin-top: 8px;
+    }
+
+    .container_people .sottotitolo{
+        font-size: 15px;
+    }
+
+    .container_studio .clickable, .container_studio .sottotitolo{
+        font-size: 12px;
+    }
+
+    .crewbis {
+        flex-wrap: wrap;
+        justify-content: space-around;
+        column-gap: 15px;
+    }
+
+    .role{
+        flex-basis: 45%;
+        width: 45%;
+        margin: 0;
+    }
+
+    .titlerole{
+        padding-top:10px;
+    }
+
+    .role a{
+        font-size: 14px !important;
+        line-height: 20px !important;
+        text-align: left;
+    }
+
+    .role div{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        text-align: left;
+        padding-right: 0;
+        gap: 5px;
+        /*text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;*/
+    }
+
+    .role div .clickable {
+        max-width: 80%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .role .sottotitolo{
+        padding-left:0 !important;
+    }
+
+    .worldmap {
+        height: 250px;
+    }
+
+    .decade{
+        flex-direction: column;
+    }
+
+    .decadeTitle{
+        font-size: 32px;
+        padding-bottom: 10px;
+    }
+
+    .decPosters {
+        width: 100%;
+        gap: 3%;
+        row-gap: 4px;
+    }
+
+    .decPosterImg {
+        width: 17%;
+        height: 100%;
+        margin: 0!important;
+    }
+
+    .chart-container, .years{
+        margin:0;
+    }
+
+    .threeColumns, .twocolumn{
+        flex-wrap: wrap;
+        row-gap: 35px;
+        flex-basis:100%;
+    }
+
+    .threeColumns div{
+        width: 100%;
+        flex-basis:100%;
+    }
+
+    .twocolumn .labels{
+        width:100%;
+    }
+
+    .ratingSpreadsection{
+        width: 343px;
+        position: relative;
+        right: 8%;
+    }
+
+    .piecharts{
+        flex-direction: column;
+        row-gap: 20px;
+    }
+
+    .numbersStats{
+        flex-basis:100%;
+        gap: 5%;
+        row-gap:15px;
+    }
+
+    .numbersStats div, .numbersStats a{
+        flex-basis: 40%;
+    }
+
+    .numbersStats .pannello{
+        display:none;
+    }
+
+    .numbersStats .number{
+        font-size: 26px;
+    }
+
+    .numbersStats .text {
+        font-size: 10px;
+    }
+
+    .msxfull {
+        margin-top: 0px !important;
+    }
+
+    .secHRF{
+        flex-basis: 100%;
+        justify-content: center;
+        column-gap: 2%;
+        flex-wrap: wrap;
+    }
+
+    .secHRF .singleFilm{
+        flex-basis: 20%;
+    }
+
+    .watchedDivided{
+        flex-basis: 100%;
+    }
+
+    .wd1x .big{
+        font-size: 24px;
+    }
+
+    .wd1x .small{
+        font-size: 12px;
+    }
+
+    .wd1 img{
+        display: none;
+    }
+
+    .wd1x{
+        width: 20%;
+    }
+
+    .wd1{
+        flex-basis: 100%;
+    }
+
+    .wd2{
+        flex-basis:70%;
+        margin-left:auto;
+        margin-right:auto;
+        margin-top: 10px;
+        position: relative;
+        top: 40px;
+    }
+
+    .weekChartcontainer{
+        margin:0 3%;
+    }
+
+    .msy{
+        flex-wrap: wrap;
+    }
+
+    .msy span{
+        font-size: 12px !important;
+        margin: 15px 0;
+    }
+
+    .msy .msx2{
+        order: 3;
+        flex-basis: 100%;
+    }
+
+    .msy .sottotitolo{
+        margin-top:5px !important;
+    }
+
+    .msx1{
+        margin: 0 8%;
+    }
+
+    .mw2{
+        gap: 3%;
+        flex-basis: 100%;
+
+    }
+
+    .mw2 .singleFilm{
+        width: 100%;
+        flex-basis: 22%;
+    }
+
+    .highLow{
+        justify-content: center;
+        gap: 10%;
+        flex-wrap: wrap;
+        row-gap: 20px;
+    }
+
+    .highLow .singleFilm{
+        flex-basis: 35%;
+    }
+
+    .highLow .suptitle{
+        font-size: 14px;
+    }
+
+    .highLow img{
+    }
+
+    .highLow .stellamedia{
+        font-size: 22px
+    }
+
+    .recSec .cuoricino{
+        font-size: 12px
+    }
+
+    .sottofilm{
+        flex-direction: row !important;
+        margin-top: 10px;
+        gap:5px;
+    }
+
+    .sottofilm img{
+        height: 13px;
+    }
+
+    .piech2{
+        width:50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .stellineBig{
+        font-size:15px !important;
+        margin-top:5px;
+    }
+
+    .highLow{
+        width:100%;
+    }
+
+    .centerimg{
+        width:85%;
+    }
+
+    .decadeLeft{
+        display: flex;
+        flex-direction: row;
+        flex-basis: 100%;
+        width: 95%;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .decadeLeft a{
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .shortTitle {
+        line-height: 1.7em;
+        text-align: justify;
+        text-justify: inter-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+    }
+
+    .support_div .support_text{
+        line-height: 0;
+    }
+
+    .bmc-btn {
+        font-size: 18px !important;
+
+    }
+
+    .bmc-btn-container{
+        text-align: center !important;
+    }
+
+    .pielists{
+        justify-content: space-around !important;
+    }
+
+    .mainTitlesec .constraint{
+        top: -40px;
+    }
+
+    .constraint_full{
+        width: auto;
+    }
+
+    .constraint_year{
+        width: auto;
+    }
+
+    .mainTitlesec .-right {
+        z-index: -2;
+        left: 50%;
+        margin-left: 20px;
+        margin-top: -10px;
+        width: 260px;
+    }
+
+    .mainTitlesec .-left {
+        z-index: -2;
+        right: 50%;
+        margin-top: -10px;
+        width: 260px;
+    }
+
+    .mainTitlesecFade{
+        display: block;
+        background-image: radial-gradient(#14181c 25%,rgba(20,24,28,0) 100%);
+        height: 400px;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: -1;
+    }
+
+    .mainSubtitle span, .mainSubtitle span a {
+        font-size: 14px;
+    }
+
+    .mainSubtitle img {
+        height: 24px;
+        width: 24px;
+    }
+
+    .mainT {
+        position: relative;
+        top: 30px;
+    }
+
+    .buttonstart{
+        gap: 20px;
+    }
+
+    .buttonstart a{
+        /*border: 0 !important;
+        padding: 0 !important;*/
+        padding: 0.7em 1.2em;
+        font-size: 11px !important;
+    }
+
+    .buttonstart .icon{
+        font-size: 18px !important;
+        padding-right: 5px !important;
+    }
+
+    .numbersStats{
+        margin-top: 20px;
+    }
+
+    .arrowcheck{
+        color: #99aabb;
+        font-size: 13px;
+        line-height: 20px;
+        width: 75%;
+        margin: 0 auto 10px;
+    }
+
+    .arrowcheck a{
+        color: #99aabb;
+    }
+
+    .popupYearContainer {
+        top: 260px;
+        left: calc(50% + 85px);
+    }
+
+    .popupYear2Container {
+        top: 220px;
+        right: 50px;
+        left: unset;
+    }
+}

@@ -1,0 +1,31 @@
+@font-face {
+    font-family: TiemposTextWeb-Semibold;
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/TiemposTextWeb-Semibold.woff') format("woff");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Graphik-Light-Web;
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/Graphik-Light-Web.woff') format("woff");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Graphik-Regular-Web;
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/Graphik-Regular-Web.woff') format("woff");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Graphik-Semibold-Web;
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/Graphik-Semibold-Web.woff') format("woff");
+    font-display: swap;
+}

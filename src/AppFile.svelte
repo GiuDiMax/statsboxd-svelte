@@ -29,6 +29,11 @@
     }
 
     onMount(async () => {
+        const localStorageData = localStorage.getItem("stats")
+        if(localStorageData !== null && localStorageData !== "undefined") {
+            data = JSON.parse(localStorageData)
+            return
+        }
         data.message = "Please upload your file"
         const input = document.querySelector('input[type="file"]');
         input.addEventListener('change', async (e) => {
@@ -61,14 +66,16 @@
                     const key = `${item['Name']}_${item['Year']}`
                     return {
                         _id: item['Letterboxd URI'].split('/').pop(),
-                        r: ratingDict[item['Letterboxd URI']] || null,
+                        r: parseFloat(ratingDict[item['Letterboxd URI']]) || null,
                         d: diaryDict[key] || []
                     };
                 });
 
                 console.log("ok tmpdata")
-                //data = await getStats(tmpdata)
-                data = tmpdata
+                data = await getStats(tmpdata)
+                data['username'] = username
+                localStorage.setItem("stats", JSON.stringify(data))
+                //data = tmpdata
                 console.log("ok stats")
                 data.message = undefined
 
@@ -90,7 +97,7 @@
         {#if data.message !== undefined}
             <p>{data.message}</p>
         {:else}
-            <SharedPage data={data}/>
+            <SharedPage data={data} year=""/>
         {/if}
     {/if}
 </main>
