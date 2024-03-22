@@ -73,7 +73,7 @@
 
                 console.log("ok tmpdata")
                 data = await getStats(tmpdata)
-                data['username'] = username
+                data['username'] = "giudimax"
                 localStorage.setItem("stats", JSON.stringify(data))
                 //data = tmpdata
                 console.log("ok stats")
