@@ -19,6 +19,7 @@
 }
 
 body{
+    color: white;
     margin:0;
     background: #14181c url(https://s.ltrbxd.com/static/img/content-bg.0d9a0f0f.png) 0 -1px repeat-x;
     /*background-image: linear-gradient(180deg,#14181c 0,#14181c 250px,#2c3440 251px);*/
@@ -150,7 +151,7 @@ span{
 }
 
 .mainTitlesecBak {
-    background-image: url("/static/images/grid.svg");
+    background-image: url("/images/grid.svg");
     background-position: top;
     background-repeat: repeat;
     background-size: 80px 80px;

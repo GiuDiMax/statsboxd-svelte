@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2021 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="50mm" height="50mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 5000 5000"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil2 {fill:#00E053}
+    .fil1 {fill:#3FBBF4}
+    .fil0 {fill:#FF7F00}
+   ]]>
+  </style>
+ </defs>
+ <g id="Livello_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <path class="fil0" d="M2388.03 4753.54c-1189.41,-55.21 -2144.16,-1035.75 -2144.16,-2247.41 0,-372.29 90.54,-723.39 250.63,-1032.66l1893.53 1093.23 0 2186.84zm-1114.13 -3855.43l11.7 15.6 -35.79 -19.09 13.73 -6.87 10.36 10.36z"/>
+  <path class="fil1" d="M4493.32 1473.43c160.07,309.29 250.54,660.41 250.54,1032.7 0,1213.79 -957.17,2192.32 -2144.15,2247.27l0 -2186.7 1893.61 -1093.27z"/>
+  <path class="fil2" d="M2493.87 256.14c795.03,0 1493.57,412.45 1893.77,1034.94l-1893.77 1093.37 -1893.83 -1093.4c400.2,-622.5 1098.8,-1034.91 1893.83,-1034.91z"/>
+ </g>
+</svg>

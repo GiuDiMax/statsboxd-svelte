@@ -31,6 +31,7 @@
     onMount(async () => {
         const localStorageData = localStorage.getItem("stats")
         if(localStorageData !== null && localStorageData !== "undefined") {
+            console.log("Read Storage Data")
             data = JSON.parse(localStorageData)
             return
         }
@@ -41,24 +42,35 @@
             try {
                 file = e.target.files[0]
                 const zip = await jszip.loadAsync(file)
-                const [watchedData, ratingsData, diaryData] = await Promise.all([
+                const [watchedData, ratingsData, diaryData, reviewsData, profileData] = await Promise.all([
                     parseCsv(zip, 'watched.csv'),
                     parseCsv(zip, 'ratings.csv'),
                     parseCsv(zip, 'diary.csv'),
+                    parseCsv(zip, 'reviews.csv'),
+                    parseCsv(zip, 'profile.csv'),
                 ]);
 
                 console.log("ok read files")
+
+                const username = profileData[0]['Username']
+                const name = profileData[0]['Given Name'] + profileData[0]['Family Name']
 
                 const ratingDict = ratingsData.reduce((acc, curr) => {
                     acc[curr['Letterboxd URI']] = curr['Rating'];
                     return acc;
                 }, {});
 
+                const reviewArray = reviewsData.map(review => review['Letterboxd URI']);
+
                 const diaryDict = diaryData.reduce((acc, curr) => {
                     const { 'Name': name, 'Year': year, 'Rewatch': rewatch } = curr;
                     const key = `${name}_${year}`;
                     acc[key] = acc[key] || [];
-                    acc[key].push({ date: curr['Watched Date'], rewatch: rewatch === 'Yes' })
+                    acc[key].push({
+                        date: curr['Watched Date'],
+                        rewatch: rewatch === 'Yes',
+                        review: reviewArray.includes(curr['Letterboxd URI']),
+                    })
                     return acc;
                 }, {});
 
@@ -71,13 +83,23 @@
                     };
                 });
 
+                const filt = tmpdata['watched'].filter(d => 'r' in d);
+
                 console.log("ok tmpdata")
+                localStorage.setItem(username, JSON.stringify(tmpdata))
                 data = await getStats(tmpdata)
-                data['username'] = "giudimax"
-                localStorage.setItem("stats", JSON.stringify(data))
-                //data = tmpdata
-                console.log("ok stats")
+                data['username'] = username.toLowerCase()
+                if (name !== ''){
+                    data['name'] = name
+                }else{
+                    data['name'] = username
+                }
+                data['ru'] = filt.length>50
+                data['update'] = new Date()
+                data['update'] = data['update'].toString().split("T")[0]
                 data.message = undefined
+                localStorage.setItem("stats", JSON.stringify(data))
+                console.log("ok stats")
 
             } catch (error) {
                 console.log(error)
@@ -97,7 +119,7 @@
         {#if data.message !== undefined}
             <p>{data.message}</p>
         {:else}
-            <SharedPage data={data} year=""/>
+            <SharedPage data={data} year="" yearnum=0/>
         {/if}
     {/if}
 </main>
