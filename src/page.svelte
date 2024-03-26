@@ -1,79 +1,160 @@
 <script>
-    export let data;
-    export let year;
-    export let yearnum;
-    let showYears = false;
+    export let data
+    export let year
+    export let yearnum
+    let showYears = false
     const lbdurl = "https://letterboxd.com/"
     import Highcharts from 'highcharts'
     import {onMount, createEventDispatcher } from "svelte"
+    import jQuery from 'jquery'
+    import { useLazyImage as lazyImage } from 'svelte-lazy-image'
+
+    function clickableFunction(){
+        jQuery('.' + jQuery(event.target).attr('data-hide')).addClass('hide')
+        jQuery('#' + jQuery(event.target).attr('data-show')).removeClass('hide')
+        jQuery('.' + jQuery(event.target).attr('data-hide2')).addClass('hide')
+        jQuery('.' + jQuery(event.target).attr('data-show2')).removeClass('hide')
+        jQuery('.' + jQuery(event.target).attr('data-class-show')).removeClass('hide')
+        jQuery(event.target).addClass('active')
+        jQuery(event.target).siblings().removeClass('active')
+    }
+
+    function handleImageLoad(){
+        jQuery(event.target).parent().addClass("imgok");
+    }
+
+    function elementAt(array, index){
+        try{return array[parseInt(index)]}
+        catch{return ""}
+    }
+
+    function getUri(obj, obj2=null) {
+        if (obj2 !== null && obj2.length > 0) {return obj2}
+        //try {
+        if(obj === undefined){return ""}
+        if (obj.toLowerCase().includes('persian')) { return 'persianfarsi' }
+        return obj.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/:/g, '').replace(/,/g, '').replace(/\(/g, '').replace(/\)/g, '').replace(/'/g, '-').replace(/\s+/g, '-');
+        //} catch (error) {return ''}
+    }
+
+    function ifNoneThenZero(n){
+        if (n === null){return 0}
+        return parseFloat(n)
+    }
+
+    function replaceSize(src, height=165, width=110){
+        try{
+            if (src !== null) {
+                if (src.includes('a.ltrbxd')) {
+                    try {
+                        return src.split("-0-").slice(0, 2).join("-0-") + "-0-" + width + "-0-" + height + "-crop.jpg";
+                    } catch (error) {
+                        if (src.includes('.jpg')) {
+                            return src;
+                        } else {
+                            return src + ".jpg";
+                        }
+                    }
+                }
+                return '//a.ltrbxd.com/resized/' + src + "-0-" + width + "-0-" + height + "-crop.jpg";
+            }
+        }catch{}
+        return ""
+    }
 
     function init() {
+        if(year === ''){
+            let dataChart = {}
+            let generalChart = {
+                chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0},
+                xAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+                yAxis: {min: -1, labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+                legend: {enabled: false},
+                title: {text: null},
+                plotOptions: {column: {pointPadding: 0.2, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
+            }
 
-        let dataChart = {}
-        let generalChart = {
-            chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0},
-            xAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
-            yAxis: {min: -1, labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
-            legend: {enabled: false},
-            title: {text: null},
-            plotOptions: {column: {pointPadding: 0.2, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
+            // RELEASE YEAR
+            dataChart = data.years.map(element => {
+                const newDict = { 'name': element['_id'], 'y': element['sum'] + 1}
+                if (element['sum'] === 0) { newDict['color'] = "#445566" }
+                return newDict;
+            });
+            generalChart['tooltip'] = {
+                formatter: function () {
+                    return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 1).toString() + ' films</span>' +
+                        '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
+                },
+                shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+            }
+            generalChart['series'] = [{
+                data: dataChart,
+                label: {enabled: false},
+                color: {
+                    linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
+                    stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
+                },
+                point: {events: {click: function () {
+                    location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
+                }}}
+            }]
+            Highcharts.chart('releaseYear', generalChart)
+
+            // RATING YEAR
+            dataChart = data.years.map(element => {
+                const newDict = { 'name': element['_id'], 'y': (ifNoneThenZero(element['avg']) + 0.1)}
+                if (ifNoneThenZero(element['avg']) === 0) { newDict['color'] = "#445566" }
+                return newDict;
+            });
+            generalChart['tooltip'] = {
+                formatter: function () {
+                    return '<div class="ttYear"><span class="ttTitle">Average ' + parseFloat(this.y - 0.1).toFixed(2).toString() + '</span>' +
+                        '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
+                },
+                shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+            }
+            generalChart['series'] = [{
+                data: dataChart,
+                label: {enabled: false},
+                color: {
+                    linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
+                    stops: [[0.00, '#ffb860'], [1.00, '#ffe870']]
+                },
+                point: {events: {click: function () {
+                            location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
+                }}}
+            }]
+            Highcharts.chart('ratingYear', generalChart)
+
+            // DIARY YEAR
+            dataChart = data.logsPerYear.map(element => {
+                const newDict = { 'name': element['_id'], 'y': element['sum'] + 5}
+                if (element['sum'] === 0) { newDict['color'] = "#445566" }
+                return newDict;
+            });
+            generalChart['tooltip'] = {
+                formatter: function () {
+                    return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 5).toString() + ' films</span>' +
+                        '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
+                },
+                shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+            }
+            generalChart['series'] = [{
+                data: dataChart,
+                label: {enabled: false},
+                color: {
+                    linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
+                    stops: [[0.00, '#48FF84'], [1.00, '#06E358']]
+                },
+                point: {events: {click: function () {
+                            location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
+                }}}
+            }]
+            generalChart['plotOptions'] = {column: {pointPadding: 0.05, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
+            Highcharts.chart('diaryYear', generalChart)
+        }else{
+
         }
-
-        dataChart = data.years.map(element => {
-            const newDict = { 'name': element['_id'], 'y': element['sum'] + 1}
-            if (element['sum'] === 0) { newDict['color'] = "#445566" }
-            return newDict;
-        });
-
-        generalChart['tooltip'] = {
-            formatter: function () {
-                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 1).toString() + ' films</span>' +
-                    '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
-            },
-            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
-        }
-
-        generalChart['series'] = [{
-            data: dataChart,
-            label: {enabled: false},
-            color: {
-                linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
-                stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
-            },
-            point: {events: {click: function () {
-                location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
-            }}}
-        }]
-
-        Highcharts.chart('releaseYear', generalChart)
-
-        dataChart = data.years.map(element => {
-            const newDict = { 'name': element['_id'], 'y': element['sum'] + 1}
-            if (element['sum'] === 0) { newDict['color'] = "#445566" }
-            return newDict;
-        });
-
-        generalChart['tooltip'] = {
-            formatter: function () {
-                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 1).toString() + ' films</span>' +
-                    '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
-            },
-            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
-        }
-
-        generalChart['series'] = [{
-            data: dataChart,
-            label: {enabled: false},
-            color: {
-                linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
-                stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
-            },
-            point: {events: {click: function () {
-                        location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
-                    }}}
-        }]
-
-        Highcharts.chart('releaseYear', generalChart)
     }
 
     function last(inputArray){
@@ -89,7 +170,10 @@
 
     const dispatch = createEventDispatcher()
     dispatch("dataReceived", data)
-    $: {if (Object.keys(data).length > 0) {init(data)}}
+    $: {if (Object.keys(data).length > 0) {init()}}
+
+    onMount(() => {
+    })
 
 </script>
 
@@ -320,14 +404,14 @@
         {#if year === '' }
         <h3 class="arrowcheck">
             Your last update: { data.update }. <br />
-            <!--<strong>Join the <a target="_blank" href="https://t.me/+lBgbgJ53QwM0OWE8">supporters Telegram group</a>.</strong>-->
             Forced update, year's stats and recommended films only for
             <a target="_blank" href="//buymeacoffee.com/giudimax">supporters</a>.
         </h3>
         {/if}
         <div class="mainSubtitle">
-            <a href="{ lbdurl }{ data.username }"><img alt="{ data.username }" class="avatar lazy"
-                                                       data-src="{ data.img }" src="images/poster.jpg" /></a>
+            <!--<a href="{ lbdurl }{ data.username }">
+                <img alt="{ data.username }" class="avatar lazy" data-src="{ data.img }" src="images/poster.jpg" />
+            </a>-->
             <span><a class="clickable" href="{ lbdurl}{ data.username }">
                 { data.name }</a>'s
                 { year==='' ? 'all-time stats' : 'year in review' }
@@ -403,15 +487,12 @@
         <div class="sepline">
             <span>By release year</span>
             <div class="line"></div>
-            <span class="clickable active" data-hide="yearChart" data-hide2="years2" data-show="releaseYear"
-                  data-show2="years1">Films</span>
+            <span class="clickable active" on:click={clickableFunction} data-hide="yearChart" data-hide2="years2" data-show="releaseYear" data-show2="years1">Films</span>
             {#if data.ru}
-            <span class="clickable" data-show="ratingYear" data-show2="years1" data-hide="yearChart"
-                  data-hide2="years2">Ratings</span>
+            <span class="clickable" on:click={clickableFunction} data-show="ratingYear" data-show2="years1" data-hide="yearChart" data-hide2="years2">Ratings</span>
             {/if}
             {#if arrayLength(data['logsPerYear']) > 0}
-            <span class="clickable" data-show="diaryYear" data-show2="years2" data-hide="yearChart"
-                  data-hide2="years1">Diary</span>
+            <span class="clickable" on:click={clickableFunction} data-show="diaryYear" data-show2="years2" data-hide="yearChart" data-hide2="years1">Diary</span>
             {/if}
         </div>
         <div class="chart-container">
@@ -430,5 +511,177 @@
         </div>
         {/if}
     </section>
-
+    {#if data.ru }
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>Highest rated decades</span>
+            <div class="line"></div>
+        </div>
+        {#each data.decades as element }
+        <div class="decade">
+            <div class="decadeLeft">
+                <a href="//letterboxd.com/{ data.username }/films/rated/.5-5/decade/{ element._id }s/by/entry-rating/"
+                   class="decadeTitle">{ element._id }s</a>
+                <div><img src="images/greystar.webp" alt="greystar"/><span
+                        class="decadeAverage">Average { element.avg }</span></div>
+            </div>
+            <div class="decPosters">
+                {#each element.imgs as element2}
+                <a class="poster decPosterImg" href="{ lbdurl }film/{ element2.uri }">
+                    <div class="containertextimg"><span>{ element2.uri.replace("-", " ") }</span></div>
+                    <img use:lazyImage on:load={handleImageLoad} src="images/poster.jpg" data-src="{ replaceSize(element2.img, 105, 70) }" alt="{ element.uri }"/>
+                </a>
+                {/each}
+            </div>
+        </div>
+        {/each}
+    </section>
+    {/if}
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>Genres, Countries & Languages</span>
+            <div class="line"></div>
+            {#if data.ru}
+            <span class="clickable active" on:click={clickableFunction} data-show="MWGCL" data-hide="secGCL">Most Watched</span>
+            <span class="clickable" on:click={clickableFunction} data-show="HRGCL" data-hide="secGCL">Highest Rated</span>
+            {/if}
+        </div>
+        <div id="MWGCL" class="attributes-chart threeColumns secGCL">
+            {#each [['genres', 'genre', 'rgb(0, 224, 84)'], ['countries', 'country', 'rgb(64, 188, 244)'], ['originallanguage','language', 'rgb(255, 128, 0)']] as type}
+                <div class="labels2">
+                {#each Array.from({ length: 10 }, (_, i) => i) as i }
+                <div>
+                    <a class="clickable label1"
+                       href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{type[1]}/{getUri( elementAt(data[('mw_'+type[0])],i)['name'] )}">
+                        { elementAt(data[('mw_'+type[0])],i)['name'] }
+                    </a>
+                    <div>
+                        <div class="genresFilms"
+                             style="width: {  elementAt(data[('mw_'+type[0])],i)['sum'] *100/ elementAt(data[('mw_'+type[0])],0)['sum']  }%;">
+                            <span>{ elementAt(data[('mw_'+type[0])],i)['sum'] } films</span></div>
+                        <div class="progressBarWithVal"
+                             style="width:{ elementAt(data[('mw_'+type[0])],i)['sum']*100/ elementAt(data[('mw_'+type[0])],0)['sum']  }%; background-color:{ type[2] };"></div>
+                    </div>
+                </div>
+                {/each}
+            </div>
+            {/each}
+        </div>
+        {#if data.ru }
+        <div id="HRGCL" class="attributes-chart threeColumns secGCL hide">
+            {#each [['genres', 'genre', 'rgb(72, 255, 132)'], ['countries', 'country', 'rgb(116, 240, 255)'], ['originallanguage','language', 'rgb(255, 184, 96)']] as type}
+                <div class="labels2">
+                    {#each Array.from({ length: 10 }, (_, i) => i) as i }
+                        <div>
+                            <a class="clickable label1"
+                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri( elementAt(data[('tr_'+type[0])],i)['name'] )}">
+                                { elementAt(data[('tr_'+type[0])],i)['name'] }
+                            </a>
+                            <div>
+                                <div class="genresFilms"
+                                     style="width: {  elementAt(data[('tr_'+type[0])],i)['avg'] *100/ elementAt(data[('tr_'+type[0])],0)['avg']  }%;">
+                                    <span>Average: { elementAt(data[('tr_'+type[0])],i)['avg'] }</span></div>
+                                <div class="progressBarWithVal"
+                                     style="width:{ elementAt(data[('tr_'+type[0])],i)['avg']*100/ elementAt(data[('tr_'+type[0])],0)['avg']  }%; background-color:{ type[2] };"></div>
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            {/each}
+        </div>
+        {/if}
+    </section>
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>Themes & Nanogenres®</span>
+            <div class="line"></div>
+            {#if data.ru }
+            <span class="clickable active" on:click={clickableFunction} data-show="MWTN" data-hide="secTN">Most Watched</span>
+            <span class="clickable" on:click={clickableFunction} data-show="HRTN" data-hide="secTN">Highest Rated</span>
+            {/if}
+        </div>
+        <div id="MWTN" class="attributes-chart twocolumn secTN">
+            {#each ['theme', 'nanogenre'] as type }
+            <div class="labels">
+                {#each Array.from({ length: 10 }, (_, i) => i) as i }
+                <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{ elementAt(data['mw_' + type + 's'],i)['type'] }/{ getUri(elementAt(data['mw_' + type + 's'],i)['name'], elementAt(data['mw_' + type + 's'],i)['uri']) }">
+                    <span class="leftText">{ elementAt(data['mw_' + type + 's'],i)['name'] }</span>
+                    <span class="bold right">{ elementAt(data['mw_' + type + 's'],i)['sum'] } films</span>
+                    <div class="labcontainer"
+                         style="width:{ elementAt(data['mw_' + type + 's'],i)['sum'] * 100 /elementAt(data['mw_' + type + 's'],0)['sum'] }%;">
+                    </div>
+                </a>
+                {/each}
+            </div>
+            {/each}
+        </div>
+        {#if data.ru }
+        <div id="HRTN" class="attributes-chart twocolumn secTN hide">
+            {#each ['theme', 'nanogenre'] as type }
+                <div class="labels">
+                    {#each Array.from({ length: 10 }, (_, i) => i) as i }
+                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{ elementAt(data['tr_' + type + 's'],i)['type'] }/{ getUri(elementAt(data['tr_' + type + 's'],i)['name'], elementAt(data['tr_' + type + 's'],i)['uri']) }">
+                            <span class="leftText">{ elementAt(data['tr_' + type + 's'],i)['name'] }</span>
+                            <span class="bold right">Average: { elementAt(data['tr_' + type + 's'],i)['avg'] }</span>
+                            <div class="labcontainer"
+                                 style="width:{ elementAt(data['tr_' + type + 's'],i)['avg'] * 100 /elementAt(data['tr_' + type + 's'],0)['avg'] }%;">
+                            </div>
+                        </a>
+                    {/each}
+                </div>
+            {/each}
+        </div>
+        {/if}
+    </section>
+    {#if year===''}
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>List progress</span>
+                <div class="line"></div>
+            </div>
+            <div class="pielists">
+                {#each Array.from({ length: arrayLength(data['lists']) }, (_, i) => i) as i }
+                <div class="donut"
+                    style="background:conic-gradient(#40bcf4 0deg { 3.6* elementAt(data['lists'],i).perc }deg,#303c44 { 3.6* elementAt(data['lists'],i).perc }deg 360deg);">
+                    <a class="hole" href="{ lbdurl }{ elementAt(data['lists'],i)._id }">
+                        <span class="listtitle">{ elementAt(data['lists'],i).name }</span>
+                        <span class="listperc">{ parseInt(elementAt(data['lists'],i).perc) }%</span>
+                        <span class="listnum">{ elementAt(data['lists'],i).num } of { elementAt(data['lists'],i).tot }</span>
+                    </a>
+                </div>
+                {/each}
+            </div>
+        </section>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Collections</span>
+                <div class="line"></div>
+                <span class="clickable active" on:click={clickableFunction} data-show="completeCollection" data-hide="collectionsx">Complete</span>
+                <span class="clickable" on:click={clickableFunction} data-show="almostCollection" data-hide="collectionsx">Almost Complete</span>
+            </div>
+            <div class="collections">
+                {#each Array.from({ length: arrayLength(data['collections']) }, (_, i) => i) as i }
+                <div id="{ elementAt(data['collections'],i)['_id'] }Collection"
+                    class="collectionsx {elementAt(data['collections'],i)._id !== 'complete' ? 'hide' : ''}">
+                    {#each elementAt(data['collections'],i).collections as element}
+                    <div class="singleCollection">
+                        <a class="threeposters"
+                           href="{ lbdurl }films/in/{ element['uri'] }/by/release-earliest/size/large/">
+                            {#each element.posters as poster }
+                            <img use:lazyImage class="lazy" src="images/poster_70.jpg" data-src="{ replaceSize(poster, 105, 70) }" alt=""/>
+                            {/each}
+                        </a>
+                        <span>
+                            <a class="name" href="{lbdurl}films/in/{element['uri']}/by/release-earliest/size/large/">
+                                {element['name']}
+                            </a>
+                            {element['num']} watched
+                        </span>
+                    </div>
+                    {/each}
+                </div>
+                {/each}
+            </div>
+        </section>
+    {/if}
 </div>
