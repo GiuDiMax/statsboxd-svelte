@@ -1,5 +1,5 @@
-//export const baseUrl = "//worker.statsboxd.eu.org/"
-export const baseUrl = 'http://127.0.0.1:8787/'
+export const baseUrl = "//worker.statsboxd.eu.org/"
+//export const baseUrl = 'http://127.0.0.1:8787/'
 export const roles = [['codirector', 'Co-Directors', 'co-director'],
     ['assistantdirector', 'Asst. Directors', 'assistant-director'],
     ['additionaldirecting', 'Add. Directing', 'additional-directing'],
