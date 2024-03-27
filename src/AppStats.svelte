@@ -8,7 +8,6 @@
     if(localStorageData !== null && localStorageData !== "undefined") {
         console.log("Read Storage Data")
         data = JSON.parse(localStorageData)
-        console.log(data)
         data.message = undefined
     }
 </script>

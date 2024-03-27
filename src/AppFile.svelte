@@ -80,7 +80,7 @@
 
                 const filt = tmpdata['watched'].filter(d => 'r' in d);
 
-                localStorage.setItem(username, JSON.stringify(tmpdata))
+                localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
                 data = await getStats(tmpdata)
                 data['username'] = username.toLowerCase()
                 if (name !== ''){data['name'] = name}

@@ -8,7 +8,7 @@
     import {onMount, createEventDispatcher } from "svelte"
     import jQuery from 'jquery'
     import { useLazyImage as lazyImage } from 'svelte-lazy-image'
-    import {roles} from './config.js'
+    import {roles, tmdb_key} from './config.js'
     import jsVectorMap from 'jsvectormap'
     import 'jsvectormap/dist/maps/world.js'
     import 'jsvectormap/dist/css/jsvectormap.css'
@@ -24,8 +24,21 @@
         jQuery(event.target).siblings().removeClass('active')
     }
 
-    function handleImageLoad(){
+    async function handleImageLoad(){
         jQuery(event.target).parent().addClass("imgok");
+    }
+
+    async function setTmdb(){
+        const element = jQuery(event.target)
+        const response = await fetch('https://api.themoviedb.org/3/person/'+element.data('tmdb')+'?api_key='+tmdb_key)
+        if (response.ok) {
+            const data = await response.json();
+            if (data.profile_path !== null) {
+                element.attr('src', 'https://www.themoviedb.org/t/p/w235_and_h235_face/'+data.profile_path);
+            }
+        } else {
+            console.error('Error fetching person data:', response.status, response.statusText);
+        }
     }
 
     function elementAt(array, index){
@@ -100,7 +113,7 @@
         return ""
     }
 
-    function setAllTimeCharts(offsetContainer){
+    async function setAllTimeCharts(offsetContainer){
         let dataChart = {}
         let generalChart = {
             chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0},
@@ -169,6 +182,7 @@
             if (element['sum'] === 0) { newDict['color'] = "#445566" }
             return newDict;
         });
+        console.log(dataChart)
         generalChart['tooltip'] = {
             formatter: function () {
                 return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 5).toString() + ' films</span>' +
@@ -191,21 +205,12 @@
             Highcharts.chart('diaryYear', generalChart)
     }
 
-    function setVectorMap(){
+    async function setVectorMap(){
         //WORLDMAP
         let worldData = {}
-        data.mw_countries.forEach(item => {
-            worldData[item._id] = item.sum
-            //if(item.sum > 0){}
-            //else{worldData[item._id] = 0}
-        })
-
+        data.mw_countries.forEach(item => {worldData[item._id] = item.sum})
         let worldDataUri = {}
-        data.mw_countries.forEach(item => {
-            worldDataUri[item._id] = getUri(item.name)
-            //if(item.name !== undefined){}
-            //else{worldDataUri[item._id] = ""}
-        })
+        data.mw_countries.forEach(item => {worldDataUri[item._id] = getUri(item.name)})
 
         jsVectorMap({
             selector: '#world-map',
@@ -238,17 +243,19 @@
     }
 
     function init() {
+        document.addEventListener("DOMContentLoaded", function(event) {
         let offsetContainer
-        try{
-            offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
-        } catch{offsetContainer = 0}
-        if (jQuery('#isMobile').is(':visible')) {isMobile = true}
-        if(year === ''){
-            // setAllTimeCharts(offsetContainer)
-        }else{
-            // setYearCharts(offsetContainer)
-        }
-        //setVectorMap()
+            try{
+                offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
+            } catch{offsetContainer = 0}
+            if (jQuery('#isMobile').is(':visible')) {isMobile = true}
+            if(year === ''){
+                setAllTimeCharts(offsetContainer)
+            }else{
+                // setYearCharts(offsetContainer)
+            }
+            setVectorMap()
+        })
     }
 
     function last(inputArray){
@@ -284,7 +291,7 @@
                 <div>
                     <a href="/{ data.username }">All time</a>
                     {#each data['yearsStats'] as y }
-                        <a href="/{ data.username }/{ y }">{ y }{#if y === new Date().getFullYear() }...{/if}</a>
+                        <a href="?username={ data.username }&year={ y }">{ y }{#if y === new Date().getFullYear() }...{/if}</a>
                     {/each}
                 </div>
             </div>
@@ -516,7 +523,7 @@
             <a id="updatebtn" class="clickable seeallbutton updatebutton" href="/#">
                 <span class="material-symbols-rounded icon">sync</span>Update
             </a>
-            <a class="clickable seeallbutton updatebutton collagebutton" href="/{ data.username }/collage" target="_blank">
+            <a class="clickable seeallbutton updatebutton collagebutton" href="?username={ data.username }&collage" target="_blank">
                 <span class="material-symbols-rounded icon">grid_on</span>Last month collage
             </a>
         </div>
@@ -870,7 +877,7 @@
                     {#each getValues(getSlice(data[type[1]+role[3]], ifThenElse(num[0] === '1',0,10), ifThenElse(num[0] === '1',10,20))) as element }
                     <div class="container_people">
                         <a href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element._id }">
-                            <img class="holeperson" src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element._id }"/>
+                            <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element._id }"/>
                         </a>
                         <a class="clickable" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{role[0]}/{element._id}">
                             {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}

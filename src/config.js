@@ -1,4 +1,5 @@
-export const baseUrl = "//worker.statsboxd.eu.org/"
+export const baseUrl = "//worker.statsboxd.top/"
+export const tmdb_key = '03209f50e8253cf416b595048aced2ff'
 //export const baseUrl = 'http://127.0.0.1:8787/'
 export const roles = [['codirector', 'Co-Directors', 'co-director'],
     ['assistantdirector', 'Asst. Directors', 'assistant-director'],
