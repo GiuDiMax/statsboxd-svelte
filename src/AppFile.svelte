@@ -3,13 +3,14 @@
     import SharedPage from "./page.svelte"
     import jszip from "jszip"
     import PapaParse from "papaparse"
-    import { baseUrl } from './config.js';
+    import { baseUrl } from './config.js'
 
     let loading = false
     let data = {}
     let tmpdata = {}
-    let file;
-    let jsonData;
+    let file
+    let jsonData
+    let message = ""
 
     async function getStats(data){
         const resp = await fetch(baseUrl + 'stats',
@@ -29,12 +30,6 @@
     }
 
     onMount(async () => {
-        const localStorageData = localStorage.getItem("stats")
-        if(localStorageData !== null && localStorageData !== "undefined") {
-            console.log("Read Storage Data")
-            data = JSON.parse(localStorageData)
-            return
-        }
         data.message = "Please upload your file"
         const input = document.querySelector('input[type="file"]');
         input.addEventListener('change', async (e) => {
@@ -85,21 +80,16 @@
 
                 const filt = tmpdata['watched'].filter(d => 'r' in d);
 
-                console.log("ok tmpdata")
                 localStorage.setItem(username, JSON.stringify(tmpdata))
                 data = await getStats(tmpdata)
                 data['username'] = username.toLowerCase()
-                if (name !== ''){
-                    data['name'] = name
-                }else{
-                    data['name'] = username
-                }
+                if (name !== ''){data['name'] = name}
+                else{data['name'] = username}
                 data['ru'] = filt.length>50
                 data['update'] = new Date()
                 data['update'] = data['update'].toString().split("T")[0]
-                data.message = undefined
-                localStorage.setItem("stats", JSON.stringify(data))
-                console.log("ok stats")
+                localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
+                window.location.pathname = import.meta.env.BASE_URL + username.toLowerCase()
 
             } catch (error) {
                 console.log(error)
@@ -111,15 +101,11 @@
 
 </script>
 
-<input type="file" hidden={loading || Object.keys(data).length > 1}/>
+<input type="file" hidden={loading}/>
 <main>
     {#if loading}
         <p>Loading</p>
     {:else}
-        {#if data.message !== undefined}
-            <p>{data.message}</p>
-        {:else}
-            <SharedPage data={data} year="" yearnum=0/>
-        {/if}
+        <p>{message}</p>
     {/if}
 </main>

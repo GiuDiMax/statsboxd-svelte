@@ -8,6 +8,11 @@
     import {onMount, createEventDispatcher } from "svelte"
     import jQuery from 'jquery'
     import { useLazyImage as lazyImage } from 'svelte-lazy-image'
+    import {roles} from './config.js'
+    import jsVectorMap from 'jsvectormap'
+    import 'jsvectormap/dist/maps/world.js'
+    import 'jsvectormap/dist/css/jsvectormap.css'
+    let isMobile = false
 
     function clickableFunction(){
         jQuery('.' + jQuery(event.target).attr('data-hide')).addClass('hide')
@@ -42,6 +47,39 @@
         return parseFloat(n)
     }
 
+    function numToStars(num){
+        let result = ""
+        if(num !== null && num !== undefined){
+            result = "★".repeat(parseInt(num))
+        }
+        if (num > parseInt(num)){
+            result = result + "½"
+        }
+        return result
+    }
+
+    function getValues(arr){
+        try {return arr.values()}
+        catch{}
+        return []
+    }
+
+    function getSlice(arr, start, stop){
+        try{
+        if(arr.length >= stop) {
+            return arr.slice(start, stop)
+        }else {
+            return arr.slice(start, arr.length)
+        }}
+        catch{}
+        return arr
+    }
+
+    function ifThenElse(control, istrue, isfalse) {
+        if(control){return istrue}
+        else{return isfalse}
+    }
+
     function replaceSize(src, height=165, width=110){
         try{
             if (src !== null) {
@@ -62,99 +100,155 @@
         return ""
     }
 
-    function init() {
-        if(year === ''){
-            let dataChart = {}
-            let generalChart = {
-                chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0},
-                xAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
-                yAxis: {min: -1, labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
-                legend: {enabled: false},
-                title: {text: null},
-                plotOptions: {column: {pointPadding: 0.2, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
-            }
-
-            // RELEASE YEAR
-            dataChart = data.years.map(element => {
-                const newDict = { 'name': element['_id'], 'y': element['sum'] + 1}
-                if (element['sum'] === 0) { newDict['color'] = "#445566" }
-                return newDict;
-            });
-            generalChart['tooltip'] = {
-                formatter: function () {
-                    return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 1).toString() + ' films</span>' +
-                        '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
-                },
-                shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
-            }
-            generalChart['series'] = [{
-                data: dataChart,
-                label: {enabled: false},
-                color: {
-                    linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
-                    stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
-                },
-                point: {events: {click: function () {
-                    location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
-                }}}
-            }]
-            Highcharts.chart('releaseYear', generalChart)
-
-            // RATING YEAR
-            dataChart = data.years.map(element => {
-                const newDict = { 'name': element['_id'], 'y': (ifNoneThenZero(element['avg']) + 0.1)}
-                if (ifNoneThenZero(element['avg']) === 0) { newDict['color'] = "#445566" }
-                return newDict;
-            });
-            generalChart['tooltip'] = {
-                formatter: function () {
-                    return '<div class="ttYear"><span class="ttTitle">Average ' + parseFloat(this.y - 0.1).toFixed(2).toString() + '</span>' +
-                        '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
-                },
-                shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
-            }
-            generalChart['series'] = [{
-                data: dataChart,
-                label: {enabled: false},
-                color: {
-                    linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
-                    stops: [[0.00, '#ffb860'], [1.00, '#ffe870']]
-                },
-                point: {events: {click: function () {
-                            location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
-                }}}
-            }]
-            Highcharts.chart('ratingYear', generalChart)
-
-            // DIARY YEAR
-            dataChart = data.logsPerYear.map(element => {
-                const newDict = { 'name': element['_id'], 'y': element['sum'] + 5}
-                if (element['sum'] === 0) { newDict['color'] = "#445566" }
-                return newDict;
-            });
-            generalChart['tooltip'] = {
-                formatter: function () {
-                    return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 5).toString() + ' films</span>' +
-                        '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
-                },
-                shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
-            }
-            generalChart['series'] = [{
-                data: dataChart,
-                label: {enabled: false},
-                color: {
-                    linearGradient: [0, 0, document.getElementsByClassName('chart-container')[0].offsetWidth, 0],
-                    stops: [[0.00, '#48FF84'], [1.00, '#06E358']]
-                },
-                point: {events: {click: function () {
-                            location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
-                }}}
-            }]
-            generalChart['plotOptions'] = {column: {pointPadding: 0.05, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
-            Highcharts.chart('diaryYear', generalChart)
-        }else{
-
+    function setAllTimeCharts(offsetContainer){
+        let dataChart = {}
+        let generalChart = {
+            chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0},
+            xAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+            yAxis: {min: -1, labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+            legend: {enabled: false},
+            title: {text: null},
+            plotOptions: {column: {pointPadding: 0.2, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
         }
+
+        // RELEASE YEAR
+        dataChart = data.years.map(element => {
+            const newDict = { 'name': element['_id'], 'y': element['sum'] + 1}
+            if (element['sum'] === 0) { newDict['color'] = "#445566" }
+            return newDict;
+        });
+        generalChart['tooltip'] = {
+            formatter: function () {
+                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 1).toString() + ' films</span>' +
+                    '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
+            },
+            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+        }
+        generalChart['series'] = [{
+            data: dataChart,
+            label: {enabled: false},
+            color: {
+                linearGradient: [0, 0, offsetContainer, 0],
+                stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
+            },
+            point: {events: {click: function () {
+                        location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
+                    }}}
+        }]
+        Highcharts.chart('releaseYear', generalChart)
+
+        // RATING YEAR
+        dataChart = data.years.map(element => {
+            const newDict = { 'name': element['_id'], 'y': (ifNoneThenZero(element['avg']) + 0.1)}
+            if (ifNoneThenZero(element['avg']) === 0) { newDict['color'] = "#445566" }
+            return newDict;
+        });
+        generalChart['tooltip'] = {
+            formatter: function () {
+                return '<div class="ttYear"><span class="ttTitle">Average ' + parseFloat(this.y - 0.1).toFixed(2).toString() + '</span>' +
+                    '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
+            },
+            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+        }
+        generalChart['series'] = [{
+            data: dataChart,
+            label: {enabled: false},
+            color: {
+                linearGradient: [0, 0, offsetContainer, 0],
+                stops: [[0.00, '#ffb860'], [1.00, '#ffe870']]
+            },
+            point: {events: {click: function () {
+                        location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
+                    }}}
+        }]
+        Highcharts.chart('ratingYear', generalChart)
+
+        // DIARY YEAR
+        dataChart = data.logsPerYear.map(element => {
+            const newDict = { 'name': element['_id'], 'y': element['sum'] + 5}
+            if (element['sum'] === 0) { newDict['color'] = "#445566" }
+            return newDict;
+        });
+        generalChart['tooltip'] = {
+            formatter: function () {
+                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 5).toString() + ' films</span>' +
+                    '<span class="ttSubtitle">Year ' + this.points[0].key + '</span></div>'
+            },
+            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+        }
+        generalChart['series'] = [{
+            data: dataChart,
+            label: {enabled: false},
+            color: {
+                linearGradient: [0, 0, offsetContainer, 0],
+                stops: [[0.00, '#48FF84'], [1.00, '#06E358']]
+            },
+            point: {events: {click: function () {
+                        location.href = lbdurl+data.username+'/films/year/' + this.options.name + "/"
+                    }}}
+        }]
+        generalChart['plotOptions'] = {column: {pointPadding: 0.05, borderWidth: 0, borderRadius: 3, groupPadding: 0,}},
+            Highcharts.chart('diaryYear', generalChart)
+    }
+
+    function setVectorMap(){
+        //WORLDMAP
+        let worldData = {}
+        data.mw_countries.forEach(item => {
+            worldData[item._id] = item.sum
+            //if(item.sum > 0){}
+            //else{worldData[item._id] = 0}
+        })
+
+        let worldDataUri = {}
+        data.mw_countries.forEach(item => {
+            worldDataUri[item._id] = getUri(item.name)
+            //if(item.name !== undefined){}
+            //else{worldDataUri[item._id] = ""}
+        })
+
+        jsVectorMap({
+            selector: '#world-map',
+            map: 'world',
+            //series: {regions: [{values: worldData}]},
+            visualizeData: {values: worldData, scale: ['#007834', '#00e054']},
+            regionStyle: {initial: {fill: '#303c44'}, hover: {fill: '#40bcf4'}},
+            showTooltip: true,
+            onRegionTooltipShow: function (event, tooltip, code) {
+                let value = 0
+                if (typeof worldData[code] !== 'undefined') {value = worldData[code]}
+                tooltip.text(
+                    '<div class="box"><span class="ttTitle">'+tooltip.text()+'</span>'+
+                    '<span class="ttSubtitle">Films watched: '+value+'</span>' +
+                    '</div><div class="ttPointer"></div>', true)
+            },
+            onRegionClick: function (e, el, code) {if (!isMobile) {clickMap(el)}},
+            onMarkerClick: function (e, code) {alert(code)}
+        })
+
+        function clickMap(el) {
+            if (typeof worldDataUri[el] !== 'undefined') {
+                if(year === ''){
+                    window.open(lbdurl+data.username+'/films/country/' + worldDataUri[el] + '/', '_blank');
+                }else{
+                    window.open(lbdurl+data.username+'/films/diary/for/'+yearnum+'/country/' + worldDataUri[el] + '/by/rating', '_blank');
+                }
+            }
+        }
+    }
+
+    function init() {
+        let offsetContainer
+        try{
+            offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
+        } catch{offsetContainer = 0}
+        if (jQuery('#isMobile').is(':visible')) {isMobile = true}
+        if(year === ''){
+            // setAllTimeCharts(offsetContainer)
+        }else{
+            // setYearCharts(offsetContainer)
+        }
+        //setVectorMap()
     }
 
     function last(inputArray){
@@ -633,6 +727,7 @@
         </div>
         {/if}
     </section>
+    <!-- ALL TIME SECTION -->
     {#if year===''}
         <section class="sectionStats">
             <div class="sepline">
@@ -683,5 +778,160 @@
                 {/each}
             </div>
         </section>
+        {#if arrayLength(data['mostWatched'])>0 }
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Most Watched</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast2">
+                {#each Array.from({ length: arrayLength(data['mostWatched']) }, (_, i) => i) as i }
+                <div class="singleFilm">
+                    <a class="poster" href="{ lbdurl }film/{  elementAt(data['mostWatched'],i)._id }">
+                        <div class="containertextimg"><span>{ elementAt(data['mostWatched'],i)._id.replace("-", " ") }</span></div>
+                        <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                             data-src="{ replaceSize(elementAt(data['mostWatched'],i).img, 165, 110) }"
+                             alt="{ elementAt(data['mostWatched'],i)._id }"/>
+                    </a>
+                    <div>
+                        <span class="sottotitolo bigsotto">{ elementAt(data['mostWatched'],i).watches } times</span>
+                    </div>
+                </div>
+                {/each}
+            </div>
+            <div class="noflex">
+                <a class="clickable seeallbutton" href="{ lbdurl }{ data.username }/films/diary/by/diary-count/">see in diary</a>
+            </div>
+        </section>
+        {/if}
+        {#if data.ru}
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Rated higher then average</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast">
+                {#each Array.from({ length: arrayLength(data['highers']) }, (_, i) => i) as i }
+                <div class="singleFilm">
+                    <a class="poster" href="{ lbdurl }film/{ elementAt(data['highers'],i)._id }">
+                        <div class="containertextimg"><span>{ elementAt(data['highers'],i)._id.replace("-", " ") }</span></div>
+                        <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg'"
+                             data-src="{ replaceSize(elementAt(data['highers'],i).img, 165, 110) }" alt="{ elementAt(data['highers'],i)._id }"/>
+                    </a>
+                    <div>
+                        <span class="sottotitolo stelline">{ numToStars(elementAt(data['highers'],i).r) }</span>
+                        <span class="sottotitolo">vs { elementAt(data['highers'],i).avg }</span>
+                    </div>
+                </div>
+                {/each}
+            </div>
+        </section>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Rated lower then average</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast">
+                {#each Array.from({ length: arrayLength(data['lowers']) }, (_, i) => i) as i }
+                <div class="singleFilm">
+                    <a class="poster" href="{ lbdurl }film/{ elementAt(data['lowers'],i)._id }">
+                        <div class="containertextimg"><span>{ elementAt(data['lowers'],i)._id.replace("-", " ") }</span></div>
+                        <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                             data-src="{ replaceSize(elementAt(data['lowers'],i).img, 165, 110) }" alt="{ elementAt(data['lowers'],i)._id }"/>
+                    </a>
+                    <div>
+                        <span class="sottotitolo stelline">{ numToStars(elementAt(data['lowers'],i).r) }</span>
+                        <span class="sottotitolo">vs { elementAt(data['lowers'],i).avg }</span>
+                    </div>
+                </div>
+                {/each}
+            </div>
+        </section>
+        {/if}
+
+    <!-- DIARY SECTION -->
+    {:else}
+
     {/if}
+
+    {#each [['actor', 'Stars', 'a', 'actor'], ['director', 'Directors', 'd', 'director']] as role}
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>{ role[1] }</span>
+            <div class="line"></div>
+            <span class="clickable active" on:click={clickableFunction} data-show="{ role[0] }sWatch" data-hide="{ role[0] }sbis">Most Watched</span>
+            {#if data.ru }<span class="clickable" on:click={clickableFunction} data-show="{ role[0] }sRat" data-hide="{ role[0] }sbis">Highest Rated</span>{/if}
+        </div>
+        <div class="{ role[0] }s2">
+            {#each [['Watch', 'mw_', 'w', ''], ['Rat', 'tr_', 'r', 'hide']] as type}
+            <section id="{ role[0] }s{ type[0] }" class="{ role[0] }sbis { type[3] }">
+                {#each [['1', ''], ['2', 'hide']] as num}
+                <div id="{role[0]}s{type[0]}{num[0]}" class="{role[0]}s people {num[1]}">
+                    {#each getValues(getSlice(data[type[1]+role[3]], ifThenElse(num[0] === '1',0,10), ifThenElse(num[0] === '1',10,20))) as element }
+                    <div class="container_people">
+                        <a href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element._id }">
+                            <img class="holeperson" src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element._id }"/>
+                        </a>
+                        <a class="clickable" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{role[0]}/{element._id}">
+                            {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
+                        </a>
+                        {#if type[2]==='w' }
+                        <a class="sottotitolo" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element._id }">
+                            { element.sum } films</a>
+                        {:else}
+                        <span class="sottotitolo">★ { element.avg }</span>
+                        {/if}
+                    </div>
+                    {/each}
+                </div>
+                {/each}
+                <div class="noflex">
+                    <a class="clickable { role[2] }{ type[2] }2 seeallbutton" on:click={clickableFunction} data-show="{ role[0] }s{ type[0] }2" data-hide="{ role[2] }{ type[2] }2">see more</a>
+                </div>
+            </section>
+            {/each}
+        </div>
+    </section>
+    {/each}
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>Crew & Studios</span>
+            <div class="line"></div>
+            <span class="clickable active" on:click={clickableFunction} data-show="crewmw" data-hide="crewbis">Most Watched</span>
+            {#if data.ru }<span class="clickable" on:click={clickableFunction} data-show="crewtr" data-hide="crewbis">Highest Rated</span>{/if}
+        </div>
+        {#each ['mw', 'tr'] as type}
+        <section id="crew{type}" class="crewbis {type === 'tr' ? 'hide' : ''}">
+            {#each getValues(roles) as role}
+            <div class="role">
+                <span class="titlerole">{role[1]}</span>
+                {#each getValues(getSlice(data[type+'_'+role[0]],0,20)) as element,i }
+                {#if element.hasOwnProperty('name') }
+                <div class="{ type }limit {i > 5 ? 'hide' : ''}">
+                    <a class="clickable"
+                       href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[2] }/{ element._id }"
+                    >
+                        {#if element.hasOwnProperty('name') }{element.name}{:else}{element._id}{/if}
+                    </a>
+                    <span class="sottotitolo">
+                        {#if type === 'mw' }{element.sum}{:else}{element.avg}{/if}
+                    </span>
+                </div>
+                {/if}
+                {/each}
+            </div>
+            {/each}
+            <div class="noflex">
+                <a class="clickable {type}btn seeallbutton" on:click={clickableFunction} data-class-show="{type}limit" data-hide="{type}btn">see more</a>
+            </div>
+        </section>
+        {/each}
+    </section>
+    {#if year !== ''}
+        //HIGH AND LOWS
+    {/if}
+    <section class="wMap noselect">
+        <span class="wmTitle">World Map</span>
+        <div class="worldmap noselect" id="world-map"></div>
+    </section>
 </div>

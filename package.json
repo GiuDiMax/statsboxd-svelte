@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@sveltejs/kit": "^2.5.4",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "svelte": "^4.2.12",
     "vite": "^5.1.6"
@@ -18,7 +19,10 @@
     "highcharts": "^11.4.0",
     "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
+    "jsvectormap": "^1.5.3",
     "jszip": "^3.10.1",
+    "jvectormap": "^2.0.4",
+    "jvectormap-next": "^3.1.1",
     "node-fetch": "^3.3.2",
     "papaparse": "^5.4.1",
     "realm-web": "^2.0.0",

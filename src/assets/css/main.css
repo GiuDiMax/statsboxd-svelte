@@ -1166,6 +1166,47 @@ span{
     border-top: 10px solid #445566;
 }
 
+.jvm-tooltip{
+    background-color: transparent !important;
+    height: auto;
+    width: auto;
+    box-shadow: none !important;
+}
+
+.jvm-tooltip .box{
+    border-radius: 0.2em;
+    position: relative;
+    left: 5em;
+    background-color: #445566;
+    color: white;
+    text-align: center;
+    border:0 !important;
+    width: 10em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.jvm-tooltip .ttTitle{
+    font-family: Graphik-Semibold-Web, sans-serif;
+    font-size: 14px;
+    color: #ccddee;
+    line-height: 22px !important;
+}
+
+.jvm-tooltip .ttSubtitle{
+    font-family: Graphik-Regular-Web-Web, sans-serif;
+    font-size: 12px;
+    color: #99aabb;
+    line-height: 22px !important;
+}
+
+.jvm-tooltip .ttPointer {
+    position: relative;
+    left: 9em;
+}
+
 .decade{
     display:flex;
     flex-direction: row;
