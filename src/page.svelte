@@ -207,6 +207,10 @@
             Highcharts.chart('diaryYear', generalChart)
     }
 
+    async function setYearCharts(offsetContainer){
+
+    }
+
     async function setVectorMap(){
         //WORLDMAP
         let worldData = {}
@@ -254,7 +258,7 @@
             if(year === ''){
                 setAllTimeCharts(offsetContainer)
             }else{
-                // setYearCharts(offsetContainer)
+                setYearCharts(offsetContainer)
             }
             setVectorMap()
         })
@@ -282,7 +286,7 @@
 
 <!--{JSON.stringify(data._id, null, 2)}-->
 <div class="content" id="content" >
-    {#if 'years' in data }
+    {#if data.hasOwnProperty('years') }
     <div class="popupYearContainer {year!=='' ? 'popupYear2Container' : ''} " on:mouseleave={()=>{showYears = false}}>
         <a href="#" class="popupButton" data-show="popupYear" on:click={()=>{showYears = !showYears}}>
             <div class="arrow-down"></div>
@@ -567,19 +571,19 @@
             {/if}
             {:else}
             <div>
-                <span class="number">{ data[year+'stats'].total }</span>
+                <span class="number">{ data.total }</span>
                 <span class="text">Diary Entries</span>
             </div>
             <div>
-                <span class="number">{ data[year+'stats'].likes }</span>
+                <span class="number">{ data.likes }</span>
                 <span class="text">Films liked</span>
             </div>
             <div>
-                <span class="number">{ data[year+'stats'].reviews }</span>
+                <span class="number">{ data.reviews }</span>
                 <span class="text">Reviews</span>
             </div>
             <div>
-                <span class="number">{ data[year+'stats'].totalRuntime }</span>
+                <span class="number">{ data.totalRuntime }</span>
                 <span class="text">Hours</span>
             </div>
             {/if}
@@ -614,7 +618,7 @@
         </div>
         {/if}
     </section>
-    {#if data.ru }
+    {#if data.ru && year === ''}
     <section class="sectionStats">
         <div class="sepline">
             <span>Highest rated decades</span>
@@ -652,18 +656,19 @@
         <div id="MWGCL" class="attributes-chart threeColumns secGCL">
             {#each [['genres', 'genre', 'rgb(0, 224, 84)'], ['countries', 'country', 'rgb(64, 188, 244)'], ['originallanguage','language', 'rgb(255, 128, 0)']] as type}
                 <div class="labels2">
-                {#each Array.from({ length: 10 }, (_, i) => i) as i }
+                <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
+                {#each getValues(getSlice(data[('mw_'+type[0])], 0, 10)) as element}
                 <div>
                     <a class="clickable label1"
-                       href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{type[1]}/{getUri( elementAt(data[('mw_'+type[0])],i)['name'] )}">
-                        { elementAt(data[('mw_'+type[0])],i)['name'] }
+                       href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{type[1]}/{getUri( element['name'] )}">
+                        { element['name'] }
                     </a>
                     <div>
                         <div class="genresFilms"
-                             style="width: {  elementAt(data[('mw_'+type[0])],i)['sum'] *100/ elementAt(data[('mw_'+type[0])],0)['sum']  }%;">
-                            <span>{ elementAt(data[('mw_'+type[0])],i)['sum'] } films</span></div>
+                             style="width: {element['sum'] *100/ data[('mw_'+type[0])][0]['sum'] }%;">
+                            <span>{ element['sum'] } films</span></div>
                         <div class="progressBarWithVal"
-                             style="width:{ elementAt(data[('mw_'+type[0])],i)['sum']*100/ elementAt(data[('mw_'+type[0])],0)['sum']  }%; background-color:{ type[2] };"></div>
+                             style="width:{element['sum']*100/ data[('mw_'+type[0])][0]['sum'] }%; background-color:{ type[2] };"></div>
                     </div>
                 </div>
                 {/each}
@@ -674,18 +679,18 @@
         <div id="HRGCL" class="attributes-chart threeColumns secGCL hide">
             {#each [['genres', 'genre', 'rgb(72, 255, 132)'], ['countries', 'country', 'rgb(116, 240, 255)'], ['originallanguage','language', 'rgb(255, 184, 96)']] as type}
                 <div class="labels2">
-                    {#each Array.from({ length: 10 }, (_, i) => i) as i }
+                    {#each getValues(getSlice(data[('tr_'+type[0])], 0, 10)) as element}
                         <div>
                             <a class="clickable label1"
-                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri( elementAt(data[('tr_'+type[0])],i)['name'] )}">
-                                { elementAt(data[('tr_'+type[0])],i)['name'] }
+                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri(element['name'])}">
+                                { element['name'] }
                             </a>
                             <div>
                                 <div class="genresFilms"
-                                     style="width: {  elementAt(data[('tr_'+type[0])],i)['avg'] *100/ elementAt(data[('tr_'+type[0])],0)['avg']  }%;">
-                                    <span>Average: { elementAt(data[('tr_'+type[0])],i)['avg'] }</span></div>
+                                     style="width: {element['avg'] *100/ data[('tr_'+type[0])][0]['avg']  }%;">
+                                    <span>Average: {element['avg'] }</span></div>
                                 <div class="progressBarWithVal"
-                                     style="width:{ elementAt(data[('tr_'+type[0])],i)['avg']*100/ elementAt(data[('tr_'+type[0])],0)['avg']  }%; background-color:{ type[2] };"></div>
+                                     style="width:{element['avg']*100/ data[('tr_'+type[0])][0]['avg'] }%; background-color:{ type[2] };"></div>
                             </div>
                         </div>
                     {/each}
@@ -841,16 +846,17 @@
                 <div class="line"></div>
             </div>
             <div class="filmList hideLast">
-                {#each Array.from({ length: arrayLength(data['lowers']) }, (_, i) => i) as i }
+                <!--{#each Array.from({ length: arrayLength(data['lowers']) }, (_, i) => i) as i }-->
+                {#each getValues(data['lowers']) as element}
                 <div class="singleFilm">
-                    <a class="poster" href="{ lbdurl }film/{ elementAt(data['lowers'],i)._id }">
-                        <div class="containertextimg"><span>{ elementAt(data['lowers'],i)._id.replace("-", " ") }</span></div>
+                    <a class="poster" href="{ lbdurl }film/{ element._id }">
+                        <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
                         <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
-                             data-src="{ replaceSize(elementAt(data['lowers'],i).img, 165, 110) }" alt="{ elementAt(data['lowers'],i)._id }"/>
+                             data-src="{ replaceSize(element.img, 165, 110) }" alt="{ element._id }"/>
                     </a>
                     <div>
-                        <span class="sottotitolo stelline">{ numToStars(elementAt(data['lowers'],i).r) }</span>
-                        <span class="sottotitolo">vs { elementAt(data['lowers'],i).avg }</span>
+                        <span class="sottotitolo stelline">{ numToStars(element.r) }</span>
+                        <span class="sottotitolo">vs { element.avg }</span>
                     </div>
                 </div>
                 {/each}
@@ -902,6 +908,7 @@
         </div>
     </section>
     {/each}
+
     <section class="sectionStats">
         <div class="sepline">
             <span>Crew & Studios</span>

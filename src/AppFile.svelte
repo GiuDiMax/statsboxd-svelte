@@ -14,6 +14,8 @@
     let jsonData
     let message = ""
 
+
+
     //let files = {accepted: [], rejected: []}
     let selectedFile = undefined
 
@@ -21,7 +23,7 @@
         //const { acceptedFiles, fileRejections } = e.detail;
         //files.accepted = [...files.accepted, ...acceptedFiles];
         //files.rejected = [...files.rejected, ...fileRejections];
-        console.log(e)
+        //console.log(e)
         selectedFile = e.detail.acceptedFiles[0]
     }
 
@@ -34,6 +36,7 @@
                 body: JSON.stringify(data)
             },
         )
+        //console.log(resp)
         return await resp.json()
     }
 
@@ -90,19 +93,29 @@
 
             const filt = tmpdata['watched'].filter(d => 'r' in d);
 
+            tmpdata['username'] = username.toLowerCase()
+            if (name !== ''){tmpdata['name'] = name}
+            else{tmpdata['name'] = username}
+            tmpdata['ru'] = filt.length>50
+            tmpdata['update'] = new Date()
+            tmpdata['update'] = tmpdata['update'].toString().split("T")[0]
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
             data = await getStats(tmpdata)
-            data['username'] = username.toLowerCase()
-            if (name !== ''){data['name'] = name}
-            else{data['name'] = username}
-            data['ru'] = filt.length>50
-            data['update'] = new Date()
-            data['update'] = data['update'].toString().split("T")[0]
+            //console.log(data)
+            data['username'] = tmpdata['username']
+            data['name'] = tmpdata['name']
+            data['ru'] = tmpdata['ru']
+            data['update'] = tmpdata['update']
+            tmpdata['years'] = data['years']
             message = ""
+            localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
             localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
-            window.location.pathname = import.meta.env.BASE_URL + '/?username=' + username.toLowerCase()
+            localStorage.setItem("latest", username.toLowerCase())
+            //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + username.toLowerCase()
+            window.location.search = '?username=' + username.toLowerCase();
 
         } catch (error) {
+            console.log(error)
             selectedFile = undefined
             message = "There is an error in the file you chose, make sure you have uploaded a file in .zip format. <br/>" +
                 "If the problem continues contact me on <a href='https://t.me/giudimax' target='_blank'>telegram" +
@@ -111,9 +124,12 @@
        loading = false
     }
 
-
     onMount(async () => {
-
+        const localStorageData = localStorage.getItem("latest")
+        if(localStorageData !== null && localStorageData !== "undefined") {
+            //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + localStorageData.toLowerCase()
+            window.location.search = '?username=' + localStorageData.toLowerCase();
+        }
     })
 
 </script>
