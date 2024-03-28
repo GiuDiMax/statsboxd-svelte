@@ -100,7 +100,7 @@
             data['update'] = data['update'].toString().split("T")[0]
             message = ""
             localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
-            window.location.pathname = import.meta.env.BASE_URL + '?username=' + username.toLowerCase()
+            window.location.pathname = import.meta.env.BASE_URL + '/?username=' + username.toLowerCase()
 
         } catch (error) {
             selectedFile = undefined

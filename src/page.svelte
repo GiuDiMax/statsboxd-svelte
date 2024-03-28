@@ -30,6 +30,7 @@
 
     async function setTmdb(){
         const element = jQuery(event.target)
+        if (element.data('tmdb') === undefined || element.data('isLoaded')){return}
         const response = await fetch('https://api.themoviedb.org/3/person/'+element.data('tmdb')+'?api_key='+tmdb_key)
         if (response.ok) {
             const data = await response.json();
@@ -39,6 +40,7 @@
         } else {
             console.error('Error fetching person data:', response.status, response.statusText);
         }
+        element.data('isLoaded', true)
     }
 
     function elementAt(array, index){
@@ -182,7 +184,7 @@
             if (element['sum'] === 0) { newDict['color'] = "#445566" }
             return newDict;
         });
-        console.log(dataChart)
+        //console.log(dataChart)
         generalChart['tooltip'] = {
             formatter: function () {
                 return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 5).toString() + ' films</span>' +
@@ -876,8 +878,8 @@
                 <div id="{role[0]}s{type[0]}{num[0]}" class="{role[0]}s people {num[1]}">
                     {#each getValues(getSlice(data[type[1]+role[3]], ifThenElse(num[0] === '1',0,10), ifThenElse(num[0] === '1',10,20))) as element }
                     <div class="container_people">
-                        <a href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element._id }">
-                            <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element._id }"/>
+                        <a href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element.uri }">
+                            <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
                         </a>
                         <a class="clickable" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{role[0]}/{element._id}">
                             {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
