@@ -5,6 +5,7 @@ import AppFile from './AppFile.svelte'
 import './assets/css/font.css'
 import './assets/css/main.css'
 import './assets/css/mobile.css'
+import './assets/css/other.css'
 
 const appBaseUrl = ''
 //const pathSplit = window.location.href.split(import.meta.env.BASE_URL)[1].split("/")

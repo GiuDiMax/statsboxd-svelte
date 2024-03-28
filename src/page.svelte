@@ -244,7 +244,7 @@
 
     function init() {
         document.addEventListener("DOMContentLoaded", function(event) {
-        let offsetContainer
+            let offsetContainer
             try{
                 offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
             } catch{offsetContainer = 0}

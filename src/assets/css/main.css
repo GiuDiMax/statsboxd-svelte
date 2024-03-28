@@ -23,6 +23,7 @@ body{
     margin:0;
     background: #14181c url(https://s.ltrbxd.com/static/img/content-bg.0d9a0f0f.png) 0 -1px repeat-x;
     /*background-image: linear-gradient(180deg,#14181c 0,#14181c 250px,#2c3440 251px);*/
+    font-family: Graphik-Regular-Web, sans-serif;
 }
 
 .bgblackwrapped{

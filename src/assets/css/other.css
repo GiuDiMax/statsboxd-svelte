@@ -1,0 +1,67 @@
+.fileUploadContainer{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 80vh;
+}
+
+.fileUploadContainer p{
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5em;
+}
+
+.fileUploadContainer .logo{
+    max-width: 200px;
+    margin-bottom: 1em;
+}
+
+.fileUploadContainer p{
+    color: white;
+    text-align: center;
+    line-height: 1.5em;
+}
+
+.fileUploadContainer .message{
+    color: lightcoral;
+}
+
+.fileUploadContainer .message a, .fileUploadContainer a{
+    color: #40bcf4;
+}
+
+.fileUpload{
+    max-width: 800px;
+    max-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.fileUpload p{
+    font-family: Graphik-Regular-Web, sans-serif;
+    color: black;
+}
+
+.confirmationBox{
+    text-align: center;
+}
+
+.confirmationBox .high{
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.confirmationBox .icon span{
+    font-size: 50px;
+}
+
+.confirmationBox .icon span:hover{
+    color: #40bcf4;
+}
