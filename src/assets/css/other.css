@@ -57,6 +57,7 @@
 .confirmationBox .high{
     font-weight: bold;
     font-size: 1.5em;
+    margin-bottom: 1em;
 }
 
 .confirmationBox .icon span{
@@ -80,6 +81,22 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.confirmationBox .btn{
+    font-family: Graphik-Regular-Web, sans-serif;
+    color: white;
+    background-color: #445566;
+    border-radius: 0.5em;
+    font-size: 1.2em;
+    padding: 0.5em 1em;
+    box-shadow: none;
+    text-decoration: none;
+}
+
+.confirmationBox .btn:hover{
+    color: #283038;
+    background-color: #646d77;
 }
 
 .loader2 {

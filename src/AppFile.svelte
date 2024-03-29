@@ -99,6 +99,7 @@
             tmpdata['update'] = new Date()
             tmpdata['update'] = tmpdata['update'].toString().split("T")[0]
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
+            //console.log(JSON.stringify(tmpdata))
             data = await getStats(tmpdata)
             //console.log(data)
             data['username'] = tmpdata['username']
@@ -144,13 +145,12 @@
         <div class="confirmationBox">
             <p>Selected File:</p>
             <p class="high">{selectedFile.name}</p>
-            <p>Click the button below to confirm</p>
-            <a on:click={setFile} class="icon" href="#"><span class="material-symbols-outlined">check_circle</span></a>
+            <a type="button" class="btn" on:click={setFile} href="#">Click here to confirm<a/>
         </div>
     {:else}
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
-            (<a href="https://letterboxd.com/data/export/">or click here</a>) and upload the zip file.<br />
+            (<a href="https://letterboxd.com/data/export/" target="_blank">or click here</a>) and upload the zip file.<br />
             If you are a supporter user you can access the old version at <a href="//legacy.statsboxd.top">legacy.statsboxd.top</a>
         </p>
         {#if message !== ''}<p class="message">{@html message}</p>{/if}
