@@ -302,7 +302,7 @@
                 location.href = lbdurl + data.username+'/films/diary/for/'+yearnum+'/rated/' + String(parseInt(this.options.name) / 2) + "/";
             }}}
         }]
-        //Highcharts.chart('ratingSpread', generalChart)
+        Highcharts.chart('ratingSpread', generalChart)
 
         //WATCHED WEEK
         generalChart.chart.height = undefined
@@ -359,6 +359,44 @@
         }]
         Highcharts.chart('watchedDayWeek', generalChart)
 
+        // PIES
+        const pies = ['currentYear', 'rewatch', 'reviews']
+        pies.forEach(async (type) => {
+            if (type === 'rewatch'){
+                data[type] = data.total - data[type]
+            }
+            dataChart = [
+                {name: '', y: data[type]/data.total, color: '#00e054'},
+                {name: '', y: (data.total - data[type])/data.total, color: '#456'}
+            ]
+            Highcharts.chart(type + 'pie', {
+                chart: {type: 'pie', backgroundColor: 'transparent', margin: 0, border: 0},
+                xAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+                legend: {enabled: false},
+                title: {text: null},
+                yAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+                tooltip: {
+                    formatter: function () {
+                        return '<div class="ttYear"><span class="ttPie">' + (this.y * 100).toFixed(1).toString() + '% <span class="gray">(' + parseInt(this.y * data.total).toString() + ' of '+data.total+')</span></span></div>'
+                    },
+                    shared: true,
+                    useHTML: true,
+                    shape: 'square',
+                    borderWidth: 0,
+                    shadow: false,
+                    backgroundColor: null,
+                },
+                label: {enabled: false},
+                plotOptions: {pie: {size: 150, borderWidth: 0, dataLabels: {connectorWidth: 0}}},
+                series: [{
+                    data: dataChart,
+                    states: {
+                        hover: {halo: {size: 0}, animation: {duration: 0}},
+                        inactive: {enabled: false, opacity: 1},
+                    },
+                }]
+            })
+        })
     }
 
     async function setVectorMap(){
@@ -885,91 +923,90 @@
                 </div>
             </div>
         </section>
-                <section class="sectionStats">
-                    <div class="sepline">
-                        <span>Milestones</span>
-                        <div class="line"></div>
-                    </div>
-                    <div class="msy">
-                        <div class="msx msx1">
-                            <span>First Film</span>
-                            <div class="singleFilm">
-                                <a class="poster" href="{lbdurl}{data.username}/film/{data.first._id}">
-                                    <div class="containertextimg"><span>{data.first._id.replace("-", " ")}</span></div>
-                                    <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
-                                         data-src="{replaceSize(data.first.poster, 165, 110)}"
-                                         alt="{data.first._id}"/>
-                                </a>
-                                <div>
-                                    <span class="sottotitolo bigsotto">{formatDate1(data.first.date)}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {#if data.milestones.length > 0 }
-                        <div class="msx msx2">
-                            <span>Diary Milestones</span>
-                            <div class="filmList mw2">
-                                {#each getValues(data.milestones) as element, index}
-                                <div class="singleFilm">
-                                    <a class="poster"
-                                       href="{lbdurl}{data.username}/film/{element._id}/activity">
-                                        <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
-                                        <img use:lazyImage on:load={handleImageLoad} class="lazy"
-                                             src="images/poster.jpg"
-                                             data-src="{replaceSize(element.poster, 165, 110)}"
-                                             alt="{element._id}"/>
-                                    </a>
-                                    <div>
-                                        <span class="sottotitolo bigsotto">{(index+1)*50}th
-                                            <span class="sottotitolo_milestones hideMobile">· {formatDate1(element.date)}</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                {/each}
-                            </div>
-                        </div>
-                        {/if}
-                        <div class="msx msx1">
-                            <span>Last Film</span>
-                            <div class="singleFilm">
-                                <a class="poster" href="{lbdurl}{data.username}/film/{data.last._id}">
-                                    <div class="containertextimg"><span>{data.last._id.replace("-", " ")}</span></div>
-                                    <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
-                                         data-src="{replaceSize(data.last.poster, 165, 110)}"
-                                         alt="{data.last._id}"/>
-                                </a>
-                                <div>
-                                    <span class="sottotitolo bigsotto">{formatDate1(data.last.date)}</span>
-                                </div>
-                            </div>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Milestones</span>
+                <div class="line"></div>
+            </div>
+            <div class="msy">
+                <div class="msx msx1">
+                    <span>First Film</span>
+                    <div class="singleFilm">
+                        <a class="poster" href="{lbdurl}{data.username}/film/{data.first._id}">
+                            <div class="containertextimg"><span>{data.first._id.replace("-", " ")}</span></div>
+                            <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                                 data-src="{replaceSize(data.first.poster, 165, 110)}"
+                                 alt="{data.first._id}"/>
+                        </a>
+                        <div>
+                            <span class="sottotitolo bigsotto">{formatDate1(data.first.date)}</span>
                         </div>
                     </div>
-        <!--            {% if user[year+'stats'].mostWatched|length > 0 %}-->
-        <!--            <div class="msy">-->
-        <!--                <div class="msx msxfull">-->
-        <!--                    <span>Most Watched</span>-->
-        <!--                    <div class="filmList mw2">-->
-        <!--                        {% for element in user[year+'stats'].mostWatched %}-->
-        <!--                        <div class="singleFilm">-->
-        <!--                            <a class="poster"-->
-        <!--                               href="{{ lbdurl }}{{ user.username }}/film/{{ element.uri }}/activity">-->
-        <!--                                <div class="containertextimg"><span>{{ element.uri.replace("-", " ") }}</span></div>-->
-        <!--                                <img class="lazy"-->
-        <!--                                     src="{{ url_for('static', filename='images/poster.jpg') }}"-->
-        <!--                                     data-src="{{ replaceSize(element.poster, 165, 110) }}"-->
-        <!--                                     alt="{{ element.uri }}"/>-->
-        <!--                            </a>-->
-        <!--                            <div>-->
-        <!--                                <span class="sottotitolo bigsotto">{{ element.sum }} times</span>-->
-        <!--                            </div>-->
-        <!--                        </div>-->
-        <!--                        {% endfor %}-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            {% endif %}-->
-                </section>
-
+                </div>
+                {#if data.milestones.length > 0 }
+                <div class="msx msx2">
+                    <span>Diary Milestones</span>
+                    <div class="filmList mw2">
+                        {#each getValues(data.milestones) as element, index}
+                        <div class="singleFilm">
+                            <a class="poster"
+                               href="{lbdurl}{data.username}/film/{element._id}/activity">
+                                <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
+                                <img use:lazyImage on:load={handleImageLoad} class="lazy"
+                                     src="images/poster.jpg"
+                                     data-src="{replaceSize(element.poster, 165, 110)}"
+                                     alt="{element._id}"/>
+                            </a>
+                            <div>
+                                <span class="sottotitolo bigsotto">{(index+1)*50}th
+                                    <span class="sottotitolo_milestones hideMobile">· {formatDate1(element.date)}</span>
+                                </span>
+                            </div>
+                        </div>
+                        {/each}
+                    </div>
+                </div>
+                {/if}
+                <div class="msx msx1">
+                    <span>Last Film</span>
+                    <div class="singleFilm">
+                        <a class="poster" href="{lbdurl}{data.username}/film/{data.last._id}">
+                            <div class="containertextimg"><span>{data.last._id.replace("-", " ")}</span></div>
+                            <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                                 data-src="{replaceSize(data.last.poster, 165, 110)}"
+                                 alt="{data.last._id}"/>
+                        </a>
+                        <div>
+                            <span class="sottotitolo bigsotto">{formatDate1(data.last.date)}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {#if data.mostWatched.length > 0}
+            <div class="msy">
+                <div class="msx msxfull">
+                    <span>Most Watched</span>
+                    <div class="filmList mw2">
+                        {#each getValues(data.mostWatched) as element}
+                        <div class="singleFilm">
+                            <a class="poster"
+                               href="{lbdurl}{data.username}/film/{element.uri}/activity">
+                                <div class="containertextimg"><span>{element.uri.replace("-", " ")}</span></div>
+                                <img class="lazy" use:lazyImage on:load={handleImageLoad}
+                                     src="images/poster.jpg"
+                                     data-src="{replaceSize(element.poster, 165, 110)}"
+                                     alt="{element.uri}"/>
+                            </a>
+                            <div>
+                                <span class="sottotitolo bigsotto">{element.sum} times</span>
+                            </div>
+                        </div>
+                        {/each}
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </section>
     {/if}
     <section class="sectionStats">
         <div class="sepline">
@@ -1194,6 +1231,45 @@
     <!-- DIARY SECTION -->
     {:else}
 
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Breakdown</span>
+                <div class="line"></div>
+            </div>
+            <div class="breakdown">
+                <div class="piecharts">
+                    <div class="piechart">
+                        <div class="legend">
+                            <span class="green">{yearnum} Releases</span>
+                            <span class="">Older</span>
+                        </div>
+                        <div id="currentYearpie" class="piech2"></div>
+                    </div>
+                    <div class="piechart">
+                        <div class="legend">
+                            <span class="green">Watches</span>
+                            <span class="">Re-watches</span>
+                        </div>
+                        <div id="rewatchpie" class="piech2"></div>
+                    </div>
+                    <div class="piechart">
+                        <div class="legend">
+                            <span class="green">Reviewed</span>
+                            <span class="">Not Reviewed</span>
+                        </div>
+                        <div id="reviewspie" class="piech2"></div>
+                    </div>
+                </div>
+                {#if data.ru}
+                <div class="ratingSpreadsection">
+                    <img src="images/1stars.png" alt="1star"/>
+                    <div id="ratingSpread" class="ratingSpread"></div>
+                    <img src="images/5stars.png" alt="5stars"/>
+                </div>
+                <span class="linetitle">Rating Spread</span>
+                {/if}
+            </div>
+        </section>
     {/if}
 
     {#each [['actor', 'Stars', 'a', 'actor'], ['director', 'Directors', 'd', 'director']] as role}
@@ -1271,7 +1347,38 @@
         {/each}
     </section>
     {#if year !== ''}
-        //HIGH AND LOWS
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Highs and Lows</span>
+                <div class="line"></div>
+            </div>
+            <div class="highLow">
+                {#each [['best', 'Highest Average'],['worst', 'Lowest Average'],
+                    ['popular', 'Most Popular'],['obscure', 'Most Obscure']] as type }
+                <div class="singleFilm">
+                    <span class="suptitle">{type[1]}</span>
+                    <a class="poster" href="{lbdurl}film/{data[type[0]]._id}">
+                        {#if data[type[0]].hasOwnProperty('poster')}
+                        <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
+                        <img class="lazy" src="images/poster.jpg" use:lazyImage on:load={handleImageLoad}
+                             data-src="{replaceSize(data[type[0]].poster, 165, 110)}"
+                             alt="{data[type[0]]._id}"/>
+                        {:else}
+                        <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
+                        <img class="lazy" src="images/poster.jpg" use:lazyImage on:load={handleImageLoad}
+                             alt="{data[type[0]]._id}"/>
+                        {/if}
+                    </a>
+                    <div class="sottofilm">
+                        {#if data[type[0]].hasOwnProperty('avg')}
+                        <img src="images/orangestar.jpg"/>
+                        <span class="sottotitolo stellamedia">{data[type[0]].avg.toFixed(1)}</span>
+                        {/if}
+                    </div>
+                </div>
+                {/each}
+            </div>
+        </section>
     {/if}
     <section class="wMap noselect">
         <span class="wmTitle">World Map</span>
