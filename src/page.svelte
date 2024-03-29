@@ -1194,7 +1194,7 @@
                 <div class="singleFilm">
                     <a class="poster" href="{ lbdurl }film/{ elementAt(data['highers'],i)._id }">
                         <div class="containertextimg"><span>{ elementAt(data['highers'],i)._id.replace("-", " ") }</span></div>
-                        <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg'"
+                        <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
                              data-src="{ replaceSize(elementAt(data['highers'],i).img, 165, 110) }" alt="{ elementAt(data['highers'],i)._id }"/>
                     </a>
                     <div>
