@@ -14,7 +14,6 @@
     let jsonData
     let message = ""
 
-
     //let files = {accepted: [], rejected: []}
     let selectedFile = undefined
 
@@ -125,7 +124,7 @@
     }
 
     onMount(async () => {
-        const localStorageData = await localStorage.getItem("latest")
+        const localStorageData = localStorage.getItem("latest")
         if(localStorageData !== null && localStorageData !== "undefined") {
             //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + localStorageData.toLowerCase()
             window.location.search = '?username=' + localStorageData.toLowerCase();
@@ -151,7 +150,7 @@
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
             (<a href="https://letterboxd.com/data/export/" target="_blank">or click here</a>) and upload the zip file.<br />
-            If you are a supporter user you can access the old version at <a href="//legacy.statsboxd.top">legacy.statsboxd.top</a>
+            If you are an old user you can access the old version at <a href="//legacy.statsboxd.top">legacy.statsboxd.top</a>
         </p>
         {#if message !== ''}<p class="message">{@html message}</p>{/if}
         <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>

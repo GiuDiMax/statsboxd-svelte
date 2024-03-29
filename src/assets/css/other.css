@@ -117,3 +117,7 @@
     33% {background: #ff8000}
     66% {background: #41bbf4}
 }
+
+.bgblackwrapped{
+    position: fixed;
+}
