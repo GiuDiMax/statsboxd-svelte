@@ -9,6 +9,7 @@
 }
 
 .fileUploadContainer p{
+    width: 85%;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -64,4 +65,38 @@
 
 .confirmationBox .icon span:hover{
     color: #40bcf4;
+}
+
+.loaderContainer2{
+    z-index: 9999;
+    background: #14181c url(https://s.ltrbxd.com/static/img/content-bg.0d9a0f0f.png) 0 -1px repeat-x;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader2 {
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation:
+            l3-1 2s infinite linear,
+            l3-2 3s infinite steps(1) -.5s;
+}
+@keyframes l3-1 {
+    0%   {transform: perspective(150px) rotateX(  0deg) rotateY(0deg)}
+    50%  {transform: perspective(150px) rotateX(180deg) rotateY(0deg)}
+    100% {transform: perspective(150px) rotateX(180deg) rotateY(180deg)}
+}
+@keyframes l3-2 {
+    0%  {background: #00df54}
+    33% {background: #ff8000}
+    66% {background: #41bbf4}
 }

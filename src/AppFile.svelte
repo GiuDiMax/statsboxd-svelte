@@ -7,13 +7,12 @@
 
     import Dropzone from "svelte-file-dropzone";
 
-    let loading = false
+    let loading = true
     let data = {}
     let tmpdata = {}
     let file
     let jsonData
     let message = ""
-
 
 
     //let files = {accepted: [], rejected: []}
@@ -106,7 +105,7 @@
             data['name'] = tmpdata['name']
             data['ru'] = tmpdata['ru']
             data['update'] = tmpdata['update']
-            tmpdata['years'] = data['years']
+            tmpdata['yearsStats'] = data['yearsStats']
             message = ""
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
             localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
@@ -130,6 +129,7 @@
             //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + localStorageData.toLowerCase()
             window.location.search = '?username=' + localStorageData.toLowerCase();
         }
+        loading = false
     })
 
 </script>
@@ -137,7 +137,7 @@
 
 <main>
     {#if loading}
-        <div>Loading</div>
+        <div class="loaderContainer2"><div class="loader2"></div></div>
     {/if}
     <div class="fileUploadContainer">
     <img class="logo" src="images/logo.webp" alt="statsboxd logo">

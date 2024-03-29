@@ -14,7 +14,7 @@
 
 <main>
     {#if loading}
-        <p>Loading</p>
+        <div class="loaderContainer2"><div class="loader2"></div></div>
     {:else}
         {#if data.message !== undefined}
             <p>{data.message}</p>

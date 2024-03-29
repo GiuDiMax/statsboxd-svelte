@@ -54,6 +54,7 @@
             data['name'] = tmpdata['name']
             data['ru'] = tmpdata['ru']
             data['update'] = tmpdata['update']
+            data['yearsStats'] = tmpdata['yearsStats']
             localStorage.setItem(username.toLowerCase() + "_" + year.toString() + "_stats", JSON.stringify(data))
             message = undefined
         }}
@@ -68,7 +69,7 @@
 
 <main>
     {#if loading}
-        <p>Loading</p>
+        <div class="loaderContainer2"><div class="loader2"></div></div>
     {:else}
         {#if message !== undefined}
             <p>{message}</p>

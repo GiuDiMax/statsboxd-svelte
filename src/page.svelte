@@ -12,7 +12,21 @@
     import jsVectorMap from 'jsvectormap'
     import 'jsvectormap/dist/maps/world.js'
     import 'jsvectormap/dist/css/jsvectormap.css'
+    import { getISOWeek } from 'date-fns'
     let isMobile = false
+
+    let current_month
+    let current_week
+
+    const currentYear = new Date().getFullYear()
+    if (currentYear === yearnum){
+        const today = new Date()
+        current_week = getISOWeek(today)
+        current_month = today.getMonth() + 1
+    }else{
+        current_month = 12
+        current_week = 52
+    }
 
     function clickableFunction(){
         jQuery('.' + jQuery(event.target).attr('data-hide')).addClass('hide')
@@ -79,6 +93,17 @@
         return []
     }
 
+    function formatDate1(dateString) {
+        const months = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+        const date = new Date(dateString);
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        return `${month} ${day}`;
+    }
+
     function getSlice(arr, start, stop){
         try{
         if(arr.length >= stop) {
@@ -113,6 +138,41 @@
             }
         }catch{}
         return ""
+    }
+
+    function getWeek(year, nweek) {
+        var startdate = new Date(year, 0, 1);
+        startdate.setDate(startdate.getDate() + (nweek - 1) * 7);
+        var dayweek = startdate.getDay();
+        var giorniAggiuntivi = (dayweek === 0) ? 1 : (8 - dayweek);
+        startdate.setDate(startdate.getDate() + giorniAggiuntivi);
+        var stopdate = new Date(startdate);
+        stopdate.setDate(stopdate.getDate() + 6)
+        return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate() + ' — ' + stopdate.toLocaleString('en', {month: 'short'}) + ' ' + stopdate.getDate()
+    }
+
+    function fillArray(array, min, max){
+        const array2 = [];
+        let z = 0;
+        for (let i = min; i <= max; i++) {
+            try {
+                if (array[z]['_id'] === i) {
+                    array2.push(array[z]);
+                    z++;
+                } else {
+                    array2.push({ '_id': i, 'sum': 0 });
+                }
+            } catch {
+                array2.push({ '_id': i, 'sum': 0 });
+            }
+        }
+        return array2;
+    }
+
+    function getWeeksInYear(year) {
+        const firstDayOfYear = new Date(year, 0, 1);
+        const isLeapYear = new Date(year, 1, 29).getMonth() === 1;
+        return firstDayOfYear.getDay() === 4 || (isLeapYear && firstDayOfYear.getDay() === 3) ? 53 : 52;
     }
 
     async function setAllTimeCharts(offsetContainer){
@@ -208,6 +268,96 @@
     }
 
     async function setYearCharts(offsetContainer){
+        let dataChart = {}
+        let generalChart = {
+            chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0, animation: false},
+            xAxis: {labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+            yAxis: {min: -1, labels: {enabled: false}, title: false, lineColor: 'transparent', visible: false},
+            legend: {enabled: false},
+            title: {text: null},
+        }
+
+        //RATING SPREAD
+        generalChart.chart.height = 150
+        generalChart.plotOptions = {column: {pointPadding: 0, borderWidth: 0, borderRadius: 2, groupPadding: 0.1,}}
+        generalChart['tooltip'] = {
+            formatter: function () {
+                var stringa = new String("");
+                for (let i = 1; i < (this.x + 1) / 2; i++) {stringa += "★"}
+                if ((this.x + 1) / 2 > parseInt((this.x + 1) / 2)) {stringa += "½";} else {stringa += "★";}
+                return '<div class="ttYear"><span class="ttStars">' + stringa + '</span><span class="ttStarsSub">' + (parseInt(this.y)).toString() + ' films</span></div>'
+            },
+            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+        }
+        dataChart = []
+        fillArray(data.rating, 1, 10).forEach(function (item){
+            dataChart.push({ name: item._id, y: item.sum + 0.1})
+        })
+        generalChart['series'] = [{
+            data: dataChart,
+            label: {enabled: false},
+            states: {hover: {color: '#00e054',}},
+            color: '#445566',
+            point: {events: {click: function () {
+                location.href = lbdurl + data.username+'/films/diary/for/'+yearnum+'/rated/' + String(parseInt(this.options.name) / 2) + "/";
+            }}}
+        }]
+        //Highcharts.chart('ratingSpread', generalChart)
+
+        //WATCHED WEEK
+        generalChart.chart.height = undefined
+        generalChart.plotOptions = {column: {pointPadding: 0.08, borderWidth: 0, borderRadius: 1.8, groupPadding: 0,}}
+        generalChart['tooltip'] = {
+            formatter: function () {
+                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y)).toString() + ' films</span>' +
+                       '<span class="ttSubtitle">Week ' + this.points[0].key + '<br/>' + getWeek(parseInt(year), this.points[0].key) + '</span></div>'
+            },
+            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+        }
+        dataChart = []
+        fillArray(data.weeks, 1, getWeeksInYear(year)).forEach(function (item){
+            if (item.sum > 0){dataChart.push({ name: item._id, y: item.sum + 0.1})}
+            else{dataChart.push({ name: item._id, y: item.sum + 0.1, color: "#445566"})}
+
+        })
+        generalChart['series'] = [{
+            data: dataChart,
+            label: {enabled: false},
+            color: {
+                linearGradient: [0, 0, jQuery('#watchedWeek').width(), 0],
+                stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
+            },
+            point: {events: {click: function () {
+                        location.href = lbdurl + data.username+'/films/diary/for/'+yearnum+'/week/' + this.options.name + "/";
+                    }}}
+        }]
+        Highcharts.chart('watchedWeek', generalChart)
+
+        //WATCHED DAY WEEK
+        generalChart.chart.height = 120
+        generalChart.plotOptions = {column: {pointPadding: 0.05, borderWidth: 0, borderRadius: 2, groupPadding: 0.05,}}
+        generalChart.xAxis = {
+            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                labels: {formatter: function () { return this.value.charAt(0)},
+                enabled: true, x: 0, y: -10, style: {color: 'white', fontSize: '12px', fontFamily: 'Graphik-Regular-Web'},
+            }, lineColor: 'transparent',
+        }
+        generalChart['tooltip'] = {
+            formatter: function () {
+                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y)).toString() + ' films</span><span class="ttSubtitle">' + this.x.toString() + '</span></div>'
+            },
+            shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
+        }
+        dataChart = []
+        fillArray(data.dayOfWeek, 1, 7).forEach(function (item){
+            dataChart.push({ name: item._id, y: item.sum + 0.1})
+        })
+        generalChart['series'] = [{
+            data: dataChart,
+            states: {hover: {color: '#00e054'}},
+            color: '#445566',
+        }]
+        Highcharts.chart('watchedDayWeek', generalChart)
 
     }
 
@@ -275,6 +425,19 @@
         return 0
     }
 
+    function handleUpdate(){
+        localStorage.clear()
+        // localStorage.removeItem(data.username.toLowerCase())
+        // localStorage.removeItem(data.username.toLowerCase() + "_stats")
+        // data.yearsStats.forEach(function (item, index, arr){
+        //     console.log(item)
+        //     try{localStorage.removeItem(data.username.toLowerCase() + "_" + item.toString() + "_stats")}
+        //     catch{}
+        // })
+        // localStorage.removeItem("latest")
+        window.location.search = ''
+    }
+
     const dispatch = createEventDispatcher()
     dispatch("dataReceived", data)
     $: {if (Object.keys(data).length > 0) {init()}}
@@ -286,7 +449,7 @@
 
 <!--{JSON.stringify(data._id, null, 2)}-->
 <div class="content" id="content" >
-    {#if data.hasOwnProperty('years') }
+    {#if data.hasOwnProperty('yearsStats') }
     <div class="popupYearContainer {year!=='' ? 'popupYear2Container' : ''} " on:mouseleave={()=>{showYears = false}}>
         <a href="#" class="popupButton" data-show="popupYear" on:click={()=>{showYears = !showYears}}>
             <div class="arrow-down"></div>
@@ -519,14 +682,14 @@
             <!--<a href="{ lbdurl }{ data.username }">
                 <img alt="{ data.username }" class="avatar lazy" data-src="{ data.img }" src="images/poster.jpg" />
             </a>-->
-            <span><a class="clickable" href="{ lbdurl}{ data.username }">
+            <span><a class="clickable" href="{ lbdurl}?username={ data.username }">
                 { data.name }</a>'s
                 { year==='' ? 'all-time stats' : 'year in review' }
             </span>
         </div>
         {#if year === '' }
         <div class="buttonstart">
-            <a id="updatebtn" class="clickable seeallbutton updatebutton" href="/#">
+            <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="/#">
                 <span class="material-symbols-rounded icon">sync</span>Update
             </a>
             <a class="clickable seeallbutton updatebutton collagebutton" href="?username={ data.username }&collage" target="_blank">
@@ -574,10 +737,10 @@
                 <span class="number">{ data.total }</span>
                 <span class="text">Diary Entries</span>
             </div>
-            <div>
-                <span class="number">{ data.likes }</span>
-                <span class="text">Films liked</span>
-            </div>
+<!--            <div>-->
+<!--                <span class="number">{ data.likes }</span>-->
+<!--                <span class="text">Films liked</span>-->
+<!--            </div>-->
             <div>
                 <span class="number">{ data.reviews }</span>
                 <span class="text">Reviews</span>
@@ -589,7 +752,7 @@
             {/if}
         </div>
     </section>
-
+    {#if year===''}
     <section class="sectionStats">
         <div class="sepline">
             <span>By release year</span>
@@ -618,7 +781,7 @@
         </div>
         {/if}
     </section>
-    {#if data.ru && year === ''}
+    {#if data.ru}
     <section class="sectionStats">
         <div class="sepline">
             <span>Highest rated decades</span>
@@ -643,6 +806,170 @@
         </div>
         {/each}
     </section>
+    {/if}
+    {:else}
+        <!--DIARY SECTION -->
+        {#if data.ru}
+            <section class="sectionStats">
+                <div class="sepline">
+                    <span>Highest rated films</span>
+                    <div class="line"></div>
+                    <span class="clickable active" on:click={clickableFunction} data-show="currentYearHRF" data-hide="secHRF">{yearnum}</span>
+                    <span class="clickable" on:click={clickableFunction} data-show="pastYearHRF" data-hide="secHRF">Older</span>
+                </div>
+                <div class="">
+                    <div id="currentYearHRF" class="secHRF filmList">
+                        {#each getValues(data.topRatedCurrentYear) as element}
+                            <div class="singleFilm">
+                                <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
+                                    <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
+                                    <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                                         data-src="{replaceSize(element.poster, 165, 110)}"
+                                         alt="{element._id}"/>
+                                </a>
+                                <div>
+                                    <span class="sottotitolo stellineBig">{numToStars(element.r)}</span>
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                    <div id="pastYearHRF" class="secHRF filmList hide">
+                        {#each getValues(data.topRatedOtherYears) as element}
+                            <div class="singleFilm">
+                                <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
+                                    <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
+                                    <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                                         data-src="{replaceSize(element.poster, 165, 110)}"
+                                         alt="{element._id}"/>
+                                </a>
+                                <div>
+                                    <span class="sottotitolo stellineBig">{numToStars(element.r)}</span>
+                                </div>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            </section>
+        {/if}
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Films by week</span>
+                <div class="line"></div>
+            </div>
+            <div class="chart-container weekChartcontainer">
+                <div id="watchedWeek" class="weekChart"></div>
+            </div>
+            <div class="years">
+                <span>Jan</span>
+                <span>Dec</span>
+            </div>
+            <div class="watchedDivided">
+                <div class="wd1">
+                    <div class="wd1x">
+                        <span class="big">{data.total}</span>
+                        <span class="small">Films watched</span>
+                    </div>
+                    <img src="images/arrow.jpg" alt="arrow"/>
+                    <div class="wd1x">
+                        <span class="big">{(data.total/current_month).toFixed(1)}</span>
+                        <span class="small">Average per month</span>
+                    </div>
+                    <img src="images/arrow.jpg" alt="arrow"/>
+                    <div class="wd1x">
+                        <span class="big">{(data.total/current_week).toFixed(1)}</span>
+                        <span class="small">Average per week</span>
+                    </div>
+                </div>
+                <div class="wd2">
+                    <div id="watchedDayWeek" class="weekDayChart"></div>
+                </div>
+            </div>
+        </section>
+                <section class="sectionStats">
+                    <div class="sepline">
+                        <span>Milestones</span>
+                        <div class="line"></div>
+                    </div>
+                    <div class="msy">
+                        <div class="msx msx1">
+                            <span>First Film</span>
+                            <div class="singleFilm">
+                                <a class="poster" href="{lbdurl}{data.username}/film/{data.first._id}">
+                                    <div class="containertextimg"><span>{data.first._id.replace("-", " ")}</span></div>
+                                    <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                                         data-src="{replaceSize(data.first.poster, 165, 110)}"
+                                         alt="{data.first._id}"/>
+                                </a>
+                                <div>
+                                    <span class="sottotitolo bigsotto">{formatDate1(data.first.date)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {#if data.milestones.length > 0 }
+                        <div class="msx msx2">
+                            <span>Diary Milestones</span>
+                            <div class="filmList mw2">
+                                {#each getValues(data.milestones) as element, index}
+                                <div class="singleFilm">
+                                    <a class="poster"
+                                       href="{lbdurl}{data.username}/film/{element._id}/activity">
+                                        <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
+                                        <img use:lazyImage on:load={handleImageLoad} class="lazy"
+                                             src="images/poster.jpg"
+                                             data-src="{replaceSize(element.poster, 165, 110)}"
+                                             alt="{element._id}"/>
+                                    </a>
+                                    <div>
+                                        <span class="sottotitolo bigsotto">{(index+1)*50}th
+                                            <span class="sottotitolo_milestones hideMobile">· {formatDate1(element.date)}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                {/each}
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="msx msx1">
+                            <span>Last Film</span>
+                            <div class="singleFilm">
+                                <a class="poster" href="{lbdurl}{data.username}/film/{data.last._id}">
+                                    <div class="containertextimg"><span>{data.last._id.replace("-", " ")}</span></div>
+                                    <img use:lazyImage on:load={handleImageLoad} class="lazy" src="images/poster.jpg"
+                                         data-src="{replaceSize(data.last.poster, 165, 110)}"
+                                         alt="{data.last._id}"/>
+                                </a>
+                                <div>
+                                    <span class="sottotitolo bigsotto">{formatDate1(data.last.date)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        <!--            {% if user[year+'stats'].mostWatched|length > 0 %}-->
+        <!--            <div class="msy">-->
+        <!--                <div class="msx msxfull">-->
+        <!--                    <span>Most Watched</span>-->
+        <!--                    <div class="filmList mw2">-->
+        <!--                        {% for element in user[year+'stats'].mostWatched %}-->
+        <!--                        <div class="singleFilm">-->
+        <!--                            <a class="poster"-->
+        <!--                               href="{{ lbdurl }}{{ user.username }}/film/{{ element.uri }}/activity">-->
+        <!--                                <div class="containertextimg"><span>{{ element.uri.replace("-", " ") }}</span></div>-->
+        <!--                                <img class="lazy"-->
+        <!--                                     src="{{ url_for('static', filename='images/poster.jpg') }}"-->
+        <!--                                     data-src="{{ replaceSize(element.poster, 165, 110) }}"-->
+        <!--                                     alt="{{ element.uri }}"/>-->
+        <!--                            </a>-->
+        <!--                            <div>-->
+        <!--                                <span class="sottotitolo bigsotto">{{ element.sum }} times</span>-->
+        <!--                            </div>-->
+        <!--                        </div>-->
+        <!--                        {% endfor %}-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--            {% endif %}-->
+                </section>
+
     {/if}
     <section class="sectionStats">
         <div class="sepline">
@@ -741,6 +1068,7 @@
         </div>
         {/if}
     </section>
+
     <!-- ALL TIME SECTION -->
     {#if year===''}
         <section class="sectionStats">
@@ -846,7 +1174,6 @@
                 <div class="line"></div>
             </div>
             <div class="filmList hideLast">
-                <!--{#each Array.from({ length: arrayLength(data['lowers']) }, (_, i) => i) as i }-->
                 {#each getValues(data['lowers']) as element}
                 <div class="singleFilm">
                     <a class="poster" href="{ lbdurl }film/{ element._id }">

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
+    "date-fns": "^3.6.0",
     "dropzone": "^6.0.0-beta.2",
     "highcharts": "^11.4.0",
     "jquery": "^3.7.1",
