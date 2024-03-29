@@ -712,8 +712,8 @@
         {#if year === '' }
         <h3 class="arrowcheck">
             Your last update: { data.update }. <br />
-            Forced update, year's stats and recommended films only for
-            <a target="_blank" href="//buymeacoffee.com/giudimax">supporters</a>.
+            Auto update and recommended films only for <a target="_blank" href="//buymeacoffee.com/giudimax">supporters</a>. <br />
+            Have you already donated?: <a href='https://t.me/giudimax' target='_blank'>contact me on Telegram</a>.
         </h3>
         {/if}
         <div class="mainSubtitle">
