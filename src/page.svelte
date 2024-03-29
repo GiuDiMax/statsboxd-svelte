@@ -496,7 +496,7 @@
             <div class="arrow-up"></div>
             <div class="listaAnni">
                 <div>
-                    <a href="/{ data.username }">All time</a>
+                    <a href="?username={ data.username }">All time</a>
                     {#each data['yearsStats'] as y }
                         <a href="?username={ data.username }&year={ y }">{ y }{#if y === new Date().getFullYear() }...{/if}</a>
                     {/each}
@@ -730,9 +730,9 @@
             <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="/#">
                 <span class="material-symbols-rounded icon">sync</span>Update
             </a>
-            <a class="clickable seeallbutton updatebutton collagebutton" href="?username={ data.username }&collage" target="_blank">
-                <span class="material-symbols-rounded icon">grid_on</span>Last month collage
-            </a>
+<!--            <a class="clickable seeallbutton updatebutton collagebutton" href="?username={ data.username }&collage" target="_blank">-->
+<!--                <span class="material-symbols-rounded icon">grid_on</span>Last month collage-->
+<!--            </a>-->
         </div>
         {/if}
         <div class="numbersStats">
