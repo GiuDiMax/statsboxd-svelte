@@ -361,7 +361,7 @@
 
         // PIES
         const pies = ['currentYear', 'rewatch', 'reviews']
-        pies.forEach(async (type) => {
+        for (const type of pies) {
             if (type === 'rewatch'){
                 data[type] = data.total - data[type]
             }
@@ -396,7 +396,7 @@
                     },
                 }]
             })
-        })
+        }
     }
 
     async function setVectorMap(){

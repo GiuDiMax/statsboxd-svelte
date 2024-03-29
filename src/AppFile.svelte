@@ -124,12 +124,11 @@
     }
 
     onMount(async () => {
-        const localStorageData = localStorage.getItem("latest")
+        const localStorageData = await localStorage.getItem("latest")
         if(localStorageData !== null && localStorageData !== "undefined") {
             //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + localStorageData.toLowerCase()
             window.location.search = '?username=' + localStorageData.toLowerCase();
-        }
-        loading = false
+        }else{loading = false}
     })
 
 </script>
