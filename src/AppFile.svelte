@@ -149,8 +149,9 @@
     {:else}
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
-            (<a href="https://letterboxd.com/data/export/" target="_blank">or click here</a>) and upload the zip file.<br />
-            If you are an old user you can access the old version at <a href="//old.statsboxd.top">old.statsboxd.top</a>
+            (<a href="https://letterboxd.com/data/export/" target="_blank">or click here</a>) and upload the zip file.<br /><br />
+            If you are an old user you can access the old version at <a href="//old.statsboxd.top">old.statsboxd.top</a><br /><br />
+            For month collage just use this url: statsboxd.top?username=yourlbdusername&collage.
         </p>
         {#if message !== ''}<p class="message">{@html message}</p>{/if}
         <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
