@@ -158,10 +158,10 @@
                                 {/if}
                             {/if}
                             {#if item.hasOwnProperty('like')}{#if item.like}
-                            <img class="star icon" style="position: relative;top: 0.05em;" src="images/like.svg" alt="like" />
+                                <img class="star icon" style="position: relative;top: 0.05em;" src="images/like.svg" alt="like" />
                             {/if}{/if}
                             {#if item.hasOwnProperty('rewatch')}{#if item.rewatch}
-                            <img class="star icon" src="images/rewatch.svg" alt="rewatch" />
+                                <img class="star icon" src="images/rewatch.svg" alt="rewatch" />
                             {/if}{/if}
                             </span>
                     </div>
