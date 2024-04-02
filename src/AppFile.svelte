@@ -126,11 +126,11 @@
 
     onMount(async () => {
 
-        if(import.meta.env.VITE_TEST>0){
-            let data = localStorage.getItem("chelovekiam_stats")
-            addMissingData(JSON.parse(data))
-            return
-        }
+        // if(import.meta.env.VITE_TEST>0){
+        //     let data = localStorage.getItem("chelovekiam_stats")
+        //     addMissingData(JSON.parse(data))
+        //     return
+        // }
 
         const localStorageData = localStorage.getItem("latest")
         if(localStorageData !== null && localStorageData !== "undefined") {

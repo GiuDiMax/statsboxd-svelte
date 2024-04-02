@@ -191,7 +191,7 @@
             const newDict = { 'name': element['_id'], 'y': element['sum'] + 1}
             if (element['sum'] === 0) { newDict['color'] = "#445566" }
             return newDict;
-        });
+        })
         generalChart['tooltip'] = {
             formatter: function () {
                 return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y) - 1).toString() + ' films</span>' +
@@ -268,7 +268,6 @@
     }
 
     async function setYearCharts(offsetContainer){
-        console.log(data.rating)
         let dataChart = {}
         let generalChart = {
             chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0, animation: false},
@@ -316,10 +315,9 @@
             shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
         }
         dataChart = []
-        fillArray(data.weeks, 1, getWeeksInYear(year)).forEach(function (item){
-            if (item.sum > 0){dataChart.push({ name: item._id, y: item.sum + 0.1})}
-            else{dataChart.push({ name: item._id, y: item.sum + 0.1, color: "#445566"})}
-
+        fillArray(data.weeks, 0, getWeeksInYear(year)).forEach(function (item){
+            if (item.sum > 0){dataChart.push({ name: item._id, y: item.sum + 0.25})}
+            else{dataChart.push({ name: item._id, y: item.sum + 0.25, color: "#445566"})}
         })
         generalChart['series'] = [{
             data: dataChart,
@@ -437,20 +435,28 @@
         }
     }
 
+    function setCharts(){
+        let offsetContainer
+        try{
+            offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
+        } catch{offsetContainer = 0}
+        if (jQuery('#isMobile').is(':visible')) {isMobile = true}
+        if(year === ''){
+            setAllTimeCharts(offsetContainer)
+        }else{
+            setYearCharts(offsetContainer)
+        }
+        setVectorMap()
+    }
+
     function init() {
-        document.addEventListener("DOMContentLoaded", function(event) {
-            let offsetContainer
-            try{
-                offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
-            } catch{offsetContainer = 0}
-            if (jQuery('#isMobile').is(':visible')) {isMobile = true}
-            if(year === ''){
-                setAllTimeCharts(offsetContainer)
-            }else{
-                setYearCharts(offsetContainer)
-            }
-            setVectorMap()
-        })
+        //if (document.readyState === 'complete') {
+       //     setCharts()
+        //}else{
+            document.addEventListener("DOMContentLoaded", function(event) {
+                setCharts()
+            })
+        //}
     }
 
     function last(inputArray){
@@ -482,6 +488,7 @@
     $: {if (Object.keys(data).length > 0) {init()}}
 
     onMount(() => {
+        //init()
     })
 
 </script>

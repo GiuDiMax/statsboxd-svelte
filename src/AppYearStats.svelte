@@ -27,8 +27,8 @@
         let localStorageData = localStorage.getItem(username.toLowerCase() + "_" + year.toString() + "_stats")
         if (localStorageData !== null && localStorageData !== "undefined") {
             console.log("Read Storage Stats Data")
-            data = JSON.parse(localStorageData)
-            console.log(data)
+            data = await JSON.parse(localStorageData)
+            //console.log(data)
             message = undefined
             loading = false
             return
@@ -72,11 +72,10 @@
 <main>
     {#if loading}
         <div class="loaderContainer2"><div class="loader2"></div></div>
+    {/if}
+    {#if message !== undefined}
+        <p>{message}</p>
     {:else}
-        {#if message !== undefined}
-            <p>{message}</p>
-        {:else}
-            <SharedPage data={data} year={year.toString()} yearnum={year}/>
-        {/if}
+        <SharedPage data={data} year={year.toString()} yearnum={year}/>
     {/if}
 </main>
