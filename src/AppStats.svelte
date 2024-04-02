@@ -1,5 +1,6 @@
 <script>
     import SharedPage from './page.svelte'
+    import {addMissingData} from "./utils.js";
     export let username
     let loading = false
     let data = {}
@@ -8,6 +9,7 @@
     if(localStorageData !== null && localStorageData !== "undefined") {
         console.log("Read Storage Data")
         data = JSON.parse(localStorageData)
+        addMissingData(data, username)
         data.message = undefined
     }
 </script>

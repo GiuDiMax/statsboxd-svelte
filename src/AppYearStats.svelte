@@ -2,6 +2,7 @@
     import SharedPage from './page.svelte'
     import {baseUrl} from "./config.js";
     import {onMount} from "svelte";
+    import {addMissingData} from "./utils.js";
     export let username
     export let year
     let loading = true
@@ -56,6 +57,7 @@
             data['update'] = tmpdata['update']
             data['yearsStats'] = tmpdata['yearsStats']
             localStorage.setItem(username.toLowerCase() + "_" + year.toString() + "_stats", JSON.stringify(data))
+            addMissingData(data, username, year)
             message = undefined
         }}
         catch(error){

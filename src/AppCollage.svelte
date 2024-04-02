@@ -40,7 +40,7 @@
         const response = await fetch('https://api.themoviedb.org/3/movie/' + element2.data('tmdb') + '?api_key=' + tmdb_key)
         if (response.ok) {
             const data = await response.json()
-            console.log(data)
+            //console.log(data)
             if (data.hasOwnProperty('poster_path')) {
                 element2.attr('src', 'https://image.tmdb.org/t/p/w185/' + data['poster_path'])
                 element2.parent().addClass("imgok");

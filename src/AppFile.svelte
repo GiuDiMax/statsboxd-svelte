@@ -6,6 +6,7 @@
     import { baseUrl } from './config.js'
 
     import Dropzone from "svelte-file-dropzone";
+    import {addMissingData} from "./utils.js"
 
     let loading = true
     let data = {}
@@ -124,6 +125,13 @@
     }
 
     onMount(async () => {
+
+        if(import.meta.env.VITE_TEST>0){
+            let data = localStorage.getItem("chelovekiam_stats")
+            addMissingData(JSON.parse(data))
+            return
+        }
+
         const localStorageData = localStorage.getItem("latest")
         if(localStorageData !== null && localStorageData !== "undefined") {
             //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + localStorageData.toLowerCase()

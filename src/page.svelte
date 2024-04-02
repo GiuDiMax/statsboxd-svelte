@@ -268,6 +268,7 @@
     }
 
     async function setYearCharts(offsetContainer){
+        console.log(data.rating)
         let dataChart = {}
         let generalChart = {
             chart: {type: 'column', backgroundColor: 'transparent', margin: 0, border: 0, animation: false},
@@ -1075,14 +1076,15 @@
         <div id="MWTN" class="attributes-chart twocolumn secTN">
             {#each ['theme', 'nanogenre'] as type }
             <div class="labels">
-                {#each Array.from({ length: 10 }, (_, i) => i) as i }
-                <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{ elementAt(data['mw_' + type + 's'],i)['type'] }/{ getUri(elementAt(data['mw_' + type + 's'],i)['name'], elementAt(data['mw_' + type + 's'],i)['uri']) }">
-                    <span class="leftText">{ elementAt(data['mw_' + type + 's'],i)['name'] }</span>
-                    <span class="bold right">{ elementAt(data['mw_' + type + 's'],i)['sum'] } films</span>
-                    <div class="labcontainer"
-                         style="width:{ elementAt(data['mw_' + type + 's'],i)['sum'] * 100 /elementAt(data['mw_' + type + 's'],0)['sum'] }%;">
-                    </div>
-                </a>
+                <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
+                {#each getValues(getSlice(data['mw_' + type + 's'], 0, 10)) as element}
+                    <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{ element['type'] }/{ getUri(element['name'], element['uri']) }">
+                        <span class="leftText">{element['name'] }</span>
+                        <span class="bold right">{ element['sum'] } films</span>
+                        <div class="labcontainer"
+                             style="width:{ element['sum'] * 100 /elementAt(data['mw_' + type + 's'],0)['sum'] }%;">
+                        </div>
+                    </a>
                 {/each}
             </div>
             {/each}
@@ -1091,12 +1093,13 @@
         <div id="HRTN" class="attributes-chart twocolumn secTN hide">
             {#each ['theme', 'nanogenre'] as type }
                 <div class="labels">
-                    {#each Array.from({ length: 10 }, (_, i) => i) as i }
-                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{ elementAt(data['tr_' + type + 's'],i)['type'] }/{ getUri(elementAt(data['tr_' + type + 's'],i)['name'], elementAt(data['tr_' + type + 's'],i)['uri']) }">
-                            <span class="leftText">{ elementAt(data['tr_' + type + 's'],i)['name'] }</span>
-                            <span class="bold right">Average: { elementAt(data['tr_' + type + 's'],i)['avg'] }</span>
+                    <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
+                    {#each getValues(getSlice(data['tr_' + type + 's'], 0, 10)) as element}
+                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{ element['type'] }/{ getUri(element['name'], element['uri']) }">
+                            <span class="leftText">{ element['name'] }</span>
+                            <span class="bold right">Average: { element['avg'] }</span>
                             <div class="labcontainer"
-                                 style="width:{ elementAt(data['tr_' + type + 's'],i)['avg'] * 100 /elementAt(data['tr_' + type + 's'],0)['avg'] }%;">
+                                 style="width:{ element['avg'] * 100 /elementAt(data['tr_' + type + 's'],0)['avg'] }%;">
                             </div>
                         </a>
                     {/each}
@@ -1286,20 +1289,22 @@
                 {#each [['1', ''], ['2', 'hide']] as num}
                 <div id="{role[0]}s{type[0]}{num[0]}" class="{role[0]}s people {num[1]}">
                     {#each getValues(getSlice(data[type[1]+role[3]], ifThenElse(num[0] === '1',0,10), ifThenElse(num[0] === '1',10,20))) as element }
-                    <div class="container_people">
-                        <a href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element.uri }">
-                            <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
-                        </a>
-                        <a class="clickable" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{role[0]}/{element._id}">
-                            {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
-                        </a>
-                        {#if type[2]==='w' }
-                        <a class="sottotitolo" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[0] }/{ element._id }">
-                            { element.sum } films</a>
-                        {:else}
-                        <span class="sottotitolo">★ { element.avg }</span>
+                        {#if element.hasOwnProperty('name')}
+                        <div class="container_people">
+                            <a href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element.uri }">
+                                <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
+                            </a>
+                            <a class="clickable" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{role[0]}/{element._id}">
+                                {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
+                            </a>
+                            {#if type[2]==='w' }
+                            <a class="sottotitolo" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element._id }">
+                                { element.sum } films</a>
+                            {:else}
+                            <span class="sottotitolo">★ { element.avg }</span>
+                            {/if}
+                        </div>
                         {/if}
-                    </div>
                     {/each}
                 </div>
                 {/each}
@@ -1328,7 +1333,7 @@
                 {#if element.hasOwnProperty('name') }
                 <div class="{ type }limit {i > 5 ? 'hide' : ''}">
                     <a class="clickable"
-                       href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}with/{ role[2] }/{ element._id }"
+                       href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[2] }/{ element._id }"
                     >
                         {#if element.hasOwnProperty('name') }{element.name}{:else}{element._id}{/if}
                     </a>
