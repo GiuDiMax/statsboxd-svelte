@@ -436,6 +436,8 @@
     }
 
     function setCharts(){
+        console.log("CHARTS")
+        console.log(jQuery('#ratingSpread'))
         let offsetContainer
         try{
             offsetContainer = document.getElementsByClassName('chart-container')[0].offsetWidth
@@ -450,13 +452,7 @@
     }
 
     function init() {
-        //if (document.readyState === 'complete') {
-       //     setCharts()
-        //}else{
-            document.addEventListener("DOMContentLoaded", function(event) {
-                setCharts()
-            })
-        //}
+        setCharts()
     }
 
     function last(inputArray){
@@ -483,18 +479,12 @@
         window.location.search = ''
     }
 
-    const dispatch = createEventDispatcher()
-    dispatch("dataReceived", data)
-    $: {if (Object.keys(data).length > 0) {init()}}
-
-    onMount(() => {
-        //init()
-    })
+    onMount(() => {})
 
 </script>
 
 <!--{JSON.stringify(data._id, null, 2)}-->
-<div class="content" id="content" >
+<div class="content" id="content" on:load={init()}>
     {#if data.hasOwnProperty('yearsStats') }
     <div class="popupYearContainer {year!=='' ? 'popupYear2Container' : ''} " on:mouseleave={()=>{showYears = false}}>
         <a href="#" class="popupButton" data-show="popupYear" on:click={()=>{showYears = !showYears}}>
