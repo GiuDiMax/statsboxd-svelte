@@ -157,12 +157,12 @@
                                 <img class="star icon" src="images/half.svg" alt="half star" />
                                 {/if}
                             {/if}
-                            {#if item.hasOwnProperty('like')}
+                            {#if item.hasOwnProperty('like')}{#if item.like}
                             <img class="star icon" style="position: relative;top: 0.05em;" src="images/like.svg" alt="like" />
-                            {/if}
-                            {#if item.hasOwnProperty('rewatch')}
+                            {/if}{/if}
+                            {#if item.hasOwnProperty('rewatch')}{#if item.rewatch}
                             <img class="star icon" src="images/rewatch.svg" alt="rewatch" />
-                            {/if}
+                            {/if}{/if}
                             </span>
                     </div>
                     {/each}
