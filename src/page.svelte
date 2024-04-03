@@ -484,6 +484,14 @@
 </script>
 
 <!--{JSON.stringify(data._id, null, 2)}-->
+<div class="headerbar">
+    <a href="/"><img src="/images/logo.webp" alt="statsboxdlogo" class="logoup"/></a>
+    <div class="navbar">
+        <a class="" href="//github.com/GiuDiMax/statsboxd-svelte" target="_blank">Repo</a>
+        <a href="//t.me/giudimax" target="_blank">Contact Me</a>
+        <a class="" href="//buymeacoffee.com/giudimax" target="_blank">Support me</a>
+    </div>
+</div>
 <div class="content" id="content" on:load={init()}>
     {#if data.hasOwnProperty('yearsStats') }
     <div class="popupYearContainer {year!=='' ? 'popupYear2Container' : ''} " on:mouseleave={()=>{showYears = false}}>
@@ -709,9 +717,9 @@
         <div class="mainTitlesecFade"></div>
         {#if year === '' }
         <h3 class="arrowcheck">
-            Your last update: { data.update }. <br />
+            <!--Your last update: { data.update }. <br />-->
             Auto update and recommended films only for <a target="_blank" href="//buymeacoffee.com/giudimax">supporters</a>. <br />
-            Have you already donated?: <a href='https://t.me/giudimax' target='_blank'>contact me on Telegram</a>.
+            <!--Have you already donated?: <a href='https://t.me/giudimax' target='_blank'>contact me on Telegram</a>.-->
         </h3>
         {/if}
         <div class="mainSubtitle">

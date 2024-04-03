@@ -158,12 +158,17 @@
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
             (<a href="https://letterboxd.com/data/export/" target="_blank">or click here</a>) and upload the zip file.<br /><br />
-            If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me.</a><br /><br />
-            If you are an old supporter user you can access the old version at <a href="//old.statsboxd.top">old.statsboxd.top</a><br /><br />
-            For month collage just use this url: statsboxd.top?username=yourlbdusername&collage.
+
         </p>
         {#if message !== ''}<p class="message">{@html message}</p>{/if}
         <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
+        <p>
+            <br/>
+            If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
+            <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
+            If you are an old supporter user you can access the old version at <a href="//old.statsboxd.top">old.statsboxd.top</a><br />
+            For month collage just use this url: statsboxd.top?username=yourlbdusername&collage.<br />
+        </p>
     {/if}
     </div>
 </main>

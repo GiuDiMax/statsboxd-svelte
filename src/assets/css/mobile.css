@@ -18,12 +18,13 @@
     }
 
     .logoup{
-        width:200px;
-        margin-top:10px;
+        height: 28px;
+        width: auto;
+        margin-top: 10px;
     }
 
     .navbar{
-        margin-top:10px;
+        margin-top: 8px;
         margin-bottom:5px;
         gap: 15px;
         flex-basis: 100%;
