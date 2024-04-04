@@ -2,6 +2,7 @@ import {baseUrl} from "./config.js"
 const limit = 25
 
 export async function addMissingData(data, username, year=0){
+    return
     if(year > 0){
         await splitPost(data['missingCrew'], "addPeople")
         localStorage.setItem(username.toLowerCase() + "_" + year.toString() + "_stats", JSON.stringify(data))
