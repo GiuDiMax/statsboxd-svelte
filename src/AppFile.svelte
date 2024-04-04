@@ -167,7 +167,7 @@
             If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
             <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
             If you are an old supporter user you can access the old version at <a href="//old.statsboxd.top">old.statsboxd.top</a><br />
-            For month collage just use this url: statsboxd.top?username=yourlbdusername&collage.<br />
+            <!--For month collage just use this url: statsboxd.top?username=yourlbdusername&collage.<br />-->
         </p>
     {/if}
     </div>
