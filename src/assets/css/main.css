@@ -2169,9 +2169,11 @@ span{
 
 .containertextimg span{
     text-decoration: none;
-    width: 95%;
-    height: 100%;
+    width: 90%;
+    height: 70px;
     font-size: 0.7em;
+    overflow: hidden;
+    text-overflow: ellipsis;
     line-height: 1.2em;
     font-weight: normal;
     margin-left: auto;
@@ -2203,6 +2205,10 @@ span{
 
 .imgok .containertextimg{
     display: none;
+}
+
+.notok .containertextimg{
+    display: block;
 }
 
 @keyframes rotation2 {

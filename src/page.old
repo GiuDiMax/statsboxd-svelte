@@ -7,13 +7,15 @@
     import Highcharts from 'highcharts'
     import {onMount, createEventDispatcher } from "svelte"
     import jQuery from 'jquery'
-    import { useLazyImage as lazyImage } from 'svelte-lazy-image'
+    //import Lazy from 'jquery-lazy'
+    //import { useLazyImage as lazyImage } from 'svelte-lazy-image'
     import {roles, tmdb_key} from './config.js'
     import jsVectorMap from 'jsvectormap'
     import 'jsvectormap/dist/maps/world.js'
     import 'jsvectormap/dist/css/jsvectormap.css'
     import { getISOWeek } from 'date-fns'
     let isMobile = false
+    import LibLoader from './LibLoader.svelte'
 
     let current_month
     let current_week
@@ -39,12 +41,7 @@
     }
 
     async function handleImageLoad(){
-        jQuery(event.target).parent().addClass("imgok")
-    }
-
-    async function handleImageError(){
-        jQuery(event.target).parent().removeClass("imgok").addClass('notok')
-        jQuery(event.target).attr('src', 'images/poster.jpg')
+        j//Query(event.target).parent().addClass("imgok");
     }
 
     async function setTmdb(){
@@ -111,11 +108,11 @@
 
     function getSlice(arr, start, stop){
         try{
-            if(arr.length >= stop) {
-                return arr.slice(start, stop)
-            }else {
-                return arr.slice(start, arr.length)
-            }}
+        if(arr.length >= stop) {
+            return arr.slice(start, stop)
+        }else {
+            return arr.slice(start, arr.length)
+        }}
         catch{}
         return arr
     }
@@ -304,8 +301,8 @@
             states: {hover: {color: '#00e054',}},
             color: '#445566',
             point: {events: {click: function () {
-                        location.href = lbdurl + data.username+'/films/diary/for/'+yearnum+'/rated/' + String(parseInt(this.options.name) / 2) + "/";
-                    }}}
+                location.href = lbdurl + data.username+'/films/diary/for/'+yearnum+'/rated/' + String(parseInt(this.options.name) / 2) + "/";
+            }}}
         }]
         Highcharts.chart('ratingSpread', generalChart)
 
@@ -315,7 +312,7 @@
         generalChart['tooltip'] = {
             formatter: function () {
                 return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y)).toString() + ' films</span>' +
-                    '<span class="ttSubtitle">Week ' + this.points[0].key + '<br/>' + getWeek(parseInt(year), this.points[0].key) + '</span></div>'
+                       '<span class="ttSubtitle">Week ' + this.points[0].key + '<br/>' + getWeek(parseInt(year), this.points[0].key) + '</span></div>'
             },
             shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
         }
@@ -342,7 +339,7 @@
         generalChart.plotOptions = {column: {pointPadding: 0.05, borderWidth: 0, borderRadius: 2, groupPadding: 0.05,}}
         generalChart.xAxis = {
             categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            labels: {formatter: function () { return this.value.charAt(0)},
+                labels: {formatter: function () { return this.value.charAt(0)},
                 enabled: true, x: 0, y: -10, style: {color: 'white', fontSize: '12px', fontFamily: 'Graphik-Regular-Web'},
             }, lineColor: 'transparent',
         }
@@ -454,7 +451,16 @@
         setVectorMap()
     }
 
+    function setLazyLoad(){
+        console.log(1)
+        jQuery("img.lazy").Lazy()
+        jQuery('img.lazy').on('load',function(){
+            jQuery(this).parent().addClass("imgok");
+        })
+    }
+
     function init() {
+        <LibLoader url="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js" on:loaded="{setLazyLoad}" />
         setCharts()
     }
 
@@ -497,22 +503,22 @@
 </div>
 <div class="content" id="content" on:load={init()}>
     {#if data.hasOwnProperty('yearsStats') }
-        <div class="popupYearContainer {year!=='' ? 'popupYear2Container' : ''} " on:mouseleave={()=>{showYears = false}}>
-            <a href="#" class="popupButton" data-show="popupYear" on:click={()=>{showYears = !showYears}}>
-                <div class="arrow-down"></div>
-            </a>
-            <div id="popupYear" class="popupYear {showYears ? '' : 'hide'}">
-                <div class="arrow-up"></div>
-                <div class="listaAnni">
-                    <div>
-                        <a href="?username={ data.username }">All time</a>
-                        {#each data['yearsStats'] as y }
-                            <a href="?username={ data.username }&year={ y }">{ y }{#if y === new Date().getFullYear() }...{/if}</a>
-                        {/each}
-                    </div>
+    <div class="popupYearContainer {year!=='' ? 'popupYear2Container' : ''} " on:mouseleave={()=>{showYears = false}}>
+        <a href="#" class="popupButton" data-show="popupYear" on:click={()=>{showYears = !showYears}}>
+            <div class="arrow-down"></div>
+        </a>
+        <div id="popupYear" class="popupYear {showYears ? '' : 'hide'}">
+            <div class="arrow-up"></div>
+            <div class="listaAnni">
+                <div>
+                    <a href="?username={ data.username }">All time</a>
+                    {#each data['yearsStats'] as y }
+                        <a href="?username={ data.username }&year={ y }">{ y }{#if y === new Date().getFullYear() }...{/if}</a>
+                    {/each}
                 </div>
             </div>
         </div>
+    </div>
     {/if}
 
     <section class="mainTitlesec">
@@ -719,11 +725,11 @@
         <div class="mainTitlesecBak"></div>
         <div class="mainTitlesecFade"></div>
         {#if year === '' }
-            <h3 class="arrowcheck">
-                <!--Your last update: { data.update }. <br />-->
-                Auto update and recommended films only for <a target="_blank" href="//buymeacoffee.com/giudimax">supporters</a>. <br />
-                <!--Have you already donated?: <a href='https://t.me/giudimax' target='_blank'>contact me on Telegram</a>.-->
-            </h3>
+        <h3 class="arrowcheck">
+            <!--Your last update: { data.update }. <br />-->
+            Auto update and recommended films only for <a target="_blank" href="//buymeacoffee.com/giudimax">supporters</a>. <br />
+            <!--Have you already donated?: <a href='https://t.me/giudimax' target='_blank'>contact me on Telegram</a>.-->
+        </h3>
         {/if}
         <div class="mainSubtitle">
             <!--<a href="{ lbdurl }{ data.username }">
@@ -735,125 +741,125 @@
             </span>
         </div>
         {#if year === '' }
-            <div class="buttonstart">
-                <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="/#">
-                    <span class="material-symbols-rounded icon">sync</span>Update
-                </a>
-                <a class="clickable seeallbutton updatebutton collagebutton" href="?username={ data.username }&collage" target="_blank">
-                    <span class="material-symbols-rounded icon">grid_on</span>Last month collage
-                </a>
-            </div>
+        <div class="buttonstart">
+            <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="/#">
+                <span class="material-symbols-rounded icon">sync</span>Update
+            </a>
+            <a class="clickable seeallbutton updatebutton collagebutton" href="?username={ data.username }&collage" target="_blank">
+                <span class="material-symbols-rounded icon">grid_on</span>Last month collage
+            </a>
+        </div>
         {/if}
         <div class="numbersStats">
             {#if year === '' }
-                <a href="//letterboxd.com/{ data.username }/films">
-                    <span class="number">{ data.totalFilms }</span>
-                    <span class="text">Films</span>
-                </a>
-                <div>
-                    <span class="number">{ data.totalRuntime }</span>
-                    <span class="text">Hours</span>
+            <a href="//letterboxd.com/{ data.username }/films">
+                <span class="number">{ data.totalFilms }</span>
+                <span class="text">Films</span>
+            </a>
+            <div>
+                <span class="number">{ data.totalRuntime }</span>
+                <span class="text">Hours</span>
+            </div>
+            <div>
+                <span class="number">{ data.totalDirectors }</span>
+                <span class="text">Directors</span>
+            </div>
+            <div>
+                <span class="number">{ data.totalCountries }</span>
+                <span class="text">Countries</span>
+            </div>
+            {#if 'streak' in data }
+            <a href="//letterboxd.com/{ data.username }/films/diary/for/{ data['streak'].year }/{ data['streak'].month }/"
+               class="mostrap1">
+                <div class="pannello p1">
+                    <div class="testo">At least one film per week,
+                        starting { data['streak'].monthName } { data['streak'].year }</div>
                 </div>
-                <div>
-                    <span class="number">{ data.totalDirectors }</span>
-                    <span class="text">Directors</span>
-                </div>
-                <div>
-                    <span class="number">{ data.totalCountries }</span>
-                    <span class="text">Countries</span>
-                </div>
-                {#if 'streak' in data }
-                    <a href="//letterboxd.com/{ data.username }/films/diary/for/{ data['streak'].year }/{ data['streak'].month }/"
-                       class="mostrap1">
-                        <div class="pannello p1">
-                            <div class="testo">At least one film per week,
-                                starting { data['streak'].monthName } { data['streak'].year }</div>
-                        </div>
-                        <span class="number">{ data['streak'].max }w</span>
-                        <span class="text">Longest Streak</span>
-                    </a>
-                {/if}
-                {#if '2+filmDays' in data}
-                    <div>
-                        <span class="number">{ data['2+filmDays'] }</span>
-                        <span class="text">2+ Film Days</span>
-                    </div>
-                {/if}
+                <span class="number">{ data['streak'].max }w</span>
+                <span class="text">Longest Streak</span>
+            </a>
+            {/if}
+            {#if '2+filmDays' in data}
+            <div>
+                <span class="number">{ data['2+filmDays'] }</span>
+                <span class="text">2+ Film Days</span>
+            </div>
+            {/if}
             {:else}
-                <div>
-                    <span class="number">{ data.total }</span>
-                    <span class="text">Diary Entries</span>
-                </div>
-                <!--            <div>-->
-                <!--                <span class="number">{ data.likes }</span>-->
-                <!--                <span class="text">Films liked</span>-->
-                <!--            </div>-->
-                <div>
-                    <span class="number">{ data.reviews }</span>
-                    <span class="text">Reviews</span>
-                </div>
-                <div>
-                    <span class="number">{ data.totalRuntime }</span>
-                    <span class="text">Hours</span>
-                </div>
+            <div>
+                <span class="number">{ data.total }</span>
+                <span class="text">Diary Entries</span>
+            </div>
+<!--            <div>-->
+<!--                <span class="number">{ data.likes }</span>-->
+<!--                <span class="text">Films liked</span>-->
+<!--            </div>-->
+            <div>
+                <span class="number">{ data.reviews }</span>
+                <span class="text">Reviews</span>
+            </div>
+            <div>
+                <span class="number">{ data.totalRuntime }</span>
+                <span class="text">Hours</span>
+            </div>
             {/if}
         </div>
     </section>
     {#if year===''}
-        <section class="sectionStats">
-            <div class="sepline">
-                <span>By release year</span>
-                <div class="line"></div>
-                <span class="clickable active" on:click={clickableFunction} data-hide="yearChart" data-hide2="years2" data-show="releaseYear" data-show2="years1">Films</span>
-                {#if data.ru}
-                    <span class="clickable" on:click={clickableFunction} data-show="ratingYear" data-show2="years1" data-hide="yearChart" data-hide2="years2">Ratings</span>
-                {/if}
-                {#if arrayLength(data['logsPerYear']) > 0}
-                    <span class="clickable" on:click={clickableFunction} data-show="diaryYear" data-show2="years2" data-hide="yearChart" data-hide2="years1">Diary</span>
-                {/if}
-            </div>
-            <div class="chart-container">
-                <div class="yearChart" id="releaseYear"></div>
-                <div class="yearChart hide" id="ratingYear"></div>
-                <div class="yearChart hide" id="diaryYear"></div>
-            </div>
-            {#if 'years' in data }
-                <div class="years">
-                    <span class="years1">{ data.years[0]._id }</span>
-                    <span class="years1">{ last(data.years)._id }</span>
-                    {#if data.logsPerYear.length > 0 }
-                        <span class="years2 hide">{ data.logsPerYear[0]._id }</span>
-                        <span class="years2 hide">{ last(data.logsPerYear)._id }</span>
-                    {/if}
-                </div>
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>By release year</span>
+            <div class="line"></div>
+            <span class="clickable active" on:click={clickableFunction} data-hide="yearChart" data-hide2="years2" data-show="releaseYear" data-show2="years1">Films</span>
+            {#if data.ru}
+            <span class="clickable" on:click={clickableFunction} data-show="ratingYear" data-show2="years1" data-hide="yearChart" data-hide2="years2">Ratings</span>
             {/if}
-        </section>
-        {#if data.ru}
-            <section class="sectionStats">
-                <div class="sepline">
-                    <span>Highest rated decades</span>
-                    <div class="line"></div>
-                </div>
-                {#each data.decades as element }
-                    <div class="decade">
-                        <div class="decadeLeft">
-                            <a href="//letterboxd.com/{ data.username }/films/rated/.5-5/decade/{ element._id }s/by/entry-rating/"
-                               class="decadeTitle">{ element._id }s</a>
-                            <div><img src="images/greystar.webp" alt="greystar"/><span
-                                    class="decadeAverage">Average { element.avg }</span></div>
-                        </div>
-                        <div class="decPosters">
-                            {#each element.imgs as element2}
-                                <a class="poster decPosterImg" href="{ lbdurl }film/{ element2.uri }">
-                                    <div class="containertextimg"><span>{ element2.uri.replace("-", " ") }</span></div>
-                                    <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} src="images/poster.jpg" data-src="{ replaceSize(element2.img, 105, 70) }" alt="{ element.uri }"/>
-                                </a>
-                            {/each}
-                        </div>
-                    </div>
-                {/each}
-            </section>
+            {#if arrayLength(data['logsPerYear']) > 0}
+            <span class="clickable" on:click={clickableFunction} data-show="diaryYear" data-show2="years2" data-hide="yearChart" data-hide2="years1">Diary</span>
+            {/if}
+        </div>
+        <div class="chart-container">
+            <div class="yearChart" id="releaseYear"></div>
+            <div class="yearChart hide" id="ratingYear"></div>
+            <div class="yearChart hide" id="diaryYear"></div>
+        </div>
+        {#if 'years' in data }
+        <div class="years">
+            <span class="years1">{ data.years[0]._id }</span>
+            <span class="years1">{ last(data.years)._id }</span>
+            {#if data.logsPerYear.length > 0 }
+            <span class="years2 hide">{ data.logsPerYear[0]._id }</span>
+            <span class="years2 hide">{ last(data.logsPerYear)._id }</span>
+            {/if}
+        </div>
         {/if}
+    </section>
+    {#if data.ru}
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>Highest rated decades</span>
+            <div class="line"></div>
+        </div>
+        {#each data.decades as element }
+        <div class="decade">
+            <div class="decadeLeft">
+                <a href="//letterboxd.com/{ data.username }/films/rated/.5-5/decade/{ element._id }s/by/entry-rating/"
+                   class="decadeTitle">{ element._id }s</a>
+                <div><img src="images/greystar.webp" alt="greystar"/><span
+                        class="decadeAverage">Average { element.avg }</span></div>
+            </div>
+            <div class="decPosters">
+                {#each element.imgs as element2}
+                <a class="poster decPosterImg" href="{ lbdurl }film/{ element2.uri }">
+                    <div class="containertextimg"><span>{ element2.uri.replace("-", " ") }</span></div>
+                    <img  src="images/poster.jpg" data-src="{ replaceSize(element2.img, 105, 70) }" alt="{ element.uri }"/>
+                </a>
+                {/each}
+            </div>
+        </div>
+        {/each}
+    </section>
+    {/if}
     {:else}
         <!--DIARY SECTION -->
         {#if data.ru}
@@ -870,7 +876,7 @@
                             <div class="singleFilm">
                                 <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
                                     <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
-                                    <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                                    <img  class="lazy" src="images/poster.jpg"
                                          data-src="{replaceSize(element.poster, 165, 110)}"
                                          alt="{element._id}"/>
                                 </a>
@@ -885,7 +891,7 @@
                             <div class="singleFilm">
                                 <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
                                     <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
-                                    <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                                    <img  class="lazy" src="images/poster.jpg"
                                          data-src="{replaceSize(element.poster, 165, 110)}"
                                          alt="{element._id}"/>
                                 </a>
@@ -943,7 +949,7 @@
                     <div class="singleFilm">
                         <a class="poster" href="{lbdurl}{data.username}/film/{data.first._id}">
                             <div class="containertextimg"><span>{data.first._id.replace("-", " ")}</span></div>
-                            <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                            <img  class="lazy" src="images/poster.jpg"
                                  data-src="{replaceSize(data.first.poster, 165, 110)}"
                                  alt="{data.first._id}"/>
                         </a>
@@ -953,35 +959,35 @@
                     </div>
                 </div>
                 {#if data.milestones.length > 0 }
-                    <div class="msx msx2">
-                        <span>Diary Milestones</span>
-                        <div class="filmList mw2">
-                            {#each getValues(data.milestones) as element, index}
-                                <div class="singleFilm">
-                                    <a class="poster"
-                                       href="{lbdurl}{data.username}/film/{element._id}/activity">
-                                        <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
-                                        <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy"
-                                             src="images/poster.jpg"
-                                             data-src="{replaceSize(element.poster, 165, 110)}"
-                                             alt="{element._id}"/>
-                                    </a>
-                                    <div>
+                <div class="msx msx2">
+                    <span>Diary Milestones</span>
+                    <div class="filmList mw2">
+                        {#each getValues(data.milestones) as element, index}
+                        <div class="singleFilm">
+                            <a class="poster"
+                               href="{lbdurl}{data.username}/film/{element._id}/activity">
+                                <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
+                                <img  class="lazy"
+                                     src="images/poster.jpg"
+                                     data-src="{replaceSize(element.poster, 165, 110)}"
+                                     alt="{element._id}"/>
+                            </a>
+                            <div>
                                 <span class="sottotitolo bigsotto">{(index+1)*50}th
                                     <span class="sottotitolo_milestones hideMobile">· {formatDate1(element.date)}</span>
                                 </span>
-                                    </div>
-                                </div>
-                            {/each}
+                            </div>
                         </div>
+                        {/each}
                     </div>
+                </div>
                 {/if}
                 <div class="msx msx1">
                     <span>Last Film</span>
                     <div class="singleFilm">
                         <a class="poster" href="{lbdurl}{data.username}/film/{data.last._id}">
                             <div class="containertextimg"><span>{data.last._id.replace("-", " ")}</span></div>
-                            <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                            <img  class="lazy" src="images/poster.jpg"
                                  data-src="{replaceSize(data.last.poster, 165, 110)}"
                                  alt="{data.last._id}"/>
                         </a>
@@ -992,28 +998,28 @@
                 </div>
             </div>
             {#if data.mostWatched.length > 0}
-                <div class="msy">
-                    <div class="msx msxfull">
-                        <span>Most Watched</span>
-                        <div class="filmList mw2">
-                            {#each getValues(data.mostWatched) as element}
-                                <div class="singleFilm">
-                                    <a class="poster"
-                                       href="{lbdurl}{data.username}/film/{element.uri}/activity">
-                                        <div class="containertextimg"><span>{element.uri.replace("-", " ")}</span></div>
-                                        <img class="lazy" use:lazyImage on:load={handleImageLoad}
-                                             src="images/poster.jpg"
-                                             data-src="{replaceSize(element.poster, 165, 110)}"
-                                             alt="{element.uri}"/>
-                                    </a>
-                                    <div>
-                                        <span class="sottotitolo bigsotto">{element.sum} times</span>
-                                    </div>
-                                </div>
-                            {/each}
+            <div class="msy">
+                <div class="msx msxfull">
+                    <span>Most Watched</span>
+                    <div class="filmList mw2">
+                        {#each getValues(data.mostWatched) as element}
+                        <div class="singleFilm">
+                            <a class="poster"
+                               href="{lbdurl}{data.username}/film/{element.uri}/activity">
+                                <div class="containertextimg"><span>{element.uri.replace("-", " ")}</span></div>
+                                <img class="lazy" 
+                                     src="images/poster.jpg"
+                                     data-src="{replaceSize(element.poster, 165, 110)}"
+                                     alt="{element.uri}"/>
+                            </a>
+                            <div>
+                                <span class="sottotitolo bigsotto">{element.sum} times</span>
+                            </div>
                         </div>
+                        {/each}
                     </div>
                 </div>
+            </div>
             {/if}
         </section>
     {/if}
@@ -1022,54 +1028,54 @@
             <span>Genres, Countries & Languages</span>
             <div class="line"></div>
             {#if data.ru}
-                <span class="clickable active" on:click={clickableFunction} data-show="MWGCL" data-hide="secGCL">Most Watched</span>
-                <span class="clickable" on:click={clickableFunction} data-show="HRGCL" data-hide="secGCL">Highest Rated</span>
+            <span class="clickable active" on:click={clickableFunction} data-show="MWGCL" data-hide="secGCL">Most Watched</span>
+            <span class="clickable" on:click={clickableFunction} data-show="HRGCL" data-hide="secGCL">Highest Rated</span>
             {/if}
         </div>
         <div id="MWGCL" class="attributes-chart threeColumns secGCL">
             {#each [['genres', 'genre', 'rgb(0, 224, 84)'], ['countries', 'country', 'rgb(64, 188, 244)'], ['originallanguage','language', 'rgb(255, 128, 0)']] as type}
                 <div class="labels2">
-                    <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
-                    {#each getValues(getSlice(data[('mw_'+type[0])], 0, 10)) as element}
+                <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
+                {#each getValues(getSlice(data[('mw_'+type[0])], 0, 10)) as element}
+                <div>
+                    <a class="clickable label1"
+                       href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{type[1]}/{getUri( element['name'] )}">
+                        { element['name'] }
+                    </a>
+                    <div>
+                        <div class="genresFilms"
+                             style="width: {element['sum'] *100/ data[('mw_'+type[0])][0]['sum'] }%;">
+                            <span>{ element['sum'] } films</span></div>
+                        <div class="progressBarWithVal"
+                             style="width:{element['sum']*100/ data[('mw_'+type[0])][0]['sum'] }%; background-color:{ type[2] };"></div>
+                    </div>
+                </div>
+                {/each}
+            </div>
+            {/each}
+        </div>
+        {#if data.ru }
+        <div id="HRGCL" class="attributes-chart threeColumns secGCL hide">
+            {#each [['genres', 'genre', 'rgb(72, 255, 132)'], ['countries', 'country', 'rgb(116, 240, 255)'], ['originallanguage','language', 'rgb(255, 184, 96)']] as type}
+                <div class="labels2">
+                    {#each getValues(getSlice(data[('tr_'+type[0])], 0, 10)) as element}
                         <div>
                             <a class="clickable label1"
-                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{type[1]}/{getUri( element['name'] )}">
+                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri(element['name'])}">
                                 { element['name'] }
                             </a>
                             <div>
                                 <div class="genresFilms"
-                                     style="width: {element['sum'] *100/ data[('mw_'+type[0])][0]['sum'] }%;">
-                                    <span>{ element['sum'] } films</span></div>
+                                     style="width: {element['avg'] *100/ data[('tr_'+type[0])][0]['avg']  }%;">
+                                    <span>Average: {element['avg'] }</span></div>
                                 <div class="progressBarWithVal"
-                                     style="width:{element['sum']*100/ data[('mw_'+type[0])][0]['sum'] }%; background-color:{ type[2] };"></div>
+                                     style="width:{element['avg']*100/ data[('tr_'+type[0])][0]['avg'] }%; background-color:{ type[2] };"></div>
                             </div>
                         </div>
                     {/each}
                 </div>
             {/each}
         </div>
-        {#if data.ru }
-            <div id="HRGCL" class="attributes-chart threeColumns secGCL hide">
-                {#each [['genres', 'genre', 'rgb(72, 255, 132)'], ['countries', 'country', 'rgb(116, 240, 255)'], ['originallanguage','language', 'rgb(255, 184, 96)']] as type}
-                    <div class="labels2">
-                        {#each getValues(getSlice(data[('tr_'+type[0])], 0, 10)) as element}
-                            <div>
-                                <a class="clickable label1"
-                                   href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri(element['name'])}">
-                                    { element['name'] }
-                                </a>
-                                <div>
-                                    <div class="genresFilms"
-                                         style="width: {element['avg'] *100/ data[('tr_'+type[0])][0]['avg']  }%;">
-                                        <span>Average: {element['avg'] }</span></div>
-                                    <div class="progressBarWithVal"
-                                         style="width:{element['avg']*100/ data[('tr_'+type[0])][0]['avg'] }%; background-color:{ type[2] };"></div>
-                                </div>
-                            </div>
-                        {/each}
-                    </div>
-                {/each}
-            </div>
         {/if}
     </section>
     <section class="sectionStats">
@@ -1077,43 +1083,43 @@
             <span>Themes & Nanogenres®</span>
             <div class="line"></div>
             {#if data.ru }
-                <span class="clickable active" on:click={clickableFunction} data-show="MWTN" data-hide="secTN">Most Watched</span>
-                <span class="clickable" on:click={clickableFunction} data-show="HRTN" data-hide="secTN">Highest Rated</span>
+            <span class="clickable active" on:click={clickableFunction} data-show="MWTN" data-hide="secTN">Most Watched</span>
+            <span class="clickable" on:click={clickableFunction} data-show="HRTN" data-hide="secTN">Highest Rated</span>
             {/if}
         </div>
         <div id="MWTN" class="attributes-chart twocolumn secTN">
             {#each ['theme', 'nanogenre'] as type }
+            <div class="labels">
+                <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
+                {#each getValues(getSlice(data['mw_' + type + 's'], 0, 10)) as element}
+                    <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{ element['type'] }/{ getUri(element['name'], element['uri']) }">
+                        <span class="leftText">{element['name'] }</span>
+                        <span class="bold right">{ element['sum'] } films</span>
+                        <div class="labcontainer"
+                             style="width:{ element['sum'] * 100 /elementAt(data['mw_' + type + 's'],0)['sum'] }%;">
+                        </div>
+                    </a>
+                {/each}
+            </div>
+            {/each}
+        </div>
+        {#if data.ru }
+        <div id="HRTN" class="attributes-chart twocolumn secTN hide">
+            {#each ['theme', 'nanogenre'] as type }
                 <div class="labels">
                     <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
-                    {#each getValues(getSlice(data['mw_' + type + 's'], 0, 10)) as element}
-                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{ element['type'] }/{ getUri(element['name'], element['uri']) }">
-                            <span class="leftText">{element['name'] }</span>
-                            <span class="bold right">{ element['sum'] } films</span>
+                    {#each getValues(getSlice(data['tr_' + type + 's'], 0, 10)) as element}
+                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{ element['type'] }/{ getUri(element['name'], element['uri']) }">
+                            <span class="leftText">{ element['name'] }</span>
+                            <span class="bold right">Average: { element['avg'] }</span>
                             <div class="labcontainer"
-                                 style="width:{ element['sum'] * 100 /elementAt(data['mw_' + type + 's'],0)['sum'] }%;">
+                                 style="width:{ element['avg'] * 100 /elementAt(data['tr_' + type + 's'],0)['avg'] }%;">
                             </div>
                         </a>
                     {/each}
                 </div>
             {/each}
         </div>
-        {#if data.ru }
-            <div id="HRTN" class="attributes-chart twocolumn secTN hide">
-                {#each ['theme', 'nanogenre'] as type }
-                    <div class="labels">
-                        <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
-                        {#each getValues(getSlice(data['tr_' + type + 's'], 0, 10)) as element}
-                            <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{ element['type'] }/{ getUri(element['name'], element['uri']) }">
-                                <span class="leftText">{ element['name'] }</span>
-                                <span class="bold right">Average: { element['avg'] }</span>
-                                <div class="labcontainer"
-                                     style="width:{ element['avg'] * 100 /elementAt(data['tr_' + type + 's'],0)['avg'] }%;">
-                                </div>
-                            </a>
-                        {/each}
-                    </div>
-                {/each}
-            </div>
         {/if}
     </section>
 
@@ -1126,14 +1132,14 @@
             </div>
             <div class="pielists">
                 {#each Array.from({ length: arrayLength(data['lists']) }, (_, i) => i) as i }
-                    <div class="donut"
-                         style="background:conic-gradient(#40bcf4 0deg { 3.6* elementAt(data['lists'],i).perc }deg,#303c44 { 3.6* elementAt(data['lists'],i).perc }deg 360deg);">
-                        <a class="hole" href="{ lbdurl }{ elementAt(data['lists'],i)._id }">
-                            <span class="listtitle">{ elementAt(data['lists'],i).name }</span>
-                            <span class="listperc">{ parseInt(elementAt(data['lists'],i).perc) }%</span>
-                            <span class="listnum">{ elementAt(data['lists'],i).num } of { elementAt(data['lists'],i).tot }</span>
-                        </a>
-                    </div>
+                <div class="donut"
+                    style="background:conic-gradient(#40bcf4 0deg { 3.6* elementAt(data['lists'],i).perc }deg,#303c44 { 3.6* elementAt(data['lists'],i).perc }deg 360deg);">
+                    <a class="hole" href="{ lbdurl }{ elementAt(data['lists'],i)._id }">
+                        <span class="listtitle">{ elementAt(data['lists'],i).name }</span>
+                        <span class="listperc">{ parseInt(elementAt(data['lists'],i).perc) }%</span>
+                        <span class="listnum">{ elementAt(data['lists'],i).num } of { elementAt(data['lists'],i).tot }</span>
+                    </a>
+                </div>
                 {/each}
             </div>
         </section>
@@ -1146,100 +1152,100 @@
             </div>
             <div class="collections">
                 {#each Array.from({ length: arrayLength(data['collections']) }, (_, i) => i) as i }
-                    <div id="{ elementAt(data['collections'],i)['_id'] }Collection"
-                         class="collectionsx {elementAt(data['collections'],i)._id !== 'complete' ? 'hide' : ''}">
-                        {#each elementAt(data['collections'],i).collections as element}
-                            <div class="singleCollection">
-                                <a class="threeposters"
-                                   href="{ lbdurl }films/in/{ element['uri'] }/by/release-earliest/size/large/">
-                                    {#each element.posters as poster }
-                                        <img use:lazyImage class="lazy" src="images/poster_70.jpg" data-src="{ replaceSize(poster, 105, 70) }" alt=""/>
-                                    {/each}
-                                </a>
-                                <span>
+                <div id="{ elementAt(data['collections'],i)['_id'] }Collection"
+                    class="collectionsx {elementAt(data['collections'],i)._id !== 'complete' ? 'hide' : ''}">
+                    {#each elementAt(data['collections'],i).collections as element}
+                    <div class="singleCollection">
+                        <a class="threeposters"
+                           href="{ lbdurl }films/in/{ element['uri'] }/by/release-earliest/size/large/">
+                            {#each element.posters as poster }
+                            <img  class="lazy" src="images/poster_70.jpg" data-src="{ replaceSize(poster, 105, 70) }" alt=""/>
+                            {/each}
+                        </a>
+                        <span>
                             <a class="name" href="{lbdurl}films/in/{element['uri']}/by/release-earliest/size/large/">
                                 {element['name']}
                             </a>
-                                    {element['num']} watched
+                            {element['num']} watched
                         </span>
-                            </div>
-                        {/each}
                     </div>
+                    {/each}
+                </div>
                 {/each}
             </div>
         </section>
         {#if arrayLength(data['mostWatched'])>0 }
-            <section class="sectionStats">
-                <div class="sepline">
-                    <span>Most Watched</span>
-                    <div class="line"></div>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Most Watched</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast2">
+                {#each Array.from({ length: arrayLength(data['mostWatched']) }, (_, i) => i) as i }
+                <div class="singleFilm">
+                    <a class="poster" href="{ lbdurl }film/{  elementAt(data['mostWatched'],i)._id }">
+                        <div class="containertextimg"><span>{ elementAt(data['mostWatched'],i)._id.replace("-", " ") }</span></div>
+                        <img  class="lazy" src="images/poster.jpg"
+                             data-src="{ replaceSize(elementAt(data['mostWatched'],i).img, 165, 110) }"
+                             alt="{ elementAt(data['mostWatched'],i)._id }"/>
+                    </a>
+                    <div>
+                        <span class="sottotitolo bigsotto">{ elementAt(data['mostWatched'],i).watches } times</span>
+                    </div>
                 </div>
-                <div class="filmList hideLast2">
-                    {#each Array.from({ length: arrayLength(data['mostWatched']) }, (_, i) => i) as i }
-                        <div class="singleFilm">
-                            <a class="poster" href="{ lbdurl }film/{  elementAt(data['mostWatched'],i)._id }">
-                                <div class="containertextimg"><span>{ elementAt(data['mostWatched'],i)._id.replace("-", " ") }</span></div>
-                                <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
-                                     data-src="{ replaceSize(elementAt(data['mostWatched'],i).img, 165, 110) }"
-                                     alt="{ elementAt(data['mostWatched'],i)._id }"/>
-                            </a>
-                            <div>
-                                <span class="sottotitolo bigsotto">{ elementAt(data['mostWatched'],i).watches } times</span>
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-                <div class="noflex">
-                    <a class="clickable seeallbutton" href="{ lbdurl }{ data.username }/films/diary/by/diary-count/">see in diary</a>
-                </div>
-            </section>
+                {/each}
+            </div>
+            <div class="noflex">
+                <a class="clickable seeallbutton" href="{ lbdurl }{ data.username }/films/diary/by/diary-count/">see in diary</a>
+            </div>
+        </section>
         {/if}
         {#if data.ru}
-            <section class="sectionStats">
-                <div class="sepline">
-                    <span>Rated higher then average</span>
-                    <div class="line"></div>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Rated higher then average</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast">
+                {#each Array.from({ length: arrayLength(data['highers']) }, (_, i) => i) as i }
+                <div class="singleFilm">
+                    <a class="poster" href="{ lbdurl }film/{ elementAt(data['highers'],i)._id }">
+                        <div class="containertextimg"><span>{ elementAt(data['highers'],i)._id.replace("-", " ") }</span></div>
+                        <img  class="lazy" src="images/poster.jpg"
+                             data-src="{ replaceSize(elementAt(data['highers'],i).img, 165, 110) }" alt="{ elementAt(data['highers'],i)._id }"/>
+                    </a>
+                    <div>
+                        <span class="sottotitolo stelline">{ numToStars(elementAt(data['highers'],i).r) }</span>
+                        <span class="sottotitolo">vs { elementAt(data['highers'],i).avg }</span>
+                    </div>
                 </div>
-                <div class="filmList hideLast">
-                    {#each Array.from({ length: arrayLength(data['highers']) }, (_, i) => i) as i }
-                        <div class="singleFilm">
-                            <a class="poster" href="{ lbdurl }film/{ elementAt(data['highers'],i)._id }">
-                                <div class="containertextimg"><span>{ elementAt(data['highers'],i)._id.replace("-", " ") }</span></div>
-                                <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
-                                     data-src="{ replaceSize(elementAt(data['highers'],i).img, 165, 110) }" alt="{ elementAt(data['highers'],i)._id }"/>
-                            </a>
-                            <div>
-                                <span class="sottotitolo stelline">{ numToStars(elementAt(data['highers'],i).r) }</span>
-                                <span class="sottotitolo">vs { elementAt(data['highers'],i).avg }</span>
-                            </div>
-                        </div>
-                    {/each}
+                {/each}
+            </div>
+        </section>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Rated lower then average</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast">
+                {#each getValues(data['lowers']) as element}
+                <div class="singleFilm">
+                    <a class="poster" href="{ lbdurl }film/{ element._id }">
+                        <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
+                        <img  class="lazy" src="images/poster.jpg"
+                             data-src="{ replaceSize(element.img, 165, 110) }" alt="{ element._id }"/>
+                    </a>
+                    <div>
+                        <span class="sottotitolo stelline">{ numToStars(element.r) }</span>
+                        <span class="sottotitolo">vs { element.avg }</span>
+                    </div>
                 </div>
-            </section>
-            <section class="sectionStats">
-                <div class="sepline">
-                    <span>Rated lower then average</span>
-                    <div class="line"></div>
-                </div>
-                <div class="filmList hideLast">
-                    {#each getValues(data['lowers']) as element}
-                        <div class="singleFilm">
-                            <a class="poster" href="{ lbdurl }film/{ element._id }">
-                                <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
-                                <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
-                                     data-src="{ replaceSize(element.img, 165, 110) }" alt="{ element._id }"/>
-                            </a>
-                            <div>
-                                <span class="sottotitolo stelline">{ numToStars(element.r) }</span>
-                                <span class="sottotitolo">vs { element.avg }</span>
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-            </section>
+                {/each}
+            </div>
+        </section>
         {/if}
 
-        <!-- DIARY SECTION -->
+    <!-- DIARY SECTION -->
     {:else}
 
         <section class="sectionStats">
@@ -1272,57 +1278,57 @@
                     </div>
                 </div>
                 {#if data.ru}
-                    <div class="ratingSpreadsection">
-                        <img src="images/1stars.png" alt="1star"/>
-                        <div id="ratingSpread" class="ratingSpread"></div>
-                        <img src="images/5stars.png" alt="5stars"/>
-                    </div>
-                    <span class="linetitle">Rating Spread</span>
+                <div class="ratingSpreadsection">
+                    <img src="images/1stars.png" alt="1star"/>
+                    <div id="ratingSpread" class="ratingSpread"></div>
+                    <img src="images/5stars.png" alt="5stars"/>
+                </div>
+                <span class="linetitle">Rating Spread</span>
                 {/if}
             </div>
         </section>
     {/if}
 
     {#each [['actor', 'Stars', 'a', 'actor'], ['director', 'Directors', 'd', 'director']] as role}
-        <section class="sectionStats">
-            <div class="sepline">
-                <span>{ role[1] }</span>
-                <div class="line"></div>
-                <span class="clickable active" on:click={clickableFunction} data-show="{ role[0] }sWatch" data-hide="{ role[0] }sbis">Most Watched</span>
-                {#if data.ru }<span class="clickable" on:click={clickableFunction} data-show="{ role[0] }sRat" data-hide="{ role[0] }sbis">Highest Rated</span>{/if}
-            </div>
-            <div class="{ role[0] }s2">
-                {#each [['Watch', 'mw_', 'w', ''], ['Rat', 'tr_', 'r', 'hide']] as type}
-                    <section id="{ role[0] }s{ type[0] }" class="{ role[0] }sbis { type[3] }">
-                        {#each [['1', ''], ['2', 'hide']] as num}
-                            <div id="{role[0]}s{type[0]}{num[0]}" class="{role[0]}s people {num[1]}">
-                                {#each getValues(getSlice(data[type[1]+role[3]], ifThenElse(num[0] === '1',0,10), ifThenElse(num[0] === '1',10,20))) as element }
-                                    {#if element.hasOwnProperty('name')}
-                                        <div class="container_people">
-                                            <a href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element.uri }">
-                                                <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
-                                            </a>
-                                            <a class="clickable" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{role[0]}/{element._id}">
-                                                {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
-                                            </a>
-                                            {#if type[2]==='w' }
-                                                <a class="sottotitolo" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element._id }">
-                                                    { element.sum } films</a>
-                                            {:else}
-                                                <span class="sottotitolo">★ { element.avg }</span>
-                                            {/if}
-                                        </div>
-                                    {/if}
-                                {/each}
-                            </div>
-                        {/each}
-                        <div class="noflex">
-                            <a class="clickable { role[2] }{ type[2] }2 seeallbutton" on:click={clickableFunction} data-show="{ role[0] }s{ type[0] }2" data-hide="{ role[2] }{ type[2] }2">see more</a>
+    <section class="sectionStats">
+        <div class="sepline">
+            <span>{ role[1] }</span>
+            <div class="line"></div>
+            <span class="clickable active" on:click={clickableFunction} data-show="{ role[0] }sWatch" data-hide="{ role[0] }sbis">Most Watched</span>
+            {#if data.ru }<span class="clickable" on:click={clickableFunction} data-show="{ role[0] }sRat" data-hide="{ role[0] }sbis">Highest Rated</span>{/if}
+        </div>
+        <div class="{ role[0] }s2">
+            {#each [['Watch', 'mw_', 'w', ''], ['Rat', 'tr_', 'r', 'hide']] as type}
+            <section id="{ role[0] }s{ type[0] }" class="{ role[0] }sbis { type[3] }">
+                {#each [['1', ''], ['2', 'hide']] as num}
+                <div id="{role[0]}s{type[0]}{num[0]}" class="{role[0]}s people {num[1]}">
+                    {#each getValues(getSlice(data[type[1]+role[3]], ifThenElse(num[0] === '1',0,10), ifThenElse(num[0] === '1',10,20))) as element }
+                        {#if element.hasOwnProperty('name')}
+                        <div class="container_people">
+                            <a href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element.uri }">
+                                <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
+                            </a>
+                            <a class="clickable" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{role[0]}/{element._id}">
+                                {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
+                            </a>
+                            {#if type[2]==='w' }
+                            <a class="sottotitolo" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element._id }">
+                                { element.sum } films</a>
+                            {:else}
+                            <span class="sottotitolo">★ { element.avg }</span>
+                            {/if}
                         </div>
-                    </section>
+                        {/if}
+                    {/each}
+                </div>
                 {/each}
-            </div>
-        </section>
+                <div class="noflex">
+                    <a class="clickable { role[2] }{ type[2] }2 seeallbutton" on:click={clickableFunction} data-show="{ role[0] }s{ type[0] }2" data-hide="{ role[2] }{ type[2] }2">see more</a>
+                </div>
+            </section>
+            {/each}
+        </div>
+    </section>
     {/each}
 
     <section class="sectionStats">
@@ -1333,30 +1339,30 @@
             {#if data.ru }<span class="clickable" on:click={clickableFunction} data-show="crewtr" data-hide="crewbis">Highest Rated</span>{/if}
         </div>
         {#each ['mw', 'tr'] as type}
-            <section id="crew{type}" class="crewbis {type === 'tr' ? 'hide' : ''}">
-                {#each getValues(roles) as role}
-                    <div class="role">
-                        <span class="titlerole">{role[1]}</span>
-                        {#each getValues(getSlice(data[type+'_'+role[0]],0,20)) as element,i }
-                            {#if element.hasOwnProperty('name') }
-                                <div class="{ type }limit {i > 5 ? 'hide' : ''}">
-                                    <a class="clickable"
-                                       href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[2] }/{ element._id }"
-                                    >
-                                        {#if element.hasOwnProperty('name') }{element.name}{:else}{element._id}{/if}
-                                    </a>
-                                    <span class="sottotitolo">
+        <section id="crew{type}" class="crewbis {type === 'tr' ? 'hide' : ''}">
+            {#each getValues(roles) as role}
+            <div class="role">
+                <span class="titlerole">{role[1]}</span>
+                {#each getValues(getSlice(data[type+'_'+role[0]],0,20)) as element,i }
+                {#if element.hasOwnProperty('name') }
+                <div class="{ type }limit {i > 5 ? 'hide' : ''}">
+                    <a class="clickable"
+                       href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[2] }/{ element._id }"
+                    >
+                        {#if element.hasOwnProperty('name') }{element.name}{:else}{element._id}{/if}
+                    </a>
+                    <span class="sottotitolo">
                         {#if type === 'mw' }{element.sum}{:else}{element.avg}{/if}
                     </span>
-                                </div>
-                            {/if}
-                        {/each}
-                    </div>
-                {/each}
-                <div class="noflex">
-                    <a class="clickable {type}btn seeallbutton" on:click={clickableFunction} data-class-show="{type}limit" data-hide="{type}btn">see more</a>
                 </div>
-            </section>
+                {/if}
+                {/each}
+            </div>
+            {/each}
+            <div class="noflex">
+                <a class="clickable {type}btn seeallbutton" on:click={clickableFunction} data-class-show="{type}limit" data-hide="{type}btn">see more</a>
+            </div>
+        </section>
         {/each}
     </section>
     {#if year !== ''}
@@ -1368,27 +1374,27 @@
             <div class="highLow">
                 {#each [['best', 'Highest Average'],['worst', 'Lowest Average'],
                     ['popular', 'Most Popular'],['obscure', 'Most Obscure']] as type }
-                    <div class="singleFilm">
-                        <span class="suptitle">{type[1]}</span>
-                        <a class="poster" href="{lbdurl}film/{data[type[0]]._id}">
-                            {#if data[type[0]].hasOwnProperty('poster')}
-                                <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
-                                <img class="lazy" src="images/poster.jpg" use:lazyImage on:load={handleImageLoad}
-                                     data-src="{replaceSize(data[type[0]].poster, 165, 110)}"
-                                     alt="{data[type[0]]._id}"/>
-                            {:else}
-                                <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
-                                <img class="lazy" src="images/poster.jpg" use:lazyImage on:load={handleImageLoad}
-                                     alt="{data[type[0]]._id}"/>
-                            {/if}
-                        </a>
-                        <div class="sottofilm">
-                            {#if data[type[0]].hasOwnProperty('avg')}
-                                <img src="images/orangestar.jpg"/>
-                                <span class="sottotitolo stellamedia">{data[type[0]].avg.toFixed(1)}</span>
-                            {/if}
-                        </div>
+                <div class="singleFilm">
+                    <span class="suptitle">{type[1]}</span>
+                    <a class="poster" href="{lbdurl}film/{data[type[0]]._id}">
+                        {#if data[type[0]].hasOwnProperty('poster')}
+                        <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
+                        <img class="lazy" src="images/poster.jpg" 
+                             data-src="{replaceSize(data[type[0]].poster, 165, 110)}"
+                             alt="{data[type[0]]._id}"/>
+                        {:else}
+                        <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
+                        <img class="lazy" src="images/poster.jpg" 
+                             alt="{data[type[0]]._id}"/>
+                        {/if}
+                    </a>
+                    <div class="sottofilm">
+                        {#if data[type[0]].hasOwnProperty('avg')}
+                        <img src="images/orangestar.jpg"/>
+                        <span class="sottotitolo stellamedia">{data[type[0]].avg.toFixed(1)}</span>
+                        {/if}
                     </div>
+                </div>
                 {/each}
             </div>
         </section>

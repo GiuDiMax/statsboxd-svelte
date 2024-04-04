@@ -58,15 +58,15 @@
         const localStorageData = localStorage.getItem(username)
         let tmpdata
         if(localStorageData !== null && localStorageData !== "undefined") {
-          tmpdata = JSON.parse(localStorageData)
-          console.log("Read from localStorage")
-          tmpdata = await getLbdUpdate(tmpdata)
+            tmpdata = JSON.parse(localStorageData)
+            console.log("Read from localStorage")
+            tmpdata = await getLbdUpdate(tmpdata)
         }else{
-          tmpdata = await getLbdWatched(username)
+            tmpdata = await getLbdWatched(username)
         }
         localStorage.setItem(username, JSON.stringify(tmpdata))
         data = await getStats(tmpdata)
-          data['id'] = tmpdata['id']
+        data['id'] = tmpdata['id']
       }
     }
     catch (error) {
@@ -75,7 +75,7 @@
   }
 
   //main();
-  data.message = "Under construction..."
+  //data.message = "Under construction..."
 
 </script>
 

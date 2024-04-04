@@ -49,6 +49,11 @@
         }
     }
 
+    async function handleImageError(){
+        jQuery(event.target).parent().removeClass("imgok").addClass('notok')
+        jQuery(event.target).attr('src', 'images/poster.jpg')
+    }
+
     async function setTmdb(element, event, lang='&language=en'){
         //const element = jQuery(event.target)
         const element2 = jQuery(element.target)
@@ -146,7 +151,7 @@
                     <div class="poster2">
                         <div class="imgContainer">
                             <div class="containertextimg"><span>{item.name}</span></div>
-                            <img class="image tmdbimg" on:load={setTmdb} src="images/posterbig.webp" data-tmdb="{item.tmdb}" alt="{item.name}" crossorigin="anonymous"/>
+                            <img class="image tmdbimg" on:load={setTmdb} on:error={handleImageError} src="images/posterbig.webp" data-tmdb="{item.tmdb}" alt="{item.name}" crossorigin="anonymous"/>
                         </div>
                         <span class="stars">
                             {#if item.hasOwnProperty('r')}
