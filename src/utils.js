@@ -2,7 +2,7 @@ import {baseUrl} from "./config.js"
 const limit = 25
 
 export async function addMissingData(data, username, year=0){
-    return
+    //return
     if(year > 0){
         await splitPost(data['missingCrew'], "addPeople")
         localStorage.setItem(username.toLowerCase() + "_" + year.toString() + "_stats", JSON.stringify(data))
@@ -30,8 +30,8 @@ async function splitPost(arr, path){
 
 async function postWorker(array, path){
     if(array.length === 0){return}
-    console.log(path)
-    console.log(array.length)
+    //console.log(path)
+    //console.log(array.length)
     return await fetch(baseUrl + path,
         {
             method: "POST",
