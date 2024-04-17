@@ -1,5 +1,5 @@
-import {baseUrl} from "./config.js"
-const limit = 25
+import {baseUrl, baseUrlOld} from "./config.js"
+const limit = 10
 
 export async function addMissingData(data, username, year=0){
     //return
@@ -11,7 +11,7 @@ export async function addMissingData(data, username, year=0){
         await Promise.all([
             splitPost(data['missing'], "addFilms"),
             splitPost(missingRatings, "addRatings"),
-            splitPost(data['missingCollections'], "addRatings"),
+            splitPost(data['missingCollections'], "addCollections"),
             splitPost(data['missingCrew'], "addPeople"),
         ])
         data['missing'] = []
@@ -30,9 +30,7 @@ async function splitPost(arr, path){
 
 async function postWorker(array, path){
     if(array.length === 0){return}
-    //console.log(path)
-    //console.log(array.length)
-    return await fetch(baseUrl + path,
+    return await fetch(baseUrlOld + path,
         {
             method: "POST",
             headers: {"Accept-Encoding": "br"},
