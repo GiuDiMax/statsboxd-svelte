@@ -1341,9 +1341,9 @@
                             {#if element.hasOwnProperty('name') }
                                 <div class="{ type }limit {i > 5 ? 'hide' : ''}">
                                     <a class="clickable"
-                                       href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[2] }/{ element._id }"
+                                       href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[2] }/{ element.uri }"
                                     >
-                                        {#if element.hasOwnProperty('name') }{element.name}{:else}{element._id}{/if}
+                                        {#if element.hasOwnProperty('name') }{element.name}{:else}{element.uri}{/if}
                                     </a>
                                     <span class="sottotitolo">
                         {#if type === 'mw' }{element.sum}{:else}{element.avg}{/if}
