@@ -739,7 +739,7 @@
                 <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="/#">
                     <span class="material-symbols-rounded icon">sync</span>Update
                 </a>
-                <a class="clickable seeallbutton updatebutton collagebutton" href="old.statsboxd.top/{ data.username }/collage2" target="_blank">
+                <a class="clickable seeallbutton updatebutton collagebutton" href="//old.statsboxd.top/{ data.username }/collage2" target="_blank">
                     <span class="material-symbols-rounded icon">grid_on</span>Last month collage
                 </a>
             </div>
