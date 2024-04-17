@@ -1302,11 +1302,11 @@
                                             <a href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element.uri }">
                                                 <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
                                             </a>
-                                            <a class="clickable" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{role[0]}/{element._id}">
+                                            <a class="clickable" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{role[0]}/{element.uri}">
                                                 {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
                                             </a>
                                             {#if type[2]==='w' }
-                                                <a class="sottotitolo" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element._id }">
+                                                <a class="sottotitolo" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element.uri }">
                                                     { element.sum } films</a>
                                             {:else}
                                                 <span class="sottotitolo">★ { element.avg }</span>
