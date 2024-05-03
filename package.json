@@ -13,7 +13,7 @@
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@types/dropzone": "^5.7.8",
     "svelte": "^4.2.12",
-    "vite": "^5.1.6"
+    "vite": "^5.1.7"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
