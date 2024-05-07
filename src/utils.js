@@ -31,10 +31,11 @@ async function splitPost(arr, path){
 
 async function postWorker(array, path){
     if(array.length === 0){return}
-    return await fetch(baseUrlOld + path,
+    console.log(JSON.stringify(array))
+    return await fetch(baseUrl + path, //solo per worker
         {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            //headers: {"Content-Type": "application/json"},
             body: JSON.stringify(array)
         },
     )
