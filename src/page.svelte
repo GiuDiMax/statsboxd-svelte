@@ -67,6 +67,12 @@
         catch{return ""}
     }
 
+    function replaceDash(str){
+        try{return str.replace("-", " ")}
+        catch{return ""}
+
+    }
+
     function getUri(obj, obj2=null) {
         if (obj2 !== null && obj2.length > 0) {return obj2}
         //try {
@@ -845,7 +851,7 @@
                         <div class="decPosters">
                             {#each element.imgs as element2}
                                 <a class="poster decPosterImg" href="{ lbdurl }film/{ element2.uri }">
-                                    <div class="containertextimg"><span>{ element2.uri.replace("-", " ") }</span></div>
+                                    <div class="containertextimg"><span>{ replaceDash(element2.uri) }</span></div>
                                     <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} src="images/poster.jpg" data-src="{ replaceSize(element2.img, 105, 70) }" alt="{ element.uri }"/>
                                 </a>
                             {/each}
@@ -869,7 +875,7 @@
                         {#each getValues(data.topRatedCurrentYear) as element}
                             <div class="singleFilm">
                                 <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
-                                    <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
+                                    <div class="containertextimg"><span>{ replaceDash(element._id) }</span></div>
                                     <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                          data-src="{replaceSize(element.poster, 165, 110)}"
                                          alt="{element._id}"/>
@@ -884,7 +890,7 @@
                         {#each getValues(data.topRatedOtherYears) as element}
                             <div class="singleFilm">
                                 <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
-                                    <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
+                                    <div class="containertextimg"><span>{replaceDash(element._id)}</span></div>
                                     <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                          data-src="{replaceSize(element.poster, 165, 110)}"
                                          alt="{element._id}"/>
@@ -942,7 +948,7 @@
                     <span>First Film</span>
                     <div class="singleFilm">
                         <a class="poster" href="{lbdurl}{data.username}/film/{data.first._id}">
-                            <div class="containertextimg"><span>{data.first._id.replace("-", " ")}</span></div>
+                            <div class="containertextimg"><span>{replaceDash(data.first._id)}</span></div>
                             <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                  data-src="{replaceSize(data.first.poster, 165, 110)}"
                                  alt="{data.first._id}"/>
@@ -960,7 +966,7 @@
                                 <div class="singleFilm">
                                     <a class="poster"
                                        href="{lbdurl}{data.username}/film/{element._id}/activity">
-                                        <div class="containertextimg"><span>{element._id.replace("-", " ")}</span></div>
+                                        <div class="containertextimg"><span>{replaceDash(element._id)}</span></div>
                                         <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy"
                                              src="images/poster.jpg"
                                              data-src="{replaceSize(element.poster, 165, 110)}"
@@ -980,7 +986,7 @@
                     <span>Last Film</span>
                     <div class="singleFilm">
                         <a class="poster" href="{lbdurl}{data.username}/film/{data.last._id}">
-                            <div class="containertextimg"><span>{data.last._id.replace("-", " ")}</span></div>
+                            <div class="containertextimg"><span>{replaceDash(data.last._id)}</span></div>
                             <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                  data-src="{replaceSize(data.last.poster, 165, 110)}"
                                  alt="{data.last._id}"/>
@@ -1000,7 +1006,7 @@
                                 <div class="singleFilm">
                                     <a class="poster"
                                        href="{lbdurl}{data.username}/film/{element.uri}/activity">
-                                        <div class="containertextimg"><span>{element.uri.replace("-", " ")}</span></div>
+                                        <div class="containertextimg"><span>{replaceDash(element.uri)}</span></div>
                                         <img class="lazy" use:lazyImage on:load={handleImageLoad}
                                              src="images/poster.jpg"
                                              data-src="{replaceSize(element.poster, 165, 110)}"
@@ -1178,7 +1184,7 @@
                     {#each Array.from({ length: arrayLength(data['mostWatched']) }, (_, i) => i) as i }
                         <div class="singleFilm">
                             <a class="poster" href="{ lbdurl }film/{  elementAt(data['mostWatched'],i)._id }">
-                                <div class="containertextimg"><span>{ elementAt(data['mostWatched'],i)._id.replace("-", " ") }</span></div>
+                                <div class="containertextimg"><span>{ replaceDash(elementAt(data['mostWatched'],i)._id) }</span></div>
                                 <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                      data-src="{ replaceSize(elementAt(data['mostWatched'],i).img, 165, 110) }"
                                      alt="{ elementAt(data['mostWatched'],i)._id }"/>
@@ -1204,7 +1210,7 @@
                     {#each Array.from({ length: arrayLength(data['highers']) }, (_, i) => i) as i }
                         <div class="singleFilm">
                             <a class="poster" href="{ lbdurl }film/{ elementAt(data['highers'],i)._id }">
-                                <div class="containertextimg"><span>{ elementAt(data['highers'],i)._id.replace("-", " ") }</span></div>
+                                <div class="containertextimg"><span>{ replaceDash(elementAt(data['highers'],i)._id) }</span></div>
                                 <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                      data-src="{ replaceSize(elementAt(data['highers'],i).img, 165, 110) }" alt="{ elementAt(data['highers'],i)._id }"/>
                             </a>
@@ -1225,7 +1231,7 @@
                     {#each getValues(data['lowers']) as element}
                         <div class="singleFilm">
                             <a class="poster" href="{ lbdurl }film/{ element._id }">
-                                <div class="containertextimg"><span>{ element._id.replace("-", " ") }</span></div>
+                                <div class="containertextimg"><span>{ replaceDash(element._id) }</span></div>
                                 <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
                                      data-src="{ replaceSize(element.img, 165, 110) }" alt="{ element._id }"/>
                             </a>
@@ -1372,12 +1378,12 @@
                         <span class="suptitle">{type[1]}</span>
                         <a class="poster" href="{lbdurl}film/{data[type[0]]._id}">
                             {#if data[type[0]].hasOwnProperty('poster')}
-                                <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
+                                <div class="containertextimg"><span>{replaceDash(data[type[0]]._id)}</span></div>
                                 <img class="lazy" src="images/poster.jpg" use:lazyImage on:load={handleImageLoad}
                                      data-src="{replaceSize(data[type[0]].poster, 165, 110)}"
                                      alt="{data[type[0]]._id}"/>
                             {:else}
-                                <div class="containertextimg"><span>{data[type[0]]._id.replace("-", " ")}</span></div>
+                                <div class="containertextimg"><span>{replaceDash(data[type[0]]._id)}</span></div>
                                 <img class="lazy" src="images/poster.jpg" use:lazyImage on:load={handleImageLoad}
                                      alt="{data[type[0]]._id}"/>
                             {/if}

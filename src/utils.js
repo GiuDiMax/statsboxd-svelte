@@ -9,10 +9,10 @@ export async function addMissingData(data, username, year=0){
     }else {
         const missingRatings = data['missingRatings'].filter((item2) => !data['missing'].some((item1) => item1.id === item2.id))
         await Promise.all([
-            splitPost(data['missing'], "addFilms"),
-            splitPost(missingRatings, "addRatings"),
-            splitPost(data['missingCollections'], "addCollections"),
-            splitPost(data['missingCrew'], "addPeople"),
+            splitPost(data['missing'], "addFilms/"),
+            splitPost(missingRatings, "addRatings/"),
+            splitPost(data['missingCollections'], "addCollections/"),
+            splitPost(data['missingCrew'], "addPeople/"),
         ])
         data['missing'] = []
         data['missingRatings'] = []
@@ -24,7 +24,8 @@ export async function addMissingData(data, username, year=0){
 
 async function splitPost(arr, path){
     for (let i = 0; i < arr.length; i += limit) {
-        postWorker(arr.slice(i, i + limit), path)
+        let x = await postWorker(arr.slice(i, i + limit), path)
+        console.log(x)
     }
 }
 
@@ -33,7 +34,7 @@ async function postWorker(array, path){
     return await fetch(baseUrlOld + path,
         {
             method: "POST",
-            headers: {"Accept-Encoding": "br"},
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(array)
         },
     )
