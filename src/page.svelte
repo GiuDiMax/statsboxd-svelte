@@ -412,10 +412,12 @@
     async function setVectorMap(){
         //WORLDMAP
         let worldData = {}
+        //console.log(data.mw_countries)
         data.mw_countries.forEach(item => {worldData[item._id] = item.sum})
         let worldDataUri = {}
         data.mw_countries.forEach(item => {worldDataUri[item._id] = getUri(item.name)})
-
+        let worldDataName = {}
+        data.mw_countries.forEach(item => {worldDataName[item._id] = item.name})
         jsVectorMap({
             selector: '#world-map',
             map: 'world',
@@ -425,9 +427,13 @@
             showTooltip: true,
             onRegionTooltipShow: function (event, tooltip, code) {
                 let value = 0
-                if (typeof worldData[code] !== 'undefined') {value = worldData[code]}
+                let country = tooltip.text()
+                if (typeof worldData[code] !== 'undefined') {
+                    value = worldData[code];
+                    country = worldDataName[code]
+                }
                 tooltip.text(
-                    '<div class="box"><span class="ttTitle">'+tooltip.text()+'</span>'+
+                    '<div class="box"><span class="ttTitle">'+country+'</span>'+
                     '<span class="ttSubtitle">Films watched: '+value+'</span>' +
                     '</div><div class="ttPointer"></div>', true)
             },
