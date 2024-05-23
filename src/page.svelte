@@ -48,6 +48,7 @@
     }
 
     async function setTmdb(){
+        console.log("test")
         const element = jQuery(event.target)
         if (element.data('tmdb') === undefined || element.data('isLoaded')){return}
         const response = await fetch('https://api.themoviedb.org/3/person/'+element.data('tmdb')+'?api_key='+tmdb_key)

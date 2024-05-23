@@ -157,7 +157,7 @@
     {:else}
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
-            (<a href="https://letterboxd.com/data/export/" target="_blank">or click here</a>) and upload the zip file.<br /><br />
+            (<a href="https://letterboxd.com/data/export/" target="_top">or click here</a>) and upload the zip file.<br /><br />
 
         </p>
         {#if message !== ''}<p class="message">{@html message}</p>{/if}
