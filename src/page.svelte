@@ -48,7 +48,6 @@
     }
 
     async function setTmdb(){
-        console.log("test")
         const element = jQuery(event.target)
         if (element.data('tmdb') === undefined || element.data('isLoaded')){return}
         const response = await fetch('https://api.themoviedb.org/3/person/'+element.data('tmdb')+'?api_key='+tmdb_key)
@@ -152,14 +151,23 @@
         return ""
     }
 
-    function getWeek(year, nweek) {
-        var startdate = new Date(year, 0, 1);
+    function getWeek(y, nweek) {
+        var startdate = new Date(y, 0, 1);
         startdate.setDate(startdate.getDate() + (nweek - 1) * 7);
         var dayweek = startdate.getDay();
         var giorniAggiuntivi = (dayweek === 0) ? 1 : (8 - dayweek);
         startdate.setDate(startdate.getDate() + giorniAggiuntivi);
         var stopdate = new Date(startdate);
         stopdate.setDate(stopdate.getDate() + 6)
+        if (parseInt(startdate.getFullYear()) !== parseInt(year)) {
+            startdate = new Date(year, 0, 1);
+        }
+        if (stopdate.getTime() === startdate.getTime()){
+            return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate()
+        }
+        if (stopdate.getMonth() === startdate.getMonth()){
+            return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate() + ' — ' + stopdate.getDate()
+        }
         return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate() + ' — ' + stopdate.toLocaleString('en', {month: 'short'}) + ' ' + stopdate.getDate()
     }
 
@@ -317,30 +325,40 @@
         Highcharts.chart('ratingSpread', generalChart)
 
         //WATCHED WEEK
+        let dataChartWeek = []
+        let fs = false
+        const firstDay = new Date(parseInt(year), 0, 1)
+        if (firstDay.getDay() === 1) {fs = true}
+        fillArray(data.weeks, 0, getWeeksInYear(year)).forEach(function (item, index){
+            let w2 = item._id
+            let y2 = year
+            let w3 = w2
+            if(w2 === 0 && !fs){w2 = getWeeksInYear(year-1); w3 = getWeeksInYear(year-1).toString() + ' (' + (year-1).toString() + ')'; y2 = y2-1}
+            if(fs){w3 = w3 + 1}
+            if (item.sum > 0){dataChartWeek.push({ name: item._id, y: item.sum + 0.25, week: w2, year: y2, w3: w3})}
+            else{dataChartWeek.push({ name: item._id, y: item.sum + 0.25, color: "#445566", week: w2, year: y2, w3: w3})}
+        })
         generalChart.chart.height = undefined
         generalChart.plotOptions = {column: {pointPadding: 0.08, borderWidth: 0, borderRadius: 1.8, groupPadding: 0,}}
         generalChart['tooltip'] = {
             formatter: function () {
+                let p = dataChartWeek[this.points[0].key]
                 return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y)).toString() + ' films</span>' +
-                    '<span class="ttSubtitle">Week ' + this.points[0].key + '<br/>' + getWeek(parseInt(year), this.points[0].key) + '</span></div>'
+                    '<span class="ttSubtitle">Week ' + p.w3+ '<br/>' + getWeek(p.year, p.week) + '</span></div>'
             },
             shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
         }
-        dataChart = []
-        fillArray(data.weeks, 0, getWeeksInYear(year)).forEach(function (item){
-            if (item.sum > 0){dataChart.push({ name: item._id, y: item.sum + 0.25})}
-            else{dataChart.push({ name: item._id, y: item.sum + 0.25, color: "#445566"})}
-        })
         generalChart['series'] = [{
-            data: dataChart,
+            data: dataChartWeek,
             label: {enabled: false},
             color: {
                 linearGradient: [0, 0, jQuery('#watchedWeek').width(), 0],
                 stops: [[0.00, '#00e054'], [1.00, '#3fbcf2']]
             },
             point: {events: {click: function () {
-                        location.href = lbdurl + data.username+'/films/diary/for/'+yearnum+'/week/' + this.options.name + "/";
-                    }}}
+                let p = dataChartWeek[this.options.name]
+                location.href = lbdurl + data.username+'/films/diary/for/'+p.year+'/week/' + p.week + "/";
+            }}}
         }]
         Highcharts.chart('watchedWeek', generalChart)
 
@@ -914,7 +932,7 @@
         {/if}
         <section class="sectionStats">
             <div class="sepline">
-                <span>Films by week</span>
+                <span>By week</span>
                 <div class="line"></div>
             </div>
             <div class="chart-container weekChartcontainer">
