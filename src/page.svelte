@@ -1101,6 +1101,7 @@
                         {/each}
                     </div>
                 {/each}
+                <div class="infoavg">Themes and nanogenres with at least four rated films are included.</div>
             </div>
         {/if}
     </section>
@@ -1145,6 +1146,7 @@
                         {/each}
                     </div>
                 {/each}
+                <div class="infoavg">Themes and nanogenres with at least three rated films are included.</div>
             </div>
         {/if}
     </section>
@@ -1419,6 +1421,49 @@
                                 <img src="images/orangestar.jpg"/>
                                 <span class="sottotitolo stellamedia">{data[type[0]].avg.toFixed(1)}</span>
                             {/if}
+                        </div>
+                    </div>
+                {/each}
+            </div>
+        </section>
+
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Rated higher then average</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast">
+                {#each Array.from({ length: arrayLength(data['highers']) }, (_, i) => i) as i }
+                    <div class="singleFilm">
+                        <a class="poster" href="{ lbdurl }film/{ elementAt(data['highers'],i)._id }">
+                            <div class="containertextimg"><span>{ replaceDash(elementAt(data['highers'],i)._id) }</span></div>
+                            <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                                 data-src="{ replaceSize(elementAt(data['highers'],i).img, 165, 110) }" alt="{ elementAt(data['highers'],i)._id }"/>
+                        </a>
+                        <div>
+                            <span class="sottotitolo stelline">{ numToStars(elementAt(data['highers'],i).r) }</span>
+                            <span class="sottotitolo">vs { elementAt(data['highers'],i).avg }</span>
+                        </div>
+                    </div>
+                {/each}
+            </div>
+        </section>
+        <section class="sectionStats">
+            <div class="sepline">
+                <span>Rated lower then average</span>
+                <div class="line"></div>
+            </div>
+            <div class="filmList hideLast">
+                {#each getValues(data['lowers']) as element}
+                    <div class="singleFilm">
+                        <a class="poster" href="{ lbdurl }film/{ element._id }">
+                            <div class="containertextimg"><span>{ replaceDash(element._id) }</span></div>
+                            <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                                 data-src="{ replaceSize(element.img, 165, 110) }" alt="{ element._id }"/>
+                        </a>
+                        <div>
+                            <span class="sottotitolo stelline">{ numToStars(element.r) }</span>
+                            <span class="sottotitolo">vs { element.avg }</span>
                         </div>
                     </div>
                 {/each}

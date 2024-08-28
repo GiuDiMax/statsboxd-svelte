@@ -522,7 +522,8 @@ span{
 .threeColumns{
     display:flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    /*flex-wrap: nowrap;*/
+    flex-wrap: wrap;
 }
 
 .threeColumns > div{
@@ -553,6 +554,7 @@ span{
 
 .twocolumn{
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .twocolumn>div{
@@ -2211,6 +2213,16 @@ span{
 
 .notok .containertextimg{
     display: block;
+}
+
+.infoavg{
+    font-size: 13px;
+    font-family: Graphik-Regular-Web, serif;
+    color: #99AABB;
+    margin-top: 1.5em;
+    width: 100% !important;
+    flex-basis: 100% !important;
+    height: auto !important;
 }
 
 @keyframes rotation2 {
