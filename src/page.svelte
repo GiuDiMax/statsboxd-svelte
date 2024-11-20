@@ -761,7 +761,7 @@
             <!--<a href="{ lbdurl }{ data.username }">
                 <img alt="{ data.username }" class="avatar lazy" data-src="{ data.img }" src="images/poster.jpg" />
             </a>-->
-            <span><a class="clickable" href="{ lbdurl}?username={ data.username }">
+            <span><a target="_blank" class="clickable" href="{ lbdurl}{ data.username }">
                 { data.name }</a>'s
                 { year==='' ? 'all-time stats' : 'year in review' }
             </span>
