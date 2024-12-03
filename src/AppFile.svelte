@@ -152,7 +152,7 @@
         <div class="confirmationBox">
             <p>Selected File:</p>
             <p class="high">{selectedFile.name}</p>
-            <a type="button" class="btn" on:click={setFile} href="#">Click here to confirm<a/>
+            <a type="button" class="btn" on:click={setFile} href="#">Click here to confirm</a>
         </div>
     {:else}
         <p>

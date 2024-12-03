@@ -5,14 +5,16 @@
     let showYears = false
     const lbdurl = "https://letterboxd.com/"
     import Highcharts from 'highcharts'
+    import 'highcharts/modules/accessibility';
     import {onMount, createEventDispatcher } from "svelte"
     import jQuery from 'jquery'
     import { useLazyImage as lazyImage } from 'svelte-lazy-image'
     import {roles, tmdb_key} from './config.js'
-    import jsVectorMap from 'jsvectormap'
+    import jsVectorMap from 'jsvectormap/dist/jsvectormap.js'
     import 'jsvectormap/dist/maps/world.js'
-    import 'jsvectormap/dist/css/jsvectormap.css'
+    import 'jsvectormap/dist/jsvectormap.css'
     import { getISOWeek } from 'date-fns'
+
     let isMobile = false
 
     let current_month
@@ -513,7 +515,9 @@
         window.location.search = ''
     }
 
-    onMount(() => {})
+    onMount(async () => {
+        init()
+    })
 
 </script>
 
@@ -772,8 +776,11 @@
                     <span class="material-symbols-rounded icon">sync</span>Update
                 </a>
                 <!--<a class="clickable seeallbutton updatebutton collagebutton" href="//old.statsboxd.top/{ data.username }/collage2" target="_blank">-->
-                <a class="clickable seeallbutton updatebutton collagebutton" href="//statsboxd.top?username={ data.username }&collage" target="_blank">
+                <a class="clickable seeallbutton updatebutton collagebutton" href="/?username={ data.username }&collage" target="_blank">
                     <span class="material-symbols-rounded icon">grid_on</span>Last month collage
+                </a>
+                <a class="clickable seeallbutton updatebutton wrappedbutton" href="/?username={ data.username }&wrapped" target="_blank">
+                    <span class="material-symbols-rounded icon">summarize</span>2024 Wrapped
                 </a>
             </div>
         {/if}

@@ -11,6 +11,7 @@
     let message = "Error"
 
     async function getYearStats(data){
+        console.log(data)
         const resp = await fetch(baseUrl + 'yearstats',
             {
                 method: "POST",

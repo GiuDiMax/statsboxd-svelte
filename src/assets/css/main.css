@@ -1908,8 +1908,8 @@ span{
 .wrapped .backdrop img {
     width: 100%;
     height: auto;
-    -webkit-mask-image: url("/static/images/mask.png");
-    mask-image: url("/static/images/mask.png");
+    -webkit-mask-image: url("/images/mask.png");
+    mask-image: url("/images/mask.png");
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     mask-size: contain;
@@ -2042,6 +2042,21 @@ span{
     top: -0.5rem;
     left: -21.5rem;
     right: 0;
+}
+
+.collage .wrappedContainer{
+    top: 2rem;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+
+.collage .wrappedContainer .changeclose{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
 }
 
 .wrapped .changeclose{

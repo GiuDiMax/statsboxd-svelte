@@ -72,7 +72,6 @@
     }
 
     function init(data){
-        //document.addEventListener("DOMContentLoaded", function(event) {
             var scale = document.documentElement.clientHeight / 1280;
             const scale2 = document.documentElement.clientWidth / 720;
             if (scale2 < scale) {
@@ -118,7 +117,6 @@
                     alert("Error! Please do a screenshot")
                 }
             })
-        //})
     }
 
     onMount(async () => {
@@ -127,7 +125,6 @@
         loading = false
     })
 
-    //$:init()
 </script>
 
 <main>
