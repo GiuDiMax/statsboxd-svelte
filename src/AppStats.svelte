@@ -11,7 +11,6 @@
         data = JSON.parse(localStorageData)
         addMissingData(data, username)
         data.message = undefined
-        //data.decades[0].imgs[0].img="https://aasafasgsagas.jpg"
     }
 </script>
 

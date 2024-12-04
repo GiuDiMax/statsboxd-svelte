@@ -1,31 +1,19 @@
 <script>
     import {onMount} from 'svelte'
-    import SharedPage from "./page.svelte"
     import jszip from "jszip"
     import PapaParse from "papaparse"
     import { baseUrl } from './config.js'
-
     import Dropzone from "svelte-file-dropzone";
-    import {addMissingData} from "./utils.js"
 
     let loading = true
     let data = {}
     let tmpdata = {}
-    let file
-    let jsonData
     let message = ""
-
-    //let files = {accepted: [], rejected: []}
     let selectedFile = undefined
 
     function handleFilesSelect(e) {
-        //const { acceptedFiles, fileRejections } = e.detail;
-        //files.accepted = [...files.accepted, ...acceptedFiles];
-        //files.rejected = [...files.rejected, ...fileRejections];
-        //console.log(e)
         selectedFile = e.detail.acceptedFiles[0]
     }
-
 
     async function getStats(data){
         const resp = await fetch(baseUrl + 'stats',
@@ -35,7 +23,6 @@
                 body: JSON.stringify(data)
             },
         )
-        //console.log(resp)
         return await resp.json()
     }
 
@@ -99,9 +86,7 @@
             tmpdata['update'] = new Date()
             tmpdata['update'] = tmpdata['update'].toString().split("T")[0]
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
-            //console.log(JSON.stringify(tmpdata))
             data = await getStats(tmpdata)
-            //console.log(data)
             data['username'] = tmpdata['username']
             data['name'] = tmpdata['name']
             data['ru'] = tmpdata['ru']
@@ -111,7 +96,6 @@
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
             localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
             localStorage.setItem("latest", username.toLowerCase())
-            //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + username.toLowerCase()
             window.location.search = '?username=' + username.toLowerCase();
 
         } catch (error) {
@@ -125,16 +109,8 @@
     }
 
     onMount(async () => {
-
-        // if(import.meta.env.VITE_TEST>0){
-        //     let data = localStorage.getItem("chelovekiam_stats")
-        //     addMissingData(JSON.parse(data))
-        //     return
-        // }
-
         const localStorageData = localStorage.getItem("latest")
         if(localStorageData !== null && localStorageData !== "undefined") {
-            //window.location.pathname = import.meta.env.BASE_URL + '/?username=' + localStorageData.toLowerCase()
             window.location.search = '?username=' + localStorageData.toLowerCase();
         }else{loading = false}
     })

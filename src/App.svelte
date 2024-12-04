@@ -1,6 +1,5 @@
 <script>
   import SharedPage from './page.svelte';
-  //const baseUrl = import.meta.env.BASE_URL
   import {baseUrl} from "./config.js"
 
   let data = {}

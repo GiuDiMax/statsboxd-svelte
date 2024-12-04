@@ -19,7 +19,6 @@
                 body: JSON.stringify(data)
             },
         )
-        //console.log(resp)
         return await resp.json()
     }
 
@@ -29,7 +28,6 @@
         if (localStorageData !== null && localStorageData !== "undefined") {
             console.log("Read Storage Stats Data")
             data = await JSON.parse(localStorageData)
-            //console.log(data)
             message = undefined
             loading = false
             return
@@ -38,8 +36,6 @@
         if (localStorageData !== null && localStorageData !== "undefined") {
             console.log("Read Storage User Data")
             tmpdata = JSON.parse(localStorageData)
-            //console.log(JSON.stringify(tmpdata))
-            //data.message = undefined
             const yearData = tmpdata['watched'].map(item => {
                 const filteredDates = item.d.filter(d => {
                     const aYear = new Date(d.date).getFullYear()
@@ -49,9 +45,7 @@
                     return {...item, d: filteredDates}
                 }
             }).filter(Boolean)
-            //console.log(JSON.stringify(({watched: yearData})))
             data = await getYearStats({year: year, watched: yearData})
-            //console.log(tmpdata)
             data['username'] = tmpdata['username']
             data['name'] = tmpdata['name']
             data['ru'] = tmpdata['ru']

@@ -162,17 +162,17 @@
 
     async function preInit(){
         try{
-            //let localStorageData = localStorage.getItem(username.toLowerCase() + "_" + year.toString() + "_wrapped")
-            // if (localStorageData !== null && localStorageData !== "undefined") {
-            //     console.log("Read Storage Stats Data")
-            //     data = await JSON.parse(localStorageData)
-            //     message = undefined
-            //     loading = false
-            //     return
-            // }
-            let localStorageData = localStorage.getItem(username.toLowerCase())
+            let localStorageData = localStorage.getItem(username.toLowerCase() + "_" + year.toString() + "_wrapped")
             if (localStorageData !== null && localStorageData !== "undefined") {
-                //console.log("Read Storage User Data")
+                console.log("Read Storage Stats Data")
+                data = await JSON.parse(localStorageData)
+                message = undefined
+                loading = false
+                return
+            }
+            localStorageData = localStorage.getItem(username.toLowerCase())
+            if (localStorageData !== null && localStorageData !== "undefined") {
+                console.log("Read Storage User Data")
                 tmpdata = JSON.parse(localStorageData)
                 const yearData = tmpdata['watched'].map(item => {
                     const filteredDates = item.d.filter(d => {
@@ -185,7 +185,7 @@
                 }).filter(Boolean)
                 data = await getWrapped(yearData)
                 data = data[0]
-                //localStorage.setItem(username.toLowerCase() + "_" + year.toString() + "_wrapped", JSON.stringify(data))
+                localStorage.setItem(username.toLowerCase() + "_" + year.toString() + "_wrapped", JSON.stringify(data))
                 message = undefined
             }
         }

@@ -1,4 +1,4 @@
-import {baseUrl, baseUrlOld} from "./config.js"
+import {baseUrl} from "./config.js"
 const limit = 10
 
 export async function addMissingData(data, username, year=0){
