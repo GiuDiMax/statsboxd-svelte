@@ -1919,10 +1919,10 @@ span{
 }
 
 .wrapped .container{
-    margin-left: 2rem;
-    margin-right: 2rem;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
     position: relative;
-    bottom: 5rem;
+    bottom: 4rem;
     z-index: 2;
 }
 
@@ -1932,11 +1932,10 @@ span{
     z-index: 1;
 }
 
-
 .wrapped .container .plantext{
     font-family: Graphik-Regular-Web, sans-serif;
     color: #678;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
 }
 
@@ -1947,7 +1946,7 @@ span{
 .wrapped .firma .link{
     font-family: Graphik-Regular-Web, sans-serif;
     color: #678;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
     text-align: right;
 }
@@ -1988,7 +1987,7 @@ span{
     justify-content: flex-start;
     align-items: center;
     gap: 0.9rem;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -2025,7 +2024,7 @@ span{
     white-space: nowrap;
     max-width: 13rem;
     overflow: hidden;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .wrapped .changeCloseContainer{
@@ -2077,7 +2076,7 @@ span{
 .wrapped .container .columns .column .namebox .num{
     font-family: Graphik-Light-Web, sans-serif, serif;
     color: #678;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     max-width: 7rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2098,15 +2097,15 @@ span{
 
 .wrapped .container .columns .column .namebox3 .name{
     font-family: Graphik-Semibold-Web, serif;
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     max-width: unset;
     white-space: pre-wrap;
-    line-height: 2.5rem;
+    line-height: 2.8rem;
 }
 
 .wrapped .container .columns .column .namebox3 .num{
     font-family: Graphik-Regular-Web, serif;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     max-width: unset;
 }
 
@@ -2121,7 +2120,7 @@ span{
 
 .wrapped .container .favMovie{
     font-family: Graphik-Semibold-Web, sans-serif;
-    font-size: 2.3rem;
+    font-size: 2.5rem;
     color: white;
     width: 98%;
     text-overflow: ellipsis;

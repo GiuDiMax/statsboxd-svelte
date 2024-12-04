@@ -12,7 +12,6 @@
     var index = 0
     const CORS = baseUrl + "cors?url="
 
-
     async function getWrapped(yearData){
         const resp = await fetch(baseUrl + 'wrapped',
             {
@@ -262,7 +261,7 @@
                     </div>
 
                     <div class="columns" style="margin-top: 3.5rem;">
-                        <div class="column" style="gap:1.2rem;">
+                        <div class="column" style="gap:1.4rem;">
                             <div class="namebox namebox2">
                                 <span class="name">{ data.films }</span>
                                 <span class="num">FILMS</span>
