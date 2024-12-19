@@ -996,7 +996,7 @@
                     <div class="msx msx2">
                         <span>Diary Milestones</span>
                         <div class="filmList mw2">
-                            {#each getValues(data.milestones) as element, index}
+                            {#each getValues(getSlice(data.milestones, 0, 5)) as element, index}
                                 <div class="singleFilm">
                                     <a class="poster"
                                        href="{lbdurl}{data.username}/film/{element._id}/activity">

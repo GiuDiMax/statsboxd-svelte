@@ -38,13 +38,33 @@
             tmpdata = JSON.parse(localStorageData)
             const yearData = tmpdata['watched'].map(item => {
                 const filteredDates = item.d.filter(d => {
-                    const aYear = new Date(d.date).getFullYear()
-                    return aYear === year;
+                    //const aYear = new Date(d.date).getFullYear()
+                    const date = new Date(d.date)
+                    const aYear = date.getUTCFullYear()
+                    return aYear === year
                 })
                 if (filteredDates.length > 0) {
                     return {...item, d: filteredDates}
                 }
             }).filter(Boolean)
+
+            // TEST MST TZ
+            // const yearData = tmpdata['watched'].map(item => {
+            //     const filteredDates = item.d.filter(d => {
+            //         const options = { timeZone: 'America/Denver' }; // MST time zone
+            //         const date = new Date(d.date);
+            //         const formatter = new Intl.DateTimeFormat('en-US', {
+            //             year: 'numeric',
+            //             ...options
+            //         });
+            //         const aYear = parseInt(formatter.format(date), 10);
+            //         return aYear === year;
+            //     });
+            //     if (filteredDates.length > 0) {
+            //         return { ...item, d: filteredDates };
+            //     }
+            // }).filter(Boolean);
+
             data = await getYearStats({year: year, watched: yearData})
             data['username'] = tmpdata['username']
             data['name'] = tmpdata['name']
