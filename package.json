@@ -13,7 +13,8 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.1",
     "@types/dropzone": "^5.7.9",
     "svelte": "^5.4.0",
-    "vite": "^6.0.2"
+    "vite": "^6.0.2",
+    "cookie": ">=0.7.0"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
@@ -29,6 +30,7 @@
     "papaparse": "^5.4.1",
     "realm-web": "^2.0.1",
     "svelte-file-dropzone": "^2.0.9",
-    "svelte-lazy-image": "^0.5.1"
+    "svelte-lazy-image": "^0.5.1",
+    "cookie": ">=0.7.0"
   }
 }
