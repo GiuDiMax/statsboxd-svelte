@@ -504,14 +504,6 @@
 
     function handleUpdate(){
         localStorage.clear()
-        // localStorage.removeItem(data.username.toLowerCase())
-        // localStorage.removeItem(data.username.toLowerCase() + "_stats")
-        // data.yearsStats.forEach(function (item, index, arr){
-        //     console.log(item)
-        //     try{localStorage.removeItem(data.username.toLowerCase() + "_" + item.toString() + "_stats")}
-        //     catch{}
-        // })
-        // localStorage.removeItem("latest")
         window.location.search = ''
     }
 
@@ -772,7 +764,7 @@
         </div>
         {#if year === '' }
             <div class="buttonstart">
-                <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="/#">
+                <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="{data.donator? '/?username=' + data.username + '&donator' : '/#'}">
                     <span class="material-symbols-rounded icon">sync</span>Update
                 </a>
                 <!--<a class="clickable seeallbutton updatebutton collagebutton" href="//old.statsboxd.top/{ data.username }/collage2" target="_blank">-->

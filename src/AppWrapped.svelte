@@ -198,6 +198,7 @@
 
     onMount(async () => {
         await preInit()
+        console.log(data)
         data.runtime = data.tot[0].runtime
         data.films = data.tot[0].films
         data.countries = data.countries[0].value

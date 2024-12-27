@@ -86,11 +86,13 @@
             tmpdata['update'] = new Date()
             tmpdata['update'] = tmpdata['update'].toString().split("T")[0]
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
+
             data = await getStats(tmpdata)
             data['username'] = tmpdata['username']
             data['name'] = tmpdata['name']
             data['ru'] = tmpdata['ru']
             data['update'] = tmpdata['update']
+            data['donator'] = false
             tmpdata['yearsStats'] = data['yearsStats']
             message = ""
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))

@@ -5,10 +5,14 @@
     import {addMissingData} from "./utils.js";
     export let username
     export let year
+    export let donator
+
     let loading = true
     let data = {}
     let tmpdata = {}
     let message = "Error"
+
+    console.log(donator)
 
     async function getYearStats(data){
         console.log(data)
