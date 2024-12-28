@@ -138,7 +138,7 @@
             (<a href="https://letterboxd.com/data/export/" target="_top">or click here</a>) and upload the zip file.<br /><br />
 
         </p>
-        {#if message !== ''}<p class="message">{@html message}</p>{/if}
+        {#if message !== ''}<p class="errormsg message">{@html message}</p>{/if}
         <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
         <p>
             <br/>

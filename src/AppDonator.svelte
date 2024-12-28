@@ -37,9 +37,11 @@
     onMount(async () => {
 
         const localStorageData = localStorage.getItem("latest")
-        if(localStorageData !== null && localStorageData !== "undefined") {
-            window.location.search = '?username=' + localStorageData.toLowerCase();
-        }else{}
+        if (localStorageData.toLowerCase() === username.toLowerCase()){
+            if(localStorageData !== null && localStorageData !== "undefined") {
+                window.location.search = '?username=' + localStorageData.toLowerCase();
+            }else{}
+        }
 
         try{
             const data0 = await getDonator(username)
@@ -106,7 +108,7 @@
 
             message = ""
         }catch{
-            message = "Error, make sure you are a donor and contact the developer"
+            message = "Error, make sure you are a supporter and contact the developer"
         }
         loading = false
     })
@@ -118,5 +120,5 @@
     {#if loading}
         <div class="loaderContainer2"><div class="loader2"></div></div>
     {/if}
-    {#if message !== ''}<p class="message">{@html message}</p>{/if}
+    {#if message !== ''}<p class="errormsg message">{@html message}</p>{/if}
 </main>
