@@ -144,8 +144,11 @@
             <br/>
             If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
             <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
-            If you are an old supporter user you can access the old version at <a href="//old.statsboxd.top">old.statsboxd.top</a><br />
-            <!--For month collage just use this url: statsboxd.top?username=yourlbdusername&collage.<br />-->
+            <br />
+        </p>
+        <p style="font-size:1.5em; line-height: 1.8em; font-weight: normal;">
+            <strong>NEW FEATURE!</strong><br />
+            Supporters will be able to access the stats without having to insert the file via the url https://statsboxd.top?username=username&donator
         </p>
     {/if}
     </div>

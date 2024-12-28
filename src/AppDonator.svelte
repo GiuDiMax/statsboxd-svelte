@@ -39,7 +39,7 @@
         const localStorageData = localStorage.getItem("latest")
         if(localStorageData !== null && localStorageData !== "undefined") {
             window.location.search = '?username=' + localStorageData.toLowerCase();
-        }else{loading = false}
+        }else{}
 
         try{
             const data0 = await getDonator(username)
@@ -105,7 +105,9 @@
             window.location.search = '?username=' + username.toLowerCase();
 
             message = ""
-        }catch{}
+        }catch{
+            message = "Error, make sure you are a donor and contact the developer"
+        }
         loading = false
     })
 
