@@ -96,7 +96,7 @@
             data['name'] = tmpdata['name']
             data['ru'] = tmpdata['ru']
             data['update'] = tmpdata['update']
-            data['yearsStats'] = tmpdata['yearsStats']
+            tmpdata['yearsStats'] = data['yearsStats']
             data['donator'] = true
 
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
