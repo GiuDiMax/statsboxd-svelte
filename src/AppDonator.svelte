@@ -37,7 +37,8 @@
     onMount(async () => {
 
         const localStorageData = localStorage.getItem("latest")
-        if (localStorageData.toLowerCase() === username.toLowerCase()){
+
+        if (localStorageData !== null && localStorageData !== undefined && localStorageData.toLowerCase() === username.toLowerCase()){
             if(localStorageData !== null && localStorageData !== "undefined") {
                 window.location.search = '?username=' + localStorageData.toLowerCase();
             }else{}
