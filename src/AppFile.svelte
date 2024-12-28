@@ -146,7 +146,7 @@
             <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
             <br />
         </p>
-        <p style="font-size:1.5em; line-height: 1.8em; font-weight: normal;">
+        <p style="font-size:1.5em; line-height: 1.8em; font-weight: normal; display:none !important;">
             <strong>NEW FEATURE!</strong><br />
             Supporters will be able to access the stats without having to insert the file via the url https://statsboxd.top?username=username&donator
         </p>
