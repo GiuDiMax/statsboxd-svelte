@@ -38,10 +38,9 @@
 
         const localStorageData = localStorage.getItem("latest")
 
-        if (localStorageData !== null && localStorageData !== undefined && localStorageData.toLowerCase() === username.toLowerCase()){
-            if(localStorageData !== null && localStorageData !== "undefined") {
-                window.location.search = '?username=' + localStorageData.toLowerCase();
-            }else{}
+        if (localStorageData !== null && localStorageData !== undefined &&
+            localStorageData !== "undefined" && localStorageData.toLowerCase() === username.toLowerCase()){
+            window.location.search = '?username=' + localStorageData.toLowerCase();
         }
 
         try{

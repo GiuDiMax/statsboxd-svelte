@@ -135,21 +135,24 @@
     {:else}
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
-            (<a href="https://letterboxd.com/data/export/" target="_top">or click here</a>) and upload the zip file.<br /><br />
+            (<a href="https://letterboxd.com/data/export/" target="_top">or click here</a>) and upload the zip file.<br />
 
         </p>
         {#if message !== ''}<p class="errormsg message">{@html message}</p>{/if}
         <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
         <p>
-            <br/>
             If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
             <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
             <br />
         </p>
-        <p style="font-size:1.5em; line-height: 1.8em; font-weight: normal">
-            <strong>NEW FEATURE!</strong><br />
-            Supporters will be able to access the stats without having to insert the file via the url https://statsboxd.top?username=username&donator
-        </p>
+        <br/>
+        <strong>Supporters features:</strong>
+        <ul style="line-height: 1.5em">
+            <li>Stats without zip file using statsboxd.top?username=username&donator;</li>
+            <li>Share your stats;</li>
+            <li>Technical support;</li>
+            <li>Contact me after making a donation by writing your username.</li>
+        </ul>
     {/if}
     </div>
 </main>
