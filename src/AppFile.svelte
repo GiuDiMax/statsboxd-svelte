@@ -135,8 +135,7 @@
     {:else}
         <p>
             Welcome to Statsboxd, to get your stats please export your data from Letterboxd
-            (<a href="https://letterboxd.com/data/export/" target="_top">or click here</a>) and upload the zip file.<br />
-
+            (<a href="https://letterboxd.com/data/export/?fromApp=false" target="_top">or click here</a>) and upload the zip file.<br />
         </p>
         {#if message !== ''}<p class="errormsg message">{@html message}</p>{/if}
         <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
