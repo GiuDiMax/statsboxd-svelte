@@ -20,6 +20,7 @@
             {
                 method: "POST",
                 //headers: {"Accept-Encoding": "br"},
+                headers: {"Content-Type": "application/json;charset=UTF-8"},
                 body: JSON.stringify(data)
             },
         )
