@@ -103,7 +103,7 @@
         } catch (error) {
             console.log(error)
             selectedFile = undefined
-            message = "There is an error in the file you chose, make sure you have uploaded a file in .zip format. <br/>" +
+            message = "There is an error in the file you chose, make sure you have uploaded a file in .zip format and try again in a few minutes. <br/>" +
                 "If the problem continues contact me on <a href='https://t.me/giudimax' target='_blank'>telegram" +
                 " and send me your zip file</a><br/>"
         }
@@ -133,25 +133,29 @@
             <a type="button" class="btn" on:click={setFile} href="#">Click here to confirm</a>
         </div>
     {:else}
-        <p>
-            Welcome to Statsboxd, to get your stats please export your data from Letterboxd
-            (<a href="https://letterboxd.com/data/export/?fromApp=false" target="_top">or click here</a>) and upload the zip file.<br />
-        </p>
-        {#if message !== ''}<p class="errormsg message">{@html message}</p>{/if}
-        <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
-        <p>
-            If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
-            <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
-            <br />
-        </p>
-        <br/>
-        <strong>Supporters features:</strong>
-        <ul style="line-height: 1.5em">
-            <li>Stats without zip file using statsboxd.top?username=username&donator;</li>
-            <li>Share your stats;</li>
-            <li>Technical support;</li>
-            <li>Contact me after making a donation by writing your username.</li>
-        </ul>
+
+        {#if message !== ''}
+            <p class="errormsg message">{@html message}</p>
+        {:else}
+            <p>
+                Welcome to Statsboxd, to get your stats please export your data from Letterboxd
+                (<a href="https://letterboxd.com/data/export/?fromApp=false" target="_top">or click here</a>) and upload the zip file.<br />
+            </p>
+            <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
+            <p>
+                If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
+                <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
+                <br />
+            </p>
+            <br/>
+            <strong>Supporters features:</strong>
+            <ul style="line-height: 1.5em">
+                <li>Stats without zip file using statsboxd.top?username=username&donator;</li>
+                <li>Share your stats;</li>
+                <li>Technical support;</li>
+                <li>Contact me after making a donation by writing your username.</li>
+            </ul>
+        {/if}
     {/if}
     </div>
 </main>
