@@ -29,7 +29,9 @@
         //         {tmdb: '418078', name: 'It Comes at Night', rewatch: false, like: false, r: 3.5},
         //     ]}
         const resp = await fetch(baseUrl + 'collage/' + username,
-            {method: "GET", headers: {"Accept-Encoding": "br"}},
+            {method: "GET",
+                //headers: {"Accept-Encoding": "br"}
+            },
         )
         return resp.json()
     }

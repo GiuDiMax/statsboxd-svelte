@@ -11,7 +11,9 @@
     let resp
     let update
     while (keepGoing) {
-      resp = await fetch(baseUrl + 'data?username='+username+"&id="+id+'&limit='+limit+'&offset='+offset +'&session='+session, {headers: {"Accept-Encoding": "br"}});
+      resp = await fetch(baseUrl + 'data?username='+username+"&id="+id+'&limit='+limit+'&offset='+offset +'&session='+session,
+          //{headers: {"Accept-Encoding": "br"}}
+      );
       json = await resp.json()
       limit = json['limit']
       offset = json['offset']
@@ -28,7 +30,9 @@
 
   async function getLbdUpdate(tmpdata){
     let response = tmpdata
-    const resp = await fetch(baseUrl + 'update?id='+tmpdata['id']+'&update='+tmpdata['update']+'&session=', {headers: {"Accept-Encoding": "br"}});
+    const resp = await fetch(baseUrl + 'update?id='+tmpdata['id']+'&update='+tmpdata['update']+'&session=',
+        //{headers: {"Accept-Encoding": "br"}}
+    );
     //const resp = await fetch(baseUrl + 'update?id='+tmpdata['id']+'&update='+"2024-03-20T09:34:21.322Z"+'&session=', {headers: {"Accept-Encoding": "br"}});
     const json = await resp.json()
     response['watched'] = tmpdata['watched'].concat(json['watched'].filter((item) => !tmpdata['watched'].some((e) => e._id === item._id)))
@@ -42,7 +46,7 @@
     const resp = await fetch(baseUrl + 'stats',
         {
           method: "POST",
-          headers: {"Accept-Encoding": "br"},
+          //headers: {"Accept-Encoding": "br"},
           body: JSON.stringify(data)
         },
     )

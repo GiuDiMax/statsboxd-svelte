@@ -19,7 +19,7 @@
         const resp = await fetch(baseUrl + 'yearstats',
             {
                 method: "POST",
-                headers: {"Accept-Encoding": "br"},
+                //headers: {"Accept-Encoding": "br"},
                 body: JSON.stringify(data)
             },
         )

@@ -16,7 +16,7 @@
         const resp = await fetch(baseUrl + 'wrapped',
             {
                 method: "POST",
-                headers: {"Accept-Encoding": "br"},
+                //headers: {"Accept-Encoding": "br"},
                 body: JSON.stringify({year: year, watched: yearData})
             },
         )
