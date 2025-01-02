@@ -145,8 +145,8 @@
             <br />
         </p>
         <br/>
-        <strong style="display:none">Supporters features:</strong>
-        <ul style="line-height: 1.5em; display:none">
+        <strong>Supporters features:</strong>
+        <ul style="line-height: 1.5em">
             <li>Stats without zip file using statsboxd.top?username=username&donator;</li>
             <li>Share your stats;</li>
             <li>Technical support;</li>

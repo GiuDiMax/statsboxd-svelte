@@ -1065,7 +1065,7 @@
                     {#each getValues(getSlice(data[('mw_'+type[0])], 0, 10)) as element}
                         <div>
                             <a class="clickable label1"
-                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{type[1]}/{getUri( element['name'] )}">
+                               href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() + '/': ''}{type[1]}/{getUri( element['name'] )}">
                                 { element['name'] }
                             </a>
                             <div>
