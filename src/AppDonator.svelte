@@ -107,7 +107,7 @@
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
             localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
             localStorage.setItem("latest", username.toLowerCase())
-            //window.location.search = '?username=' + username.toLowerCase();
+            window.location.search = '?username=' + username.toLowerCase();
 
             message = ""
         }catch{
