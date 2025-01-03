@@ -2,7 +2,7 @@
 
 ## Screenshot
 <p align="center">
-  <img src="[https://github.com/user-attachments/assets/1535b5bb-4d70-4f99-80c4-81d89582be37](https://github.com/user-attachments/assets/81be9265-80a8-4811-a542-fbbb2dc14a34)" />
+  <img src="https://github.com/user-attachments/assets/81be9265-80a8-4811-a542-fbbb2dc14a34" />
 </p>
 
 
