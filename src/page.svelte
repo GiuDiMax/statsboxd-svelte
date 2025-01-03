@@ -1087,7 +1087,7 @@
                         {#each getValues(getSlice(data[('tr_'+type[0])], 0, 10)) as element}
                             <div>
                                 <a class="clickable label1"
-                                   href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri(element['name'])}">
+                                   href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}/rated/.5-5/{type[1]}/{getUri(element['name'])}">
                                     { element['name'] }
                                 </a>
                                 <div>
