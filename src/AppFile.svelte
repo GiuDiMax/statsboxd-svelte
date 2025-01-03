@@ -36,8 +36,19 @@
 
     async function setFile(){
         loading = true
+        let zip
+        try{
+            zip = await jszip.loadAsync(selectedFile)
+        }catch{
+            selectedFile = undefined
+            message = "The file you uploaded appears to be corrupt or incorrect. Make sure you downloaded it from a browser like Chrome or Firefox and not from other apps' internal browsers." +
+                "Try opening it, and then try uploading again. <br/>" +
+                "If the problem continues contact me on <a href='https://t.me/giudimax' target='_blank'>telegram" +
+                " and send me your zip file</a><br/>"
+            loading = false
+            return
+        }
         try {
-            const zip = await jszip.loadAsync(selectedFile)
             const [watchedData, ratingsData, diaryData, reviewsData, profileData] = await Promise.all([
                 parseCsv(zip, 'watched.csv'),
                 parseCsv(zip, 'ratings.csv'),
@@ -105,7 +116,7 @@
         } catch (error) {
             console.log(error)
             selectedFile = undefined
-            message = "There is an error in the file you chose, make sure you have uploaded a file in .zip format and try again in a few minutes. <br/>" +
+            message = "There was a problem with the server. It is probably caused by the excessive demand these days, try again in a few minutes. <br/>" +
                 "If the problem continues contact me on <a href='https://t.me/giudimax' target='_blank'>telegram" +
                 " and send me your zip file</a><br/>"
         }
