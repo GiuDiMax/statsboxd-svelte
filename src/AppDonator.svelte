@@ -31,7 +31,6 @@
         let url = baseUrl + 'donator' + '?session=' + session + '&offset=' + offset
         if (diary) {url += '&diary'}
         let response = await fetch(url);
-        console.log(response)
         return await response.json()
     }
 
@@ -65,9 +64,12 @@
             const [watchResults, diaryResults] = await Promise.all([
                 Promise.all(watchPromises),
                 Promise.all(diaryPromises)
-            ]);
+            ])
             watchResults.forEach(tmpdata => {dataWatched = dataWatched.concat(tmpdata.watched || [])})
             diaryResults.forEach(tmpdata => {dataDiary = dataDiary.concat(tmpdata.diary || [])})
+
+            //console.log(dataWatched)
+            //console.log(dataDiary)
 
             tmpdata['watched'] = dataWatched.map(item => {
                 const relatedDiary = dataDiary
@@ -105,7 +107,7 @@
             localStorage.setItem(username.toLowerCase(), JSON.stringify(tmpdata))
             localStorage.setItem(username.toLowerCase() + "_stats", JSON.stringify(data))
             localStorage.setItem("latest", username.toLowerCase())
-            window.location.search = '?username=' + username.toLowerCase();
+            //window.location.search = '?username=' + username.toLowerCase();
 
             message = ""
         }catch{
