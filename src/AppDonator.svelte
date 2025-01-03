@@ -9,7 +9,7 @@
     let message = "Error"
     let selectedFile = undefined
 
-    var limit = 1000
+    var limit = 500
 
     async function getStats(data){
         const resp = await fetch(baseUrl + 'stats',
@@ -31,6 +31,7 @@
         let url = baseUrl + 'donator' + '?session=' + session + '&offset=' + offset
         if (diary) {url += '&diary'}
         let response = await fetch(url);
+        console.log(response)
         return await response.json()
     }
 
