@@ -117,7 +117,7 @@
             console.log(error)
             selectedFile = undefined
             message = "There was a problem with the server. It is probably caused by the excessive demand these days, try again in a few minutes. <br/>" + "I will try to fix the issues in the next few days. Do not contact me about this error."
-       loading = false
+       }loading = false
     }
 
     onMount(async () => {
