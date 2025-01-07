@@ -116,11 +116,8 @@
         } catch (error) {
             console.log(error)
             selectedFile = undefined
-            message = "There was a problem with the server. It is probably caused by the excessive demand these days, try again in a few minutes. <br/>" +
-                "If the problem continues contact me on <a href='https://t.me/giudimax' target='_blank'>telegram" +
-                " and send me your zip file</a><br/>"
-        }
-       loading = false
+            message = "There was a problem with the server. It is probably caused by the excessive demand these days, try again in a few minutes. <br/>" + "I will try to fix the issues in the next few days. Do not contact me about this error."
+       }loading = false
     }
 
     onMount(async () => {

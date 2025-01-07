@@ -1087,7 +1087,7 @@
                         {#each getValues(getSlice(data[('tr_'+type[0])], 0, 10)) as element}
                             <div>
                                 <a class="clickable label1"
-                                   href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{type[1]}/{getUri(element['name'])}">
+                                   href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}/rated/.5-5/{type[1]}/{getUri(element['name'])}">
                                     { element['name'] }
                                 </a>
                                 <div>
@@ -1119,7 +1119,7 @@
                 <div class="labels">
                     <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
                     {#each getValues(getSlice(data['mw_' + type + 's'], 0, 10)) as element}
-                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}{ element['type'] }/{ getUri(element['name'], element['uri']) }">
+                        <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}/{ element['type'] }/{ getUri(element['name'], element['uri']) }">
                             <span class="leftText">{element['name'] }</span>
                             <span class="bold right">{ element['sum'] } films</span>
                             <div class="labcontainer"
@@ -1136,7 +1136,7 @@
                     <div class="labels">
                         <!--{#each Array.from({ length: 10 }, (_, i) => i) as i }-->
                         {#each getValues(getSlice(data['tr_' + type + 's'], 0, 10)) as element}
-                            <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}rated/.5-5/{ element['type'] }/{ getUri(element['name'], element['uri']) }">
+                            <a class="clickable label2" href="{ lbdurl }{ data.username }/films/{year!=='' ? 'diary/for/'+yearnum.toString() : ''}/rated/.5-5/{ element['type'] }/{ getUri(element['name'], element['uri']) }">
                                 <span class="leftText">{ element['name'] }</span>
                                 <span class="bold right">Average: { element['avg'] }</span>
                                 <div class="labcontainer"
