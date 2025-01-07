@@ -10,7 +10,7 @@
     let tmpdata = {}
     const year = 2024
     var index = 0
-    const CORS = baseUrl + "cors?url="
+    const CORS = "https://worker.statsboxd.top/" + "cors?url="
 
     async function getWrapped(yearData){
         const resp = await fetch(baseUrl + 'wrapped',
