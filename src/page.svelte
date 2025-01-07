@@ -517,7 +517,7 @@
 <div class="headerbar">
     <a href="/"><img src="/images/logo.webp" alt="statsboxdlogo" class="logoup"/></a>
     <div class="navbar">
-        <a class="" href="//github.com/GiuDiMax/statsboxd-svelte" target="_blank">Repo</a>
+        <a class="" href="//github.com/GiuDiMax/Statsboxd" target="_blank">Repo</a>
         <a href="//t.me/giudimax" target="_blank">Contact Me</a>
         <a class="" href="//buymeacoffee.com/giudimax" target="_blank">Support me</a>
     </div>

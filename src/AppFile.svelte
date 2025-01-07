@@ -116,7 +116,8 @@
         } catch (error) {
             console.log(error)
             selectedFile = undefined
-            message = "There was a problem with the server. It is probably caused by the excessive demand these days, try again in a few minutes. <br/>" + "I will try to fix the issues in the next few days. Do not contact me about this error."
+            message = "There was a problem with the server. It is probably caused by the excessive demand these days, try again in a few minutes. <br/>" +
+                "I will try to fix the issues in the next few days. Do not contact me about this error."
        }loading = false
     }
 
@@ -152,14 +153,19 @@
                 (<a href="https://letterboxd.com/data/export/?fromApp=false" target="_top">or click here</a>) and upload the zip file.<br />
             </p>
             <Dropzone on:drop={handleFilesSelect} containerClasses="fileUpload"/>
+            <p style="color: yellow !important;">
+                In the last few days there has been a large load of users and Cloudflare Workers have imposed more stringent limits for free users.
+                If anyone would like to give me a hand for a possible solution contact me.
+                <br />
+            </p>
             <p>
-                If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> and/or
-                <a target="_blank" href="//github.com/GiuDiMax/statsboxd-svelte">collaborating on the public repository</a>
+                If you like the project consider to <a target="_blank" href="//buymeacoffee.com/giudimax">supporting me</a> or
+                <a target="_blank" href="//github.com/GiuDiMax/Statsboxd">collaborating on Github</a>
                 <br />
             </p>
             <br/>
-            <strong>Supporters features:</strong>
-            <ul style="line-height: 1.5em">
+            <strong style="display:none;">Supporters features:</strong>
+            <ul style="line-height: 1.5em;display:none;">
                 <li>Stats without zip file using statsboxd.top?username=username&donator;</li>
                 <li>Share your stats;</li>
                 <li>Technical support;</li>
