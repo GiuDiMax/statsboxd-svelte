@@ -17,6 +17,7 @@
     "vite": "^6.0.2"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
     "abort-controller": "^3.0.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.6",
@@ -30,6 +31,7 @@
     "papaparse": "^5.4.1",
     "realm-web": "^2.0.1",
     "svelte-file-dropzone": "^2.0.9",
-    "svelte-lazy-image": "^0.5.1"
+    "svelte-lazy-image": "^0.5.1",
+    "tfjs": "^0.6.0"
   }
 }

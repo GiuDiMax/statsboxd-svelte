@@ -3,13 +3,12 @@
     export let year
     export let yearnum
     let showYears = false
-    const lbdurl = "https://letterboxd.com/"
     import Highcharts from 'highcharts'
     import 'highcharts/modules/accessibility';
     import {onMount, createEventDispatcher } from "svelte"
     import jQuery from 'jquery'
     import { useLazyImage as lazyImage } from 'svelte-lazy-image'
-    import {roles, tmdb_key} from './config.js'
+    import {roles, tmdb_key, lbdurl} from './config.js'
     import jsVectorMap from 'jsvectormap/dist/jsvectormap.js'
     import 'jsvectormap/dist/maps/world.js'
     import 'jsvectormap/dist/jsvectormap.css'
@@ -773,6 +772,11 @@
                 </a>
                 <a class="clickable seeallbutton updatebutton wrappedbutton" href="/?username={ data.username }&wrapped" target="_blank">
                     <span class="material-symbols-rounded icon">summarize</span>2024 Wrapped
+                </a>
+            </div>
+            <div class="buttonstart" style="margin-top: 2em;">
+                <a class="clickable seeallbutton updatebutton recbutton" href="/?username={ data.username }&rec" target="_blank">
+                    <span class="material-symbols-rounded icon">recommend</span>Film Recommendation [Beta feature]
                 </a>
             </div>
         {/if}

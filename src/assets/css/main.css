@@ -1038,6 +1038,14 @@ span{
     color: #FF8100 !important;
 }
 
+.recbutton{
+    color: #FFD700;
+    border: 1px solid #FFD700;
+}
+
+.recbutton .icon{
+    color: #FFD700 !important;
+}
 
 .seeallbutton:hover{
     border: 1px solid #646d77;
@@ -2249,6 +2257,36 @@ span{
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.recpercentage{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.2em;
+}
+
+.recpercentage span{
+    font-size: 1.5em;
+    font-weight: 200;
+    font-family: Graphik-Regular-Web,sans-serif;
+}
+
+.loadingMsg{
+
+}
+
+.withMsg{
+    flex-direction: column !important;
+    gap: 2em !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.loadingMsg{
+    font-size: 1.3em;
 }
 
 @keyframes rotation2 {

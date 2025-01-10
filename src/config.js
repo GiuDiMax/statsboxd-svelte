@@ -1,8 +1,9 @@
 //export let baseUrl = "https://worker.statsboxd.top/"
-//if(import.meta.env.VITE_TEST>0){baseUrl = 'http://127.0.0.1:8787/'}
 export let baseUrl = "https://statsboxd-worker.vercel.app/"
+//if(import.meta.env.VITE_TEST>0){baseUrl = 'http://127.0.0.1:8787/'}
 
 export const tmdb_key = '03209f50e8253cf416b595048aced2ff'
+export const lbdurl = "https://letterboxd.com/"
 
 export const roles = [['codirector', 'Co-Directors', 'co-director'],
     ['assistantdirector', 'Asst. Directors', 'assistant-director'],
