@@ -14,7 +14,7 @@
 
     const csvUrl = `${window.location.origin}/ratings_2500_100k.csv`
     //const csvUrl = `${window.location.origin}/ratings_1000_50k.csv`
-    const n_rec = 48
+    const n_rec = 60
     const n_batch = 512
     const n_epoch = 4
 
@@ -151,7 +151,14 @@
         const predictions = await Promise.all(unratedMovieIndices.map(async movieIdx => {
             const pred = await model.predict([tf.tensor2d([userIdx], [1, 1]), tf.tensor2d([movieIdx], [1, 1])]).data();
             return {_id: movies[movieIdx], score: pred[0]};
-        }));
+        }))
+
+        const maxScore = Math.max(...predictions.map(p => p.score));
+        const minScore = Math.min(...predictions.map(p => p.score));
+
+        predictions.forEach(p => {
+            p.score = (p.score - minScore) / (maxScore - minScore);
+        });
 
         return predictions.sort((a, b) => b.score - a.score).slice(0, n_rec);
     }
@@ -219,7 +226,7 @@
             <div class="">
                 <div class="filmList">
                     {#each getValues(data) as element}
-                        <div class="singleFilm">
+                        <div class="singleFilm singleFilmBig">
                             <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
                                 <div class="containertextimg"><span>{ replaceDash(element._id) }</span></div>
                                 <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy"

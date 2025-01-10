@@ -2260,18 +2260,18 @@ span{
 }
 
 .recpercentage{
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.5em !important;
     justify-content: center;
     align-items: center;
-    margin-top: 0.2em;
+    margin-top: 0.2em !important;
 }
 
 .recpercentage span{
-    font-size: 1.5em;
-    font-weight: 200;
-    font-family: Graphik-Regular-Web,sans-serif;
+    font-size: 1.5em !important;
+    font-weight: 200 !important;
+    font-family: Graphik-Regular-Web,sans-serif !important;
 }
 
 .withMsg{

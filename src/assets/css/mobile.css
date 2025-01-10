@@ -193,6 +193,10 @@
         margin: 0;
     }
 
+    .filmList .singleFilmBig{
+        width: 30%;
+    }
+
     .singleFilm div{
         display:flex;
         flex-direction:column;
