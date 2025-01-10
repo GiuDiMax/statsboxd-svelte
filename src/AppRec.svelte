@@ -16,7 +16,7 @@
     //const csvUrl = `${window.location.origin}/ratings_1000_50k.csv`
     const n_rec = 48
     const n_batch = 512
-    const n_epoch = 5
+    const n_epoch = 4
 
     async function handleImageLoad(){
         jQuery(event.target).parent().addClass("imgok")
@@ -104,8 +104,16 @@
 
         const userInput = tf.input({shape: [1]});
         const movieInput = tf.input({shape: [1]});
-        const userEmbedding = tf.layers.embedding({inputDim: users.length, outputDim: 50}).apply(userInput);
-        const movieEmbedding = tf.layers.embedding({inputDim: movies.length, outputDim: 50}).apply(movieInput);
+        const userEmbedding = tf.layers.embedding({
+            inputDim: users.length,
+            outputDim: 25,
+            //embeddingsRegularizer: tf.regularizers.l2({ l2: 0.001 })
+        }).apply(userInput)
+        const movieEmbedding = tf.layers.embedding({
+            inputDim: movies.length,
+            outputDim: 25,
+            //embeddingsRegularizer: tf.regularizers.l2({ l2: 0.001 })
+        }).apply(movieInput)
         const userVector = tf.layers.flatten().apply(userEmbedding);
         const movieVector = tf.layers.flatten().apply(movieEmbedding);
         const dotProduct = tf.layers.dot({axes: 1}).apply([userVector, movieVector]);
@@ -115,7 +123,7 @@
         loadingMsg = `Model created and compiled, start 1/${n_epoch} epoch`
         console.log('Model created and compiled.')
 
-        let loss = 0
+        let loss = ""
 
         await model.fit(
             [tf.tensor2d(userIndices, [userIndices.length, 1]), tf.tensor2d(movieIndices, [movieIndices.length, 1]),], tf.tensor2d(ratings, [ratings.length, 1]),
@@ -126,7 +134,7 @@
                     onEpochEnd: (epoch, logs) => {
                         loadingMsg = `Epoch ${epoch + 1}/${n_epoch} completed. Loss: ${logs.loss.toFixed(3)}`;
                         console.log(`Epoch ${epoch + 1}/${n_epoch} completed. Loss: ${logs.loss}`);
-                        loss = logs.loss
+                        loss = logs.loss.toFixed(3)
                     },
                 },
             }
@@ -135,7 +143,10 @@
         console.log('Model training completed.');
 
         const userIdx = userMap['500'];
-        const unratedMovieIndices = movies.map((m, i) => ({m, i})).filter(movie => !validRatings.some(r => r.movie === movie.m)).map(movie => movie.i);
+        const unratedMovieIndices = movies.map((m, i) => ({
+            m,
+            i
+        })).filter(movie => !validRatings.some(r => r.movie === movie.m)).map(movie => movie.i);
 
         const predictions = await Promise.all(unratedMovieIndices.map(async movieIdx => {
             const pred = await model.predict([tf.tensor2d([userIdx], [1, 1]), tf.tensor2d([movieIdx], [1, 1])]).data();
