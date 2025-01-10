@@ -13,6 +13,7 @@
     let loadingMsg = "This operation takes some time, please wait..."
 
     const csvUrl = `${window.location.origin}/ratings_2500_100k.csv`
+    //const csvUrl = `${window.location.origin}/ratings_1000_50k.csv`
     const n_rec = 48
     const n_batch = 512
     const n_epoch = 5
@@ -74,7 +75,7 @@
         if(data === null || data === "undefined") return null
         data = JSON.parse(data)
         return data.watched.map(item => ({
-            user: 'xyxy',
+            user: '500',
             movie: item._id,
             r: item.r * 2
             //r: Math.floor(Math.random() * 10) + 1
@@ -99,42 +100,46 @@
         userIndices.length = movieIndices.length = ratings.length = minLength;
 
         loadingMsg = "Tensorflow model preparation"
-        console.log('Prepared data for TensorFlow.js:', { userIndices, movieIndices, ratings });
+        console.log('Prepared data for TensorFlow.js:', {userIndices, movieIndices, ratings});
 
-        const userInput = tf.input({ shape: [1] });
-        const movieInput = tf.input({ shape: [1] });
-        const userEmbedding = tf.layers.embedding({ inputDim: users.length, outputDim: 50 }).apply(userInput);
-        const movieEmbedding = tf.layers.embedding({ inputDim: movies.length, outputDim: 50 }).apply(movieInput);
+        const userInput = tf.input({shape: [1]});
+        const movieInput = tf.input({shape: [1]});
+        const userEmbedding = tf.layers.embedding({inputDim: users.length, outputDim: 50}).apply(userInput);
+        const movieEmbedding = tf.layers.embedding({inputDim: movies.length, outputDim: 50}).apply(movieInput);
         const userVector = tf.layers.flatten().apply(userEmbedding);
         const movieVector = tf.layers.flatten().apply(movieEmbedding);
-        const dotProduct = tf.layers.dot({ axes: 1 }).apply([userVector, movieVector]);
-        const model = tf.model({ inputs: [userInput, movieInput], outputs: dotProduct });
-        model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
+        const dotProduct = tf.layers.dot({axes: 1}).apply([userVector, movieVector]);
+        const model = tf.model({inputs: [userInput, movieInput], outputs: dotProduct});
+        model.compile({optimizer: 'adam', loss: 'meanSquaredError'});
 
-        loadingMsg = "Model created and compiled, start 1st epoch training"
-        console.log('Model created and compiled.');
+        loadingMsg = `Model created and compiled, start 1/${n_epoch} epoch`
+        console.log('Model created and compiled.')
 
-        const batchSize = n_batch;
-        await model.fit([tf.tensor2d(userIndices, [userIndices.length, 1]), tf.tensor2d(movieIndices, [movieIndices.length, 1])], tf.tensor2d(ratings, [ratings.length, 1]), {
-            epochs: n_epoch,
-            batchSize: batchSize,
-            callbacks: {
-                onEpochEnd: (epoch, logs) => {
-                    loadingMsg = `Epoch ${epoch + 1} completed. Loss: ${logs.loss}`
-                    console.log(`Epoch ${epoch + 1}/${n_epoch} completed. Loss: ${logs.loss}`);
-                }
+        let loss = 0
+
+        await model.fit(
+            [tf.tensor2d(userIndices, [userIndices.length, 1]), tf.tensor2d(movieIndices, [movieIndices.length, 1]),], tf.tensor2d(ratings, [ratings.length, 1]),
+            {
+                epochs: n_epoch,
+                batchSize: n_batch,
+                callbacks: {
+                    onEpochEnd: (epoch, logs) => {
+                        loadingMsg = `Epoch ${epoch + 1}/${n_epoch} completed. Loss: ${logs.loss.toFixed(3)}`;
+                        console.log(`Epoch ${epoch + 1}/${n_epoch} completed. Loss: ${logs.loss}`);
+                        loss = logs.loss
+                    },
+                },
             }
-        });
-
+        )
+        loadingMsg = "Model training completed with Loss: " + loss;
         console.log('Model training completed.');
-        loadingMsg = "Model training completed"
 
-        const userIdx = userMap['xyxy'];
-        const unratedMovieIndices = movies.map((m, i) => ({ m, i })).filter(movie => !validRatings.some(r => r.movie === movie.m)).map(movie => movie.i);
+        const userIdx = userMap['500'];
+        const unratedMovieIndices = movies.map((m, i) => ({m, i})).filter(movie => !validRatings.some(r => r.movie === movie.m)).map(movie => movie.i);
 
         const predictions = await Promise.all(unratedMovieIndices.map(async movieIdx => {
             const pred = await model.predict([tf.tensor2d([userIdx], [1, 1]), tf.tensor2d([movieIdx], [1, 1])]).data();
-            return { _id: movies[movieIdx], score: pred[0] };
+            return {_id: movies[movieIdx], score: pred[0]};
         }));
 
         return predictions.sort((a, b) => b.score - a.score).slice(0, n_rec);
@@ -143,26 +148,26 @@
     onMount(async () => {
         let username
         username = localStorage.getItem("latest")
-        if(username === null || username === "undefined"){
+        if (username === null || username === "undefined") {
             message = "Incorrect or not set data"
-        }else{
+        } else {
             data = localStorage.getItem(username.toLowerCase() + '_rec')
             data = JSON.parse(data)
-            if (data === null || data === "undefined"){
+            if (data === null || data === "undefined") {
                 loadingMsg = "Download database and user ratings"
                 const [user, ratings] = await Promise.all([loadUserData(username), loadCsvData()]);
-                if (user === null || ratings === null){
+                if (user === null || ratings === null) {
                     message = "Incorrect or not set data"
-                }
-                else{
+                } else {
                     let rec
                     try {
                         rec = await getRecommendations(user, ratings)
-                    } catch{
-                        message = "An error occurred while creating the recommendation model."
+                    } catch (error) {
+                        console.error('Error during model training:', error)
+                        loadingMsg = 'Error during model training: ' + error
                     }
                     loadingMsg = "Get information about recommended films"
-                    try{
+                    try {
                         const resp = await fetch(baseUrl + 'associate',
                             {
                                 method: "POST",
@@ -172,8 +177,7 @@
                         )
                         data = await resp.json()
                         localStorage.setItem(username.toLowerCase() + '_rec', JSON.stringify(data))
-                    }
-                    catch {
+                    } catch {
                         message = "Server error."
                     }
                 }
@@ -207,7 +211,8 @@
                         <div class="singleFilm">
                             <a class="poster" href="{lbdurl}{data.username}/film/{element._id}">
                                 <div class="containertextimg"><span>{ replaceDash(element._id) }</span></div>
-                                <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy" src="images/poster.jpg"
+                                <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy"
+                                     src="images/poster.jpg"
                                      data-src="{replaceSize(element.poster, 165, 110)}"
                                      alt="{element._id}"/>
                             </a>

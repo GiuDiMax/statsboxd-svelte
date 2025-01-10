@@ -2274,10 +2274,6 @@ span{
     font-family: Graphik-Regular-Web,sans-serif;
 }
 
-.loadingMsg{
-
-}
-
 .withMsg{
     flex-direction: column !important;
     gap: 2em !important;
@@ -2286,7 +2282,9 @@ span{
 }
 
 .loadingMsg{
-    font-size: 1.3em;
+    max-width: 90vw;
+    font-size: 1em;
+    text-align: center;
 }
 
 @keyframes rotation2 {
