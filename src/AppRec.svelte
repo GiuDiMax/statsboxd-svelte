@@ -12,10 +12,9 @@
     let data = {}
     let loadingMsg = "This operation takes some time, please wait..."
 
-    const csvUrl = `${window.location.origin}/ratings_2500_100k.csv`
-    //const csvUrl = `${window.location.origin}/ratings_1000_50k.csv`
+    const csvUrl = `${window.location.origin}/ratings_5000_250k.csv`
     const n_rec = 60
-    const n_batch = 512
+    const n_batch = 1024
     const n_epoch = 4
 
     async function handleImageLoad(){

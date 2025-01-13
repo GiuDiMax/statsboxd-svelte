@@ -48,8 +48,9 @@
         jQuery(event.target).attr('src', 'images/poster.jpg')
     }
 
-    async function setTmdb(){
-        const element = jQuery(event.target)
+    async function setTmdb(img){
+        const element = jQuery(img);
+        //const element = jQuery(event.target)
         if (element.data('tmdb') === undefined || element.data('isLoaded')){return}
         const response = await fetch('https://api.themoviedb.org/3/person/'+element.data('tmdb')+'?api_key='+tmdb_key)
         if (response.ok) {
@@ -486,8 +487,25 @@
         setVectorMap()
     }
 
+    function setObserver(){
+        const images = document.querySelectorAll(".holeperson");
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setTmdb(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { root: null, rootMargin: "0px", threshold: 0.1 }
+        );
+        images.forEach((img) => observer.observe(img))
+    }
+
     function init() {
         setCharts()
+        setObserver()
     }
 
     function last(inputArray){
@@ -774,9 +792,9 @@
                     <span class="material-symbols-rounded icon">summarize</span>2024 Wrapped
                 </a>
             </div>
-            <div class="buttonstart" style="margin-top: 2em;">
+            <div class="buttonstart" style="margin-top: 20px;">
                 <a class="clickable seeallbutton updatebutton recbutton" href="/?username={ data.username }&rec" target="_blank">
-                    <span class="material-symbols-rounded icon">recommend</span>Film Recommendation [Beta feature]
+                    <span class="material-symbols-rounded icon">recommend</span>Film Recommendation
                 </a>
             </div>
         {/if}
@@ -1338,7 +1356,10 @@
                                     {#if element.hasOwnProperty('name')}
                                         <div class="container_people">
                                             <a href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{ role[0] }/{ element.uri }">
-                                                <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>
+<!--                                                <img class="holeperson" on:load={setTmdb} src="images/{role[0]}.jpg" data-tmdb="{ element.tmdb }" alt="{ element.uri }"/>-->
+
+                                                <img class="holeperson" src="images/{role[0]}.jpg" data-tmdb="{element.tmdb}" alt="{element.uri}"/>
+
                                             </a>
                                             <a class="clickable" href="{ lbdurl }{ data.username }/films{year!=='' ? '/diary/for/'+yearnum.toString() : ''}/with/{role[0]}/{element.uri}">
                                                 {#if element.hasOwnProperty('name')}{ element.name }{:else}{ element._id }{/if}
