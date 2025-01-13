@@ -230,7 +230,7 @@
                                 <div class="containertextimg"><span>{ replaceDash(element._id) }</span></div>
                                 <img use:lazyImage on:load={handleImageLoad} on:error={handleImageError} class="lazy"
                                      src="images/poster.jpg"
-                                     data-src="{replaceSize(element.poster, 165, 110)}"
+                                     data-src="{replaceSize(element.poster, 225, 150)}"
                                      alt="{element._id}"/>
                             </a>
                             <div class="recpercentage">
