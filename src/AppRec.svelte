@@ -173,7 +173,7 @@
             if (data === null || data === "undefined") {
                 loadingMsg = "Download database and user ratings"
                 const [user, ratings] = await Promise.all([loadUserData(username), loadCsvData()]);
-                if (user === null || ratings === null) {
+                if (user === null || ratings === null || user === 'undefined' || ratings === 'undefined') {
                     message = "Incorrect or not set data"
                 } else {
                     let rec
