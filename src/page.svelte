@@ -23,7 +23,7 @@
     if (currentYear === yearnum){
         const today = new Date()
         current_week = getISOWeek(today)
-        current_month = today.getMonth() + 1
+        current_month = today.getUTCMonth() + 1
     }else{
         current_month = 12
         current_week = 52
@@ -107,13 +107,16 @@
     }
 
     function formatDate1(dateString) {
+        // if (len(dateString)>10){
+        //     dateString = dateString.substring(10)
+        // }
         const months = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
         const date = new Date(dateString);
-        const month = months[date.getMonth()];
-        const day = date.getDate();
+        const month = months[date.getUTCMonth()];
+        const day = date.getUTCDate();
         return `${month} ${day}`;
     }
 
@@ -155,22 +158,22 @@
 
     function getWeek(y, nweek) {
         var startdate = new Date(y, 0, 1);
-        startdate.setDate(startdate.getDate() + (nweek - 1) * 7);
-        var dayweek = startdate.getDay();
+        startdate.setDate(startdate.getUTCDate() + (nweek - 1) * 7);
+        var dayweek = startdate.getUTCDay();
         var giorniAggiuntivi = (dayweek === 0) ? 1 : (8 - dayweek);
-        startdate.setDate(startdate.getDate() + giorniAggiuntivi);
+        startdate.setDate(startdate.getUTCDate() + giorniAggiuntivi);
         var stopdate = new Date(startdate);
-        stopdate.setDate(stopdate.getDate() + 6)
-        if (parseInt(startdate.getFullYear()) !== parseInt(year)) {
+        stopdate.setDate(stopdate.getUTCDate() + 6)
+        if (parseInt(startdate.getUTCFullYear()) !== parseInt(year)) {
             startdate = new Date(year, 0, 1);
         }
         if (stopdate.getTime() === startdate.getTime()){
-            return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate()
+            return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getUTCDate()
         }
-        if (stopdate.getMonth() === startdate.getMonth()){
-            return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate() + ' — ' + stopdate.getDate()
+        if (stopdate.getUTCMonth() === startdate.getUTCMonth()){
+            return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getUTCDate() + ' — ' + stopdate.getUTCDate()
         }
-        return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getDate() + ' — ' + stopdate.toLocaleString('en', {month: 'short'}) + ' ' + stopdate.getDate()
+        return startdate.toLocaleString('en', {month: 'short'}) + ' ' + startdate.getUTCDate() + ' — ' + stopdate.toLocaleString('en', {month: 'short'}) + ' ' + stopdate.getUTCDate()
     }
 
     function fillArray(array, min, max){
@@ -193,8 +196,8 @@
 
     function getWeeksInYear(year) {
         const firstDayOfYear = new Date(year, 0, 1);
-        const isLeapYear = new Date(year, 1, 29).getMonth() === 1;
-        return firstDayOfYear.getDay() === 4 || (isLeapYear && firstDayOfYear.getDay() === 3) ? 53 : 52;
+        const isLeapYear = new Date(year, 1, 29).getUTCMonth() === 1;
+        return firstDayOfYear.getUTCDay() === 4 || (isLeapYear && firstDayOfYear.getUTCDay() === 3) ? 53 : 52;
     }
 
     async function setAllTimeCharts(offsetContainer){
@@ -330,7 +333,7 @@
         let dataChartWeek = []
         let fs = false
         const firstDay = new Date(parseInt(year), 0, 1)
-        if (firstDay.getDay() === 1) {fs = true}
+        if (firstDay.getUTCDay() === 1) {fs = true}
         fillArray(data.weeks, 0, getWeeksInYear(year)).forEach(function (item, index){
             let w2 = item._id
             let y2 = year
@@ -512,6 +515,7 @@
     }
 
     function init() {
+        //console.log(data.milestones)
         setCharts()
         setObserver()
     }
@@ -559,7 +563,7 @@
                     <div>
                         <a href="?username={ data.username }">All time</a>
                         {#each data['yearsStats'] as y }
-                            <a href="?username={ data.username }&year={ y }">{ y }{#if y === new Date().getFullYear() }...{/if}</a>
+                            <a href="?username={ data.username }&year={ y }">{ y }{#if y === new Date().getUTCFullYear() }...{/if}</a>
                         {/each}
                     </div>
                 </div>
