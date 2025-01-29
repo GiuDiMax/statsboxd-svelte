@@ -375,14 +375,22 @@
         }
         generalChart['tooltip'] = {
             formatter: function () {
-                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y)).toString() + ' films</span><span class="ttSubtitle">' + this.x.toString() + '</span></div>'
+                return '<div class="ttYear"><span class="ttTitle">' + (parseInt(this.y)).toString() + ' films</span><span class="ttSubtitle">' + this.name.toString() + '</span></div>'
             },
             shared: true, useHTML: true, shape: 'square', borderWidth: 0, shadow: false, backgroundColor: null,
         }
         dataChart = []
-        fillArray(data.dayOfWeek, 1, 7).forEach(function (item){
-            dataChart.push({ name: item._id, y: item.sum + 0.1})
-        })
+        const weekDayArray = fillArray(data.dayOfWeek, 1, 7)
+        dataChart.push({ name: "Monday", y: weekDayArray[1].sum + 0.1})
+        dataChart.push({ name: "Tuesday", y: weekDayArray[2].sum + 0.1})
+        dataChart.push({ name: "Wednesday", y: weekDayArray[3].sum + 0.1})
+        dataChart.push({ name: "Thursday", y: weekDayArray[4].sum + 0.1})
+        dataChart.push({ name: "Friday", y: weekDayArray[5].sum + 0.1})
+        dataChart.push({ name: "Saturday", y: weekDayArray[6].sum + 0.1})
+        dataChart.push({ name: "Sunday", y: weekDayArray[0].sum + 0.1})
+        // fillArray(data.dayOfWeek, 1, 7).forEach(function (item){
+        //     dataChart.push({ name: item._id, x: "a" + item._id.toString(), y: item.sum + 0.1})
+        // })
         generalChart['series'] = [{
             data: dataChart,
             states: {hover: {color: '#00e054'}},

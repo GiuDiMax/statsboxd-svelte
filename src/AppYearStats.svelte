@@ -12,10 +12,10 @@
     let tmpdata = {}
     let message = "Error"
 
-    console.log(donator)
+    //console.log(donator)
 
     async function getYearStats(data){
-        console.log(data)
+        //console.log(data)
         const resp = await fetch(baseUrl + 'yearstats',
             {
                 method: "POST",
