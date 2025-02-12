@@ -796,15 +796,14 @@
                 <a id="updatebtn" on:click={handleUpdate} class="clickable seeallbutton updatebutton" href="{data.donator? '/?username=' + data.username + '&donator' : '/#'}">
                     <span class="material-symbols-rounded icon">sync</span>Update
                 </a>
-                <!--<a class="clickable seeallbutton updatebutton collagebutton" href="//old.statsboxd.top/{ data.username }/collage2" target="_blank">-->
                 <a class="clickable seeallbutton updatebutton collagebutton" href="/?username={ data.username }&collage" target="_blank">
                     <span class="material-symbols-rounded icon">grid_on</span>Last month collage
                 </a>
-                <a class="clickable seeallbutton updatebutton wrappedbutton" href="/?username={ data.username }&wrapped" target="_blank">
+                <!--<a class="clickable seeallbutton updatebutton wrappedbutton" href="/?username={ data.username }&wrapped" target="_blank">
                     <span class="material-symbols-rounded icon">summarize</span>2024 Wrapped
-                </a>
+                </a>-->
             </div>
-            <div class="buttonstart" style="margin-top: 20px;">
+            <div class="buttonstart">
                 <a class="clickable seeallbutton updatebutton recbutton" href="/?username={ data.username }&rec" target="_blank">
                     <span class="material-symbols-rounded icon">recommend</span>Film Recommendation
                 </a>
