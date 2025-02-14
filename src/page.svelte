@@ -802,8 +802,6 @@
                 <!--<a class="clickable seeallbutton updatebutton wrappedbutton" href="/?username={ data.username }&wrapped" target="_blank">
                     <span class="material-symbols-rounded icon">summarize</span>2024 Wrapped
                 </a>-->
-            </div>
-            <div class="buttonstart">
                 <a class="clickable seeallbutton updatebutton recbutton" href="/?username={ data.username }&rec" target="_blank">
                     <span class="material-symbols-rounded icon">recommend</span>Film Recommendation
                 </a>
